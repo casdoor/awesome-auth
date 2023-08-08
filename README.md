@@ -33,9 +33,6 @@
   </a>
 </p>
 
-## Online Demo
-Deployed site: [https://log.casbin.com/](https://log.casbin.com/)
-
 ## Architecture
 Casvisor contains 2 parts:
 Name | Description | Language | Source code
@@ -83,7 +80,7 @@ After creating an organization and an application for Casvisor in a Casdoor, you
 
 #### Setup your Casvisor to enable some third-party login platform
 
-  Casvisor uses Casdoor to manage members. If you want to log in with oauth, you should see [casdoor oauth configuration](https://casdoor.org/docs/provider/OAuth).
+  Casvisor uses Casdoor to manage members. If you want to log in with oauth, you should see [casdoor oauth configuration](https://casdoor.org/docs/provider/oauth/overview).
 
 #### OSS, Mail, and SMS services
 
@@ -95,4 +92,4 @@ For Casvisor, if you have any questions, you can give Issues, or you can also di
 
 ## License
 
-[Apache-2.0](https://github.com/casvisor/casvisor/blob/master/LICENSE)
+[Apache-2.0](LICENSE)
