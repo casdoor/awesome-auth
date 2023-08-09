@@ -3,7 +3,7 @@ module github.com/casbin/casvisor
 go 1.17
 
 require (
-	github.com/astaxie/beego v1.12.3
+	github.com/beego/beego v1.12.12
 	github.com/casdoor/casdoor-go-sdk v0.3.3
 	github.com/go-sql-driver/mysql v1.6.0
 	xorm.io/core v0.7.3
@@ -16,7 +16,7 @@ require (
 	github.com/goccy/go-json v0.7.4 // indirect
 	github.com/golang-jwt/jwt/v4 v4.1.0 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
-	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
+	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirectyarn
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/plugins/cors"
-	_ "github.com/astaxie/beego/session/redis"
+	"github.com/beego/beego"
+	"github.com/beego/beego/plugins/cors"
+	_ "github.com/beego/beego/session/redis"
 	"github.com/casbin/casvisor/object"
 	"github.com/casbin/casvisor/routers"
 )
