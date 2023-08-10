@@ -11,12 +11,11 @@ func init() {
 }
 
 func initAPI() {
-	ns :=
-		beego.NewNamespace("/api",
-			beego.NSInclude(
-				&controllers.ApiController{},
-			),
-		)
+	ns := beego.NewNamespace("/api",
+		beego.NSInclude(
+			&controllers.ApiController{},
+		),
+	)
 	beego.AddNamespace(ns)
 
 	beego.Router("/api/signin", &controllers.ApiController{}, "POST:Signin")
@@ -29,4 +28,8 @@ func initAPI() {
 	beego.Router("/api/update-dataset", &controllers.ApiController{}, "POST:UpdateDataset")
 	beego.Router("/api/add-dataset", &controllers.ApiController{}, "POST:AddDataset")
 	beego.Router("/api/delete-dataset", &controllers.ApiController{}, "POST:DeleteDataset")
+
+	beego.Router("/api/get-records-filter", &controllers.ApiController{}, "GET:GetRecordsByFilter")
+	beego.Router("/api/get-records", &controllers.ApiController{}, "GET:GetRecords")
+	beego.Router("/api/add-record", &controllers.ApiController{}, "POST:AddRecord")
 }

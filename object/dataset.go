@@ -85,7 +85,7 @@ func UpdateDataset(id string, dataset *Dataset) bool {
 		panic(err)
 	}
 
-	//return affected != 0
+	// return affected != 0
 	return true
 }
 

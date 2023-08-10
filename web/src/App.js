@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Switch, Redirect, Route, withRouter, Link} from 'react-router-dom';
+import {Link, Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import {Avatar, BackTop, Dropdown, Layout, Menu} from 'antd';
 import {DownOutlined, LogoutOutlined, SettingOutlined} from '@ant-design/icons';
 import './App.less';
@@ -13,6 +13,7 @@ import DatasetEditPage from "./DatasetEditPage";
 import SigninPage from "./SigninPage";
 import i18next from "i18next";
 import SelectLanguageBox from "./SelectLanguageBox";
+import RecordListPage from "./RecordListPage";
 
 const {Header, Footer} = Layout;
 
@@ -52,7 +53,7 @@ class App extends Component {
     if (uri === '/') {
       this.setState({selectedMenuKey: '/'});
     } else if (uri.includes('/datasets')) {
-      this.setState({ selectedMenuKey: '/datasets' });
+      this.setState({selectedMenuKey: '/datasets'});
     } else {
       this.setState({selectedMenuKey: 'null'});
     }
@@ -114,13 +115,14 @@ class App extends Component {
   renderAvatar() {
     if (this.state.account.avatar === "") {
       return (
-        <Avatar style={{ backgroundColor: Setting.getAvatarColor(this.state.account.name), verticalAlign: 'middle' }} size="large">
+        <Avatar style={{backgroundColor: Setting.getAvatarColor(this.state.account.name), verticalAlign: 'middle'}}
+                size="large">
           {Setting.getShortName(this.state.account.name)}
         </Avatar>
       )
     } else {
       return (
-        <Avatar src={this.state.account.avatar} style={{verticalAlign: 'middle' }} size="large">
+        <Avatar src={this.state.account.avatar} style={{verticalAlign: 'middle'}} size="large">
           {Setting.getShortName(this.state.account.name)}
         </Avatar>
       )
@@ -131,11 +133,11 @@ class App extends Component {
     const menu = (
       <Menu onClick={this.handleRightDropdownClick.bind(this)}>
         <Menu.Item key="/account">
-          <SettingOutlined />
+          <SettingOutlined/>
           {i18next.t("account:My Account")}
         </Menu.Item>
         <Menu.Item key="/logout">
-          <LogoutOutlined />
+          <LogoutOutlined/>
           {i18next.t("account:Sign Out")}
         </Menu.Item>
       </Menu>
@@ -151,7 +153,7 @@ class App extends Component {
           }
           &nbsp;
           &nbsp;
-          {Setting.isMobile() ? null : Setting.getShortName(this.state.account.displayName)} &nbsp; <DownOutlined />
+          {Setting.isMobile() ? null : Setting.getShortName(this.state.account.displayName)} &nbsp; <DownOutlined/>
           &nbsp;
           &nbsp;
           &nbsp;
@@ -227,12 +229,20 @@ class App extends Component {
       </Menu.Item>
     );
 
+    res.push(
+      <Menu.Item key="/records">
+        <Link to="/records">
+          {i18next.t("general:Records")}
+        </Link>
+      </Menu.Item>
+    );
+
     return res;
   }
 
   renderHomeIfSignedIn(component) {
     if (this.state.account !== null && this.state.account !== undefined) {
-      return <Redirect to='/' />
+      return <Redirect to='/'/>
     } else {
       return component;
     }
@@ -241,11 +251,10 @@ class App extends Component {
   renderSigninIfNotSignedIn(component) {
     if (this.state.account === null) {
       sessionStorage.setItem("from", window.location.pathname);
-      return <Redirect to='/signin' />
+      return <Redirect to='/signin'/>
     } else if (this.state.account === undefined) {
       return null;
-    }
-    else {
+    } else {
       return component;
     }
   }
@@ -255,6 +264,7 @@ class App extends Component {
       <div>
         <Header style={{padding: '0', marginBottom: '3px'}}>
           {
+            // eslint-disable-next-line jsx-a11y/anchor-has-content
             Setting.isMobile() ? null : <a className="logo" href={"/"}/>
           }
           <Menu
@@ -269,15 +279,19 @@ class App extends Component {
             {
               this.renderAccount()
             }
-            <SelectLanguageBox />
+            <SelectLanguageBox/>
           </Menu>
         </Header>
         <Switch>
           <Route exact path="/callback" component={AuthCallback}/>
           <Route exact path="/" render={(props) => <HomePage account={this.state.account} {...props} />}/>
           <Route exact path="/signin" render={(props) => this.renderHomeIfSignedIn(<SigninPage {...props} />)}/>
-          <Route exact path="/datasets" render={(props) => this.renderSigninIfNotSignedIn(<DatasetListPage account={this.state.account} {...props} />)}/>
-          <Route exact path="/datasets/:datasetName" render={(props) => this.renderSigninIfNotSignedIn(<DatasetEditPage account={this.state.account} {...props} />)}/>
+          <Route exact path="/datasets" render={(props) => this.renderSigninIfNotSignedIn(<DatasetListPage
+            account={this.state.account} {...props} />)}/>
+          <Route exact path="/datasets/:datasetName" render={(props) => this.renderSigninIfNotSignedIn(<DatasetEditPage
+            account={this.state.account} {...props} />)}/>
+          <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage
+            account={this.state.account} {...props} />)}/>
         </Switch>
       </div>
     )
@@ -285,7 +299,7 @@ class App extends Component {
 
   renderFooter() {
     // How to keep your footer where it belongs ?
-    // https://www.freecodecamp.org/news/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c/
+    // https://www.freecodecamp.org/neyarnws/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c/
 
     return (
       <Footer id="footer" style={
@@ -295,7 +309,9 @@ class App extends Component {
           textAlign: 'center',
         }
       }>
-        Made with <span style={{color: 'rgb(255, 255, 255)'}}>❤️</span> by <a style={{fontWeight: "bold", color: "black"}} target="_blank" href="https://github.com/casbin/casvisor">Casvisor</a>, { Setting.isMobile() ? "Mobile" : "Desktop" } View
+        Made with <span style={{color: 'rgb(255, 255, 255)'}}>❤️</span> by <a
+        style={{fontWeight: "bold", color: "black"}} target="_blank"
+        href="https://github.com/casbin/casvisor">Casvisor</a>, {Setting.isMobile() ? "Mobile" : "Desktop"} View
       </Footer>
     )
   }

@@ -135,7 +135,7 @@ export function getShortName(s) {
   return s.split('/').slice(-1)[0];
 }
 
-export function getShortText(s, maxLength=35) {
+export function getShortText(s, maxLength = 35) {
   if (s.length > maxLength) {
     return `${s.slice(0, maxLength)}...`;
   } else {
@@ -204,4 +204,43 @@ export function changeMomentLanguage(lng) {
       },
     });
   }
+}
+
+
+export function setOrganization(organization) {
+  localStorage.setItem("organization", organization);
+  window.dispatchEvent(new Event("storageOrganizationChanged"));
+}
+
+export function isDefaultOrganizationSelected(account) {
+  if (isAdminUser(account)) {
+    return getOrganization() === "All";
+  }
+  return false;
+}
+
+export function getOrganization() {
+  const organization = localStorage.getItem("organization");
+  return organization !== null ? organization : "All";
+}
+
+export function getRequestOrganization(account) {
+  if (isAdminUser(account)) {
+    return getOrganization() === "All" ? account.owner : getOrganization();
+  }
+  return account.owner;
+}
+
+export function isLocalAdminUser(account) {
+  if (account === undefined || account === null) {
+    return false;
+  }
+  return account.isAdmin === true || isAdminUser(account);
+}
+
+export function getAcceptLanguage() {
+  if (i18next.language === null || i18next.language === "") {
+    return "en;q=0.9,en;q=0.8";
+  }
+  return i18next.language + ";q=0.9,en;q=0.8";
 }

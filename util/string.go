@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 func IndexAt(s, sep string, n int) int {
@@ -88,7 +90,7 @@ func ReadStringFromPath(path string) string {
 }
 
 func WriteStringToPath(s string, path string) {
-	err := ioutil.WriteFile(path, []byte(s), 0644)
+	err := ioutil.WriteFile(path, []byte(s), 0o644)
 	if err != nil {
 		panic(err)
 	}
@@ -104,8 +106,31 @@ func ReadBytesFromPath(path string) []byte {
 }
 
 func WriteBytesToPath(b []byte, path string) {
-	err := ioutil.WriteFile(path, b, 0644)
+	err := ioutil.WriteFile(path, b, 0o644)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func GenerateId() string {
+	return uuid.NewString()
+}
+
+// SnakeString transform XxYy to xx_yy
+func SnakeString(s string) string {
+	data := make([]byte, 0, len(s)*2)
+	j := false
+	num := len(s)
+	for i := 0; i < num; i++ {
+		d := s[i]
+		if i > 0 && d >= 'A' && d <= 'Z' && j {
+			data = append(data, '_')
+		}
+		if d != '_' {
+			j = true
+		}
+		data = append(data, d)
+	}
+	result := strings.ToLower(string(data[:]))
+	return strings.ReplaceAll(result, " ", "")
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/gob"
+	"strings"
 
 	"github.com/beego/beego"
 	"github.com/casdoor/casdoor-go-sdk/auth"
@@ -21,6 +22,75 @@ func GetUserName(user *auth.User) string {
 	}
 
 	return user.Name
+}
+
+func (c *ApiController) IsGlobalAdmin() bool {
+	isGlobalAdmin, _ := c.isGlobalAdmin()
+
+	return isGlobalAdmin
+}
+
+func (c *ApiController) IsAdmin() bool {
+	isGlobalAdmin, user := c.isGlobalAdmin()
+	if !isGlobalAdmin && user == nil {
+		return false
+	}
+
+	return isGlobalAdmin || user.IsAdmin
+}
+
+func (c *ApiController) IsAdminOrSelf(user2 *auth.User) bool {
+	isGlobalAdmin, user := c.isGlobalAdmin()
+	if isGlobalAdmin || (user != nil && user.IsAdmin) {
+		return true
+	}
+
+	if user.Owner == user2.Owner && user.Name == user2.Name {
+		return true
+	}
+	return false
+}
+
+func (c *ApiController) isGlobalAdmin() (bool, *auth.User) {
+	username := c.GetSessionUsername()
+	if strings.HasPrefix(username, "app/") {
+		// e.g., "app/app-casnode"
+		return true, nil
+	}
+
+	user := c.getCurrentUser()
+	if user == nil {
+		return false, nil
+	}
+
+	return user.Owner == "built-in" || user.IsGlobalAdmin, user
+}
+
+func (c *ApiController) getCurrentUser() *auth.User {
+	var user *auth.User
+	var err error
+	userId := c.GetSessionUsername()
+	if userId == "" {
+		user = nil
+	} else {
+		// user, err = auth..GetUser(userId)
+		user, err = auth.GetUser(userId)
+		if err != nil {
+			c.ResponseError(err.Error())
+			return nil
+		}
+	}
+	return user
+}
+
+func wrapActionResponse(affected bool, e ...error) *Response {
+	if len(e) != 0 && e[0] != nil {
+		return &Response{Status: "error", Msg: e[0].Error()}
+	} else if affected {
+		return &Response{Status: "ok", Msg: "", Data: "Affected"}
+	} else {
+		return &Response{Status: "ok", Msg: "", Data: "Unaffected"}
+	}
 }
 
 func (c *ApiController) GetSessionClaims() *auth.Claims {
