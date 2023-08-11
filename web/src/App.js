@@ -54,6 +54,8 @@ class App extends Component {
       this.setState({selectedMenuKey: '/'});
     } else if (uri.includes('/datasets')) {
       this.setState({selectedMenuKey: '/datasets'});
+    } else if (uri.includes('/records')) {
+      this.setState({selectedMenuKey: '/records'});
     } else {
       this.setState({selectedMenuKey: 'null'});
     }
