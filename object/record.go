@@ -34,6 +34,81 @@ type Record struct {
 	IsTriggered bool `json:"isTriggered"`
 }
 
+func GetRecordCount(field, value string, filterRecord *Record) (int64, error) {
+	session := GetSession("", -1, -1, field, value, "", "")
+	return session.Count(filterRecord)
+}
+
+func GetRecords() ([]*Record, error) {
+	records := []*Record{}
+	err := adapter.engine.Desc("id").Find(&records)
+	if err != nil {
+		return records, err
+	}
+
+	return records, nil
+}
+
+func GetPaginationRecords(offset, limit int, field, value, sortField, sortOrder string, filterRecord *Record) ([]*Record, error) {
+	records := []*Record{}
+	session := GetSession("", offset, limit, field, value, sortField, sortOrder)
+	err := session.Find(&records, filterRecord)
+	if err != nil {
+		return records, err
+	}
+
+	return records, nil
+}
+
+func GetRecordsByField(record *Record) ([]*Record, error) {
+	records := []*Record{}
+	err := adapter.engine.Find(&records, record)
+	if err != nil {
+		return records, err
+	}
+
+	return records, nil
+}
+
+func getRecord(owner string, name string) (*Record, error) {
+	if owner == "" || name == "" {
+		return nil, nil
+	}
+
+	record := Record{Name: name}
+	existed, err := adapter.engine.Get(&record)
+	if err != nil {
+		return &record, err
+	}
+
+	if existed {
+		return &record, nil
+	} else {
+		return nil, nil
+	}
+}
+
+func GetRecord(id string) (*Record, error) {
+	owner, name := util.GetOwnerAndNameFromIdNoCheck(id)
+	return getRecord(owner, name)
+}
+
+func UpdateRecord(id string, record *Record) (bool, error) {
+	owner, name := util.GetOwnerAndNameFromId(id)
+	if p, err := getRecord(owner, name); err != nil {
+		return false, err
+	} else if p == nil {
+		return false, nil
+	}
+
+	affected, err := adapter.engine.Where("name = ?", name).AllCols().Update(record)
+	if err != nil {
+		return false, err
+	}
+
+	return affected != 0, nil
+}
+
 func NewRecord(ctx *context.Context) *Record {
 	ip := strings.Replace(util.GetIPFromRequest(ctx.Request), ": ", "", -1)
 	action := strings.Replace(ctx.Request.URL.Path, "/api/", "", -1)
@@ -82,38 +157,11 @@ func AddRecord(record *Record) bool {
 	return affected != 0
 }
 
-func GetRecordCount(field, value string, filterRecord *Record) (int64, error) {
-	session := GetSession("", -1, -1, field, value, "", "")
-	return session.Count(filterRecord)
-}
-
-func GetRecords() ([]*Record, error) {
-	records := []*Record{}
-	err := adapter.engine.Desc("id").Find(&records)
+func DeleteRecord(record *Record) (bool, error) {
+	affected, err := adapter.engine.Where("name = ?", record.Name).Delete(&Record{})
 	if err != nil {
-		return records, err
+		return false, err
 	}
 
-	return records, nil
-}
-
-func GetPaginationRecords(offset, limit int, field, value, sortField, sortOrder string, filterRecord *Record) ([]*Record, error) {
-	records := []*Record{}
-	session := GetSession("", offset, limit, field, value, sortField, sortOrder)
-	err := session.Find(&records, filterRecord)
-	if err != nil {
-		return records, err
-	}
-
-	return records, nil
-}
-
-func GetRecordsByField(record *Record) ([]*Record, error) {
-	records := []*Record{}
-	err := adapter.engine.Find(&records, record)
-	if err != nil {
-		return records, err
-	}
-
-	return records, nil
+	return affected != 0, nil
 }

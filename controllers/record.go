@@ -62,6 +62,25 @@ func (c *ApiController) GetRecords() {
 	}
 }
 
+// GetRecord
+// @Title GetRecord
+// @Tag Record API
+// @Description get record
+// @Param   id     query    string  true        "The id ( owner/name ) of the record"
+// @Success 200 {object} object.Record The Response object
+// @router /get-record [get]
+func (c *ApiController) GetRecord() {
+	id := c.Input().Get("id")
+
+	record, err := object.GetRecord(id)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	c.ResponseOk(record)
+}
+
 // GetRecordsByFilter
 // @Tag Record API
 // @Title GetRecordsByFilter
@@ -88,6 +107,28 @@ func (c *ApiController) GetRecordsByFilter() {
 	c.ResponseOk(records)
 }
 
+// UpdateRecord
+// @Title UpdateRecord
+// @Tag Record API
+// @Description update record
+// @Param   id     query    string  true        "The id ( owner/name ) of the record"
+// @Param   body    body   object.Record  true        "The details of the record"
+// @Success 200 {object} controllers.Response The Response object
+// @router /update-record [post]
+func (c *ApiController) UpdateRecord() {
+	id := c.Input().Get("id")
+
+	var record object.Record
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &record)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	c.Data["json"] = wrapActionResponse(object.UpdateRecord(id, &record))
+	c.ServeJSON()
+}
+
 // AddRecord
 // @Title AddRecord
 // @Tag Record API
@@ -104,5 +145,24 @@ func (c *ApiController) AddRecord() {
 	}
 
 	c.Data["json"] = wrapActionResponse(object.AddRecord(&record))
+	c.ServeJSON()
+}
+
+// DeleteRecord
+// @Title DeleteRecord
+// @Tag Record API
+// @Description delete a record
+// @Param   body    body   object.Record  true        "The details of the record"
+// @Success 200 {object} controllers.Response The Response object
+// @router /delete-record [post]
+func (c *ApiController) DeleteRecord() {
+	var record object.Record
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &record)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	c.Data["json"] = wrapActionResponse(object.DeleteRecord(&record))
 	c.ServeJSON()
 }
