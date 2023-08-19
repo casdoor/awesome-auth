@@ -144,10 +144,6 @@ func NewRecord(ctx *context.Context) *Record {
 }
 
 func AddRecord(record *Record) bool {
-	if record.Organization == "app" {
-		return false
-	}
-
 	record.Owner = record.Organization
 
 	affected, err := adapter.engine.Insert(record)

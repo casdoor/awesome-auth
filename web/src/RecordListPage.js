@@ -95,9 +95,9 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("organization"),
         render: (text, record, index) => {
           return (
-            <Link to={`/organizations/${text}`}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/organizations/${text}`)}>
               {text}
-            </Link>
+            </a>
           );
         },
       },
@@ -110,9 +110,9 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("user"),
         render: (text, record, index) => {
           return (
-            <Link to={`/users/${record.organization}/${record.user}`}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/users/${record.organization}/${record.user}`)}>
               {text}
-            </Link>
+            </a>
           );
         },
       },

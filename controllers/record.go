@@ -58,6 +58,10 @@ func (c *ApiController) GetRecords() {
 		if c.IsGlobalAdmin() && organizationName != "" {
 			organization = organizationName
 		}
+		if c.IsAdmin() {
+			organization = ""
+		}
+
 		filterRecord := &object.Record{Organization: organization}
 		count, err := object.GetRecordCount(field, value, filterRecord)
 		if err != nil {
