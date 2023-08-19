@@ -18,15 +18,8 @@ import (
 	"strings"
 
 	"github.com/beego/beego/context"
-	"github.com/casbin/casvisor/conf"
 	"github.com/casbin/casvisor/util"
 )
-
-var logPostOnly bool
-
-func init() {
-	logPostOnly = conf.GetConfigBool("logPostOnly")
-}
 
 type Record struct {
 	Id int `xorm:"int notnull pk autoincr" json:"id"`
@@ -151,12 +144,6 @@ func NewRecord(ctx *context.Context) *Record {
 }
 
 func AddRecord(record *Record) bool {
-	if logPostOnly {
-		if record.Method == "GET" {
-			return false
-		}
-	}
-
 	if record.Organization == "app" {
 		return false
 	}
