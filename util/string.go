@@ -72,6 +72,11 @@ func GetOwnerAndNameFromId(id string) (string, string) {
 	return tokens[0], tokens[1]
 }
 
+func GetOwnerAndNameFromIdNoCheck(id string) (string, string) {
+	tokens := strings.SplitN(id, "/", 2)
+	return tokens[0], tokens[1]
+}
+
 func GetOwnerAndNameFromId3(id string) (string, string, string) {
 	tokens := strings.Split(id, "/")
 	if len(tokens) != 3 {
