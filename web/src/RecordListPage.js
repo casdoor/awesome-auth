@@ -13,8 +13,7 @@
 // limitations under the License.
 
 import React from "react";
-import {Link} from "react-router-dom";
-import {Button, Popconfirm, Table} from "antd";
+import {Button, Popconfirm, Switch, Table} from "antd";
 import moment from "moment";
 import * as Setting from "./Setting";
 import * as RecordBackend from "./backend/RecordBackend";
@@ -168,9 +167,9 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("organization"),
         render: (text, record, index) => {
           return (
-            <Link to={`/organizations/${text}`}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/organizations/${text}`)}>
               {text}
-            </Link>
+            </a>
           );
         },
       },
@@ -183,9 +182,9 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("user"),
         render: (text, record, index) => {
           return (
-            <Link to={`/users/${record.organization}/${record.user}`}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/users/${record.organization}/${record.user}`)}>
               {text}
-            </Link>
+            </a>
           );
         },
       },
@@ -217,14 +216,32 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("requestUri"),
       },
       {
+        title: i18next.t("record:Is triggered"),
+        dataIndex: "isTriggered",
+        key: "isTriggered",
+        width: "140px",
+        sorter: true,
+        fixed: (Setting.isMobile()) ? "false" : "right",
+        render: (text, record, index) => {
+          if (!["signup", "login", "logout", "update-user"].includes(record.action)) {
+            return null;
+          }
+
+          return (
+            <Switch disabled checkedChildren="ON" unCheckedChildren="OFF" checked={text}/>
+          );
+        },
+      },
+      {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
         width: "180px",
+        fixed: (Setting.isMobile()) ? "false" : "right",
         render: (text, record, index) => {
           return (
             <div>
-              {/*<Button style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}} type="primary" onClick={() => this.props.history.push(`/records/${record.name}`)}>{i18next.t("general:Edit")}</Button>*/}
+              <Button style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}} type="primary" onClick={() => this.props.history.push(`/records/${record.name}`)}>{i18next.t("general:Edit")}</Button>
               <Popconfirm
                 title={`Sure to delete record: ${record.name} ?`}
                 onConfirm={() => this.deleteRecord(index)}
@@ -245,7 +262,7 @@ class RecordListPage extends BaseListPage {
                title={() => (
                  <div>
                    {i18next.t("record:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
-                   <Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button>
+                   {/*<Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button>*/}
                  </div>
                )}
                loading={records === null}

@@ -67,24 +67,8 @@ class App extends Component {
     });
     if (uri === "/" || uri === "/home") {
       this.setState({selectedMenuKey: "/"});
-    } else if (uri.includes("/stores")) {
-      this.setState({selectedMenuKey: "/stores"});
-    } else if (uri.includes("/clustering")) {
-      this.setState({selectedMenuKey: "/clustering"});
-    } else if (uri.includes("/wordsets")) {
-      this.setState({selectedMenuKey: "/wordsets"});
-    } else if (uri.includes("/factorsets")) {
-      this.setState({selectedMenuKey: "/factorsets"});
-    } else if (uri.includes("/videos")) {
-      this.setState({selectedMenuKey: "/videos"});
-    } else if (uri.includes("/providers")) {
-      this.setState({selectedMenuKey: "/providers"});
-    } else if (uri.includes("/vectors")) {
-      this.setState({selectedMenuKey: "/vectors"});
-    } else if (uri.includes("/chats")) {
-      this.setState({selectedMenuKey: "/chats"});
-    } else if (uri.includes("/messages")) {
-      this.setState({selectedMenuKey: "/messages"});
+    } else if (uri.includes("/records")) {
+      this.setState({selectedMenuKey: "/records"});
     } else {
       this.setState({selectedMenuKey: "null"});
     }
