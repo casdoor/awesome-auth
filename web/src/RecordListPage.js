@@ -14,19 +14,56 @@
 
 import React from "react";
 import {Link} from "react-router-dom";
-import {Switch, Table} from "antd";
+import {Button, Popconfirm, Table} from "antd";
+import moment from "moment";
 import * as Setting from "./Setting";
 import * as RecordBackend from "./backend/RecordBackend";
 import i18next from "i18next";
-import moment from "moment";
 import BaseListPage from "./BaseListPage";
 
 class RecordListPage extends BaseListPage {
-  UNSAFE_componentWillMount() {
-    this.state.pagination.pageSize = 20;
-    const {pagination} = this.state;
-    this.fetch({pagination});
+  constructor(props) {
+    super(props);
+    this.state = {
+      classes: props,
+      records: null,
+    };
   }
+
+  UNSAFE_componentWillMount() {
+    this.getRecords();
+  }
+
+  getRecords() {
+    // eslint-disable-next-line react/prop-types
+    RecordBackend.getRecords(this.props.account.name)
+      .then((res) => {
+        if (res.status === "ok") {
+          this.setState({
+            records: res.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get records: ${res.msg}`);
+        }
+      });
+  }
+
+  // newRecord() {
+  //   const randomName = Setting.getRandomName();
+  //   return {
+  //     owner: this.props.account.name,
+  //     name: `record_${randomName}`,
+  //     createdTime: moment().format(),
+  //     updatedTime: moment().format(),
+  //     displayName: `New Record - ${randomName}`,
+  //     category: "Record Category - 1",
+  //     type: "AI",
+  //     user1: `${this.props.account.owner}/${this.props.account.name}`,
+  //     user2: "",
+  //     users: [`${this.props.account.owner}/${this.props.account.name}`],
+  //     messageCount: 0,
+  //   };
+  // }
 
   newRecord() {
     return {
@@ -42,9 +79,45 @@ class RecordListPage extends BaseListPage {
       isTriggered: false,
     };
   }
+  // TODO: test
+  addRecord() {
+    const newRecord = this.newRecord();
+    RecordBackend.addRecord(newRecord)
+      .then((res) => {
+        if (res.status === "ok") {
+          Setting.showMessage("success", "Record added successfully");
+          this.setState({
+            records: Setting.prependRow(this.state.records, newRecord),
+          });
+        } else {
+          Setting.showMessage("error", `Failed to add Record: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `Record failed to add: ${error}`);
+      });
+  }
+  // TODO: test
+  deleteRecord(i) {
+    RecordBackend.deleteRecord(this.state.records[i])
+      .then((res) => {
+        if (res.status === "ok") {
+          Setting.showMessage("success", "Record deleted successfully");
+          this.setState({
+            records: Setting.deleteRow(this.state.records, i),
+            // pagination: {total: this.state.pagination.total - 1},
+          });
+        } else {
+          Setting.showMessage("error", `Failed to delete Record: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `Record failed to delete: ${error}`);
+      });
+  }
 
   renderTable(records) {
-    let columns = [
+    const columns = [
       {
         title: i18next.t("general:Name"),
         dataIndex: "name",
@@ -95,9 +168,9 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("organization"),
         render: (text, record, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/organizations/${text}`)}>
+            <Link to={`/organizations/${text}`}>
               {text}
-            </a>
+            </Link>
           );
         },
       },
@@ -110,9 +183,9 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("user"),
         render: (text, record, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/users/${record.organization}/${record.user}`)}>
+            <Link to={`/users/${record.organization}/${record.user}`}>
               {text}
-            </a>
+            </Link>
           );
         },
       },
@@ -139,7 +212,7 @@ class RecordListPage extends BaseListPage {
         title: i18next.t("general:Request URI"),
         dataIndex: "requestUri",
         key: "requestUri",
-        // width: '300px',
+        width: '200px',
         sorter: true,
         ...this.getColumnSearchProps("requestUri"),
       },
@@ -147,94 +220,49 @@ class RecordListPage extends BaseListPage {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
-        width: "200px",
-        sorter: true,
-        ...this.getColumnSearchProps("action"),
-        fixed: (Setting.isMobile()) ? "false" : "right",
+        width: "180px",
         render: (text, record, index) => {
-          return text;
-        },
-      },
-      {
-        title: i18next.t("record:Is triggered"),
-        dataIndex: "isTriggered",
-        key: "isTriggered",
-        width: "140px",
-        sorter: true,
-        fixed: (Setting.isMobile()) ? "false" : "right",
-        render: (text, record, index) => {
-          if (!["signup", "login", "logout", "update-user"].includes(record.action)) {
-            return null;
-          }
-
           return (
-            <Switch disabled checkedChildren="ON" unCheckedChildren="OFF" checked={text}/>
+            <div>
+              {/*<Button style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}} type="primary" onClick={() => this.props.history.push(`/records/${record.name}`)}>{i18next.t("general:Edit")}</Button>*/}
+              <Popconfirm
+                title={`Sure to delete record: ${record.name} ?`}
+                onConfirm={() => this.deleteRecord(index)}
+                okText="OK"
+                cancelText="Cancel"
+              >
+                <Button style={{marginBottom: "10px"}} type="primary" danger>{i18next.t("general:Delete")}</Button>
+              </Popconfirm>
+            </div>
           );
         },
       },
     ];
 
-    if (Setting.isLocalAdminUser(this.props.account)) {
-      columns = columns.filter(column => column.key !== "name");
-    }
-
-    const paginationProps = {
-      total: this.state.pagination.total,
-      pageSize: this.state.pagination.pageSize,
-      showQuickJumper: true,
-      showSizeChanger: true,
-      showTotal: () => i18next.t("general:{total} in total").replace("{total}", this.state.pagination.total),
-    };
-
     return (
       <div>
-        <Table scroll={{x: "max-content"}} columns={columns} dataSource={records} rowKey="id" size="middle" bordered
-               pagination={paginationProps}
+        <Table scroll={{x: "max-content"}} columns={columns} dataSource={records} rowKey="name" size="middle" bordered pagination={{pageSize: 100}}
                title={() => (
                  <div>
-                   {i18next.t("general:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
+                   {i18next.t("record:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
+                   <Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button>
                  </div>
                )}
-               loading={this.state.loading}
-               onChange={this.handleTableChange}
+               loading={records === null}
         />
       </div>
     );
   }
 
-  fetch = (params = {}) => {
-    let field = params.searchedColumn, value = params.searchText;
-    const sortField = params.sortField, sortOrder = params.sortOrder;
-    if (params.method !== undefined && params.method !== null) {
-      field = "method";
-      value = params.method;
-    }
-    this.setState({loading: true});
-    RecordBackend.getRecords(Setting.isDefaultOrganizationSelected(this.props.account) ? "" : Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
-      .then((res) => {
-        this.setState({
-          loading: false,
-        });
-        if (res.status === "ok") {
-          this.setState({
-            data: res.data,
-            pagination: {
-              ...params.pagination,
-              total: res.data2,
-            },
-            searchText: params.searchText,
-            searchedColumn: params.searchedColumn,
-          });
-        } else {
-          if (res.data.includes("Please login first")) {
-            this.setState({
-              loading: false,
-              isAuthorized: false,
-            });
-          }
+  render() {
+    return (
+      <div>
+        {
+          this.renderTable(this.state.records)
         }
-      });
-  };
+      </div>
+    );
+  }
 }
 
 export default RecordListPage;

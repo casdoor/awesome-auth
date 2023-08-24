@@ -1,15 +1,15 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif !important;
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  monospace;
 }
 
 .logo {
@@ -35,10 +35,10 @@ code {
 }
 
 .alert-row {
-  background: #ffccc7;
+  background: rgba(92,48,125,0.55);
 }
 
-/* http://react-china.org/t/topic/33846/3 */
+/*http://react-china.org/t/topic/33846/3*/
 .ant-table-header {
   scrollbar-color:transparent transparent
 }
@@ -48,10 +48,6 @@ code {
 
 .import-output {
   height: 500px;
-}
-
-.CodeMirror {
-  height: 100% !important;
 }
 
 .App {
@@ -70,6 +66,10 @@ code {
   background: #d9f7be;
 }
 
+.ant-list-item:hover {
+  box-shadow: 0 0 4px #888;
+}
+
 /*https://stackoverflow.com/questions/64961752/how-do-i-change-the-color-of-selected-menu-item-in-ant-design*/
 /*.conferenceMenu > .ant-menu-item-selected {*/
 /*  background-color: rgb(230,247,255) !important;*/
@@ -77,4 +77,14 @@ code {
 
 .conferenceMenu {
   background-color: rgb(242,242,242) !important;
+}
+
+.react-codemirror2 {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.anticon-file {
+  visibility: hidden;
 }

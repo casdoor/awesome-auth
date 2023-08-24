@@ -3,33 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/cssinjs": "^1.12.0",
     "@ant-design/icons": "4.6.2",
     "@craco/craco": "6.4.5",
-    "antd": "4.15.5",
+    "antd": "5.2.3",
     "casdoor-js-sdk": "^0.2.7",
     "copy-to-clipboard": "^3.3.1",
     "craco-less": "2.0.0",
     "i18next": "^19.8.9",
     "moment": "^2.29.1",
-    "react": "17.0.2",
+    "react": "^18.2.0",
     "react-device-detect": "1.17.0",
-    "react-dom": "17.0.2",
+    "react-dom": "^18.2.0",
     "react-i18next": "^11.8.7",
-    "react-router-dom": "5.1.2",
+    "react-router-dom": "^5.3.3",
     "react-scripts": "5.0.1",
     "react-highlight-words": "^0.20.0"
   },
   "scripts": {
     "start": "set PORT=18001 && craco start",
-    "build": "del build.zip 2>nul && set \"GENERATE_SOURCEMAP=false\" && set \"SKIP_PREFLIGHT_CHECK=true\" && craco build && 360zip.exe -ar build %cd%/build.zip || ECHO.",
+    "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('Use yarn for installing: https://yarnpkg.com/en/docs/install')\"",
+    "fix": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
+    "lint:css": "stylelint src/**/*.{css,less} --fix"
   },
   "browserslist": {
     "production": [

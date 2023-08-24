@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2021 The casbin Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ import {Button, Input, Result, Space} from "antd";
 import {SearchOutlined} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import i18next from "i18next";
-import * as Setting from "./Setting";
 
 class BaseListPage extends React.Component {
   constructor(props) {
@@ -36,21 +35,6 @@ class BaseListPage extends React.Component {
     };
   }
 
-  handleOrganizationChange = () => {
-    const {pagination} = this.state;
-    this.fetch({pagination});
-  };
-
-  componentDidMount() {
-    window.addEventListener("storageOrganizationChanged", this.handleOrganizationChange);
-    if (!Setting.isAdminUser(this.props.account)) {
-      Setting.setOrganization("All");
-    }
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("storageOrganizationChanged", this.handleOrganizationChange);
-  }
 
   UNSAFE_componentWillMount() {
     const {pagination} = this.state;
@@ -75,7 +59,7 @@ class BaseListPage extends React.Component {
           <Button
             type="primary"
             onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined/>}
+            icon={<SearchOutlined />}
             size="small"
             style={{width: 90}}
           >
@@ -100,7 +84,7 @@ class BaseListPage extends React.Component {
         </Space>
       </div>
     ),
-    filterIcon: filtered => <SearchOutlined style={{color: filtered ? "#1890ff" : undefined}}/>,
+    filterIcon: filtered => <SearchOutlined style={{color: filtered ? "#1890ff" : undefined}} />,
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
@@ -131,17 +115,6 @@ class BaseListPage extends React.Component {
     clearFilters();
     const {pagination} = this.state;
     this.fetch({pagination});
-  };
-
-  handleTableChange = (pagination, filters, sorter) => {
-    this.fetch({
-      sortField: sorter.field,
-      sortOrder: sorter.order,
-      pagination,
-      ...filters,
-      searchText: this.state.searchText,
-      searchedColumn: this.state.searchedColumn,
-    });
   };
 
   render() {

@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {Component} from 'react';
-import {Link, Redirect, Route, Switch, withRouter} from 'react-router-dom';
-import {Avatar, BackTop, Dropdown, Layout, Menu} from 'antd';
-import {DownOutlined, LogoutOutlined, SettingOutlined} from '@ant-design/icons';
-import './App.less';
+import React, {Component} from "react";
+import {Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
+import {StyleProvider, legacyLogicalPropertiesTransformer} from "@ant-design/cssinjs";
+import {Avatar, Button, Card, ConfigProvider, Drawer, Dropdown, FloatButton, Layout, Menu} from "antd";
+import {BarsOutlined, DownOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
+import "./App.less";
 import * as Setting from "./Setting";
 import * as AccountBackend from "./backend/AccountBackend";
 import AuthCallback from "./AuthCallback";
 import * as Conf from "./Conf";
 import HomePage from "./HomePage";
-import DatasetListPage from "./DatasetListPage";
-import DatasetEditPage from "./DatasetEditPage";
-import RecordListPage from "./RecordListPage";
 import SigninPage from "./SigninPage";
 import i18next from "i18next";
-import SelectLanguageBox from "./SelectLanguageBox";
+import LanguageSelect from "./LanguageSelect";
+import RecordListPage from "./RecordListPage";
 
-const {Header, Footer} = Layout;
+const {Header, Footer, Content} = Layout;
 
 class App extends Component {
   constructor(props) {
@@ -39,13 +38,15 @@ class App extends Component {
       selectedMenuKey: 0,
       account: undefined,
       uri: null,
+      themeData: Conf.ThemeDefault,
+      menuVisible: false,
     };
 
     Setting.initServerUrl();
     Setting.initCasdoorSdk(Conf.AuthConfig);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.updateMenuKey();
     this.getAccount();
   }
@@ -64,26 +65,40 @@ class App extends Component {
     this.setState({
       uri: uri,
     });
-    if (uri === '/') {
-      this.setState({selectedMenuKey: '/'});
-    } else if (uri.includes('/datasets')) {
-      this.setState({selectedMenuKey: '/datasets'});
-    } else if (uri.includes('/records')) {
-      this.setState({selectedMenuKey: '/records'});
+    if (uri === "/" || uri === "/home") {
+      this.setState({selectedMenuKey: "/"});
+    } else if (uri.includes("/stores")) {
+      this.setState({selectedMenuKey: "/stores"});
+    } else if (uri.includes("/clustering")) {
+      this.setState({selectedMenuKey: "/clustering"});
+    } else if (uri.includes("/wordsets")) {
+      this.setState({selectedMenuKey: "/wordsets"});
+    } else if (uri.includes("/factorsets")) {
+      this.setState({selectedMenuKey: "/factorsets"});
+    } else if (uri.includes("/videos")) {
+      this.setState({selectedMenuKey: "/videos"});
+    } else if (uri.includes("/providers")) {
+      this.setState({selectedMenuKey: "/providers"});
+    } else if (uri.includes("/vectors")) {
+      this.setState({selectedMenuKey: "/vectors"});
+    } else if (uri.includes("/chats")) {
+      this.setState({selectedMenuKey: "/chats"});
+    } else if (uri.includes("/messages")) {
+      this.setState({selectedMenuKey: "/messages"});
     } else {
-      this.setState({selectedMenuKey: 'null'});
+      this.setState({selectedMenuKey: "null"});
     }
   }
 
   onUpdateAccount(account) {
     this.setState({
-      account: account
+      account: account,
     });
   }
 
-  setLanguage(account) {
+  setLanguage() {
     // let language = account?.language;
-    let language = localStorage.getItem("language");
+    const language = localStorage.getItem("language");
     if (language !== "" && language !== i18next.language) {
       Setting.setLanguage(language);
     }
@@ -92,7 +107,7 @@ class App extends Component {
   getAccount() {
     AccountBackend.getAccount()
       .then((res) => {
-        let account = res.data;
+        const account = res.data;
         if (account !== null) {
           this.setLanguage(account);
         }
@@ -106,12 +121,12 @@ class App extends Component {
   signout() {
     AccountBackend.signout()
       .then((res) => {
-        if (res.status === 'ok') {
+        if (res.status === "ok") {
           this.setState({
-            account: null
+            account: null,
           });
 
-          Setting.showMessage("success", `Successfully signed out, redirected to homepage`);
+          Setting.showMessage("success", "Successfully signed out, redirected to homepage");
           Setting.goToLink("/");
           // this.props.history.push("/");
         } else {
@@ -121,143 +136,135 @@ class App extends Component {
   }
 
   handleRightDropdownClick(e) {
-    if (e.key === '/account') {
+    if (e.key === "/account") {
       Setting.openLink(Setting.getMyProfileUrl(this.state.account));
-    } else if (e.key === '/logout') {
+    } else if (e.key === "/logout") {
       this.signout();
     }
   }
 
+  onClose = () => {
+    this.setState({
+      menuVisible: false,
+    });
+  };
+
+  showMenu = () => {
+    this.setState({
+      menuVisible: true,
+    });
+  };
+
   renderAvatar() {
     if (this.state.account.avatar === "") {
       return (
-        <Avatar style={{backgroundColor: Setting.getAvatarColor(this.state.account.name), verticalAlign: 'middle'}} size="large">
+        <Avatar style={{backgroundColor: Setting.getAvatarColor(this.state.account.name), verticalAlign: "middle"}} size="large">
           {Setting.getShortName(this.state.account.name)}
         </Avatar>
-      )
+      );
     } else {
       return (
-        <Avatar src={this.state.account.avatar} style={{verticalAlign: 'middle'}} size="large">
+        <Avatar src={this.state.account.avatar} style={{verticalAlign: "middle"}} size="large">
           {Setting.getShortName(this.state.account.name)}
         </Avatar>
-      )
+      );
     }
   }
 
   renderRightDropdown() {
-    const menu = (
-      <Menu onClick={this.handleRightDropdownClick.bind(this)}>
-        <Menu.Item key="/account">
-          <SettingOutlined/>
-          {i18next.t("account:My Account")}
-        </Menu.Item>
-        <Menu.Item key="/logout">
-          <LogoutOutlined/>
-          {i18next.t("account:Sign Out")}
-        </Menu.Item>
-      </Menu>
-    );
+    const items = [];
+    items.push(Setting.getItem(<><SettingOutlined />&nbsp;&nbsp;{i18next.t("account:My Account")}</>,
+      "/account"
+    ));
+    items.push(Setting.getItem(<><LogoutOutlined />&nbsp;&nbsp;{i18next.t("account:Sign Out")}</>,
+      "/logout"
+    ));
+    const onClick = (e) => {
+      if (e.key === "/account") {
+        Setting.openLink(Setting.getMyProfileUrl(this.state.account));
+      } else if (e.key === "/logout") {
+        this.signout();
+      }
+    };
 
     return (
-      <Dropdown key="/rightDropDown" overlay={menu} className="rightDropDown">
-        <div className="ant-dropdown-link" style={{float: 'right', cursor: 'pointer'}}>
-          &nbsp;
-          &nbsp;
+      <Dropdown key="/rightDropDown" menu={{items, onClick}} >
+        <div className="rightDropDown">
           {
             this.renderAvatar()
           }
           &nbsp;
           &nbsp;
-          {Setting.isMobile() ? null : Setting.getShortName(this.state.account.displayName)} &nbsp; <DownOutlined/>
+          {Setting.isMobile() ? null : Setting.getShortName(this.state.account.displayName)} &nbsp; <DownOutlined />
           &nbsp;
           &nbsp;
           &nbsp;
         </div>
       </Dropdown>
-    )
+    );
   }
 
-  renderAccount() {
-    let res = [];
-
+  renderAccountMenu() {
     if (this.state.account === undefined) {
       return null;
     } else if (this.state.account === null) {
-      res.push(
-        <Menu.Item key="/signup" style={{float: 'right', marginRight: '20px'}}>
-          <a href={Setting.getSignupUrl()}>
-            {i18next.t("account:Sign Up")}
-          </a>
-        </Menu.Item>
-      );
-      res.push(
-        <Menu.Item key="/signin" style={{float: 'right'}}>
-          <a href={Setting.getSigninUrl()}>
-            {i18next.t("account:Sign In")}
-          </a>
-        </Menu.Item>
-      );
-      res.push(
-        <Menu.Item key="/" style={{float: 'right'}}>
-          <a href="/">
-            {i18next.t("general:Home")}
-          </a>
-        </Menu.Item>
+      return (
+        <React.Fragment>
+          <Menu.Item key="/signup" style={{float: "right", marginRight: "20px"}}>
+            <a href={Setting.getSignupUrl()}>
+              {i18next.t("account:Sign Up")}
+            </a>
+          </Menu.Item>
+          <Menu.Item key="/signin" style={{float: "right"}}>
+            <a href={Setting.getSigninUrl()}>
+              {i18next.t("account:Sign In")}
+            </a>
+          </Menu.Item>
+          <Menu.Item style={{float: "right", margin: "0px", padding: "0px"}}>
+            <LanguageSelect />
+          </Menu.Item>
+        </React.Fragment>
       );
     } else {
-      res.push(this.renderRightDropdown());
       return (
-        <div style={{float: 'right', margin: '0px', padding: '0px'}}>
-          {
-            res
-          }
-        </div>
-      )
+        <React.Fragment>
+          {this.renderRightDropdown()}
+          <LanguageSelect />
+        </React.Fragment>
+      );
     }
-
-    return res;
   }
 
-  renderMenu() {
-    let res = [];
+  getMenuItems() {
+    const res = [];
 
     if (this.state.account === null || this.state.account === undefined) {
       return [];
     }
 
-    res.push(
-      <Menu.Item key="/">
-        <a href="/">
-          {i18next.t("general:Home")}
-        </a>
-        {/*<Link to="/">*/}
-        {/*  Home*/}
-        {/*</Link>*/}
-      </Menu.Item>
-    );
+    res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, "/"));
 
-    res.push(
-      <Menu.Item key="/datasets">
-        <Link to="/datasets">
-          {i18next.t("general:Datasets")}
-        </Link>
-      </Menu.Item>
-    );
 
-    res.push(
-      <Menu.Item key="/records">
-        <Link to="/records">
-          {i18next.t("general:Records")}
-        </Link>
-      </Menu.Item>
-    );
+    res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>,
+      "/records"));
+
+
+    // if (Setting.isLocalAdminUser(this.state.account)) {
+    //
+    //   res.push(Setting.getItem(
+    //     <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", "/records")}>
+    //       {i18next.t("general:Logs")}
+    //       {Setting.renderExternalLink()}
+    //     </a>,
+    //     "###"));
+    // }
 
     return res;
   }
 
   renderHomeIfSignedIn(component) {
     if (this.state.account !== null && this.state.account !== undefined) {
-      return <Redirect to='/'/>
+      return <Redirect to="/" />;
     } else {
       return component;
     }
@@ -266,7 +273,7 @@ class App extends Component {
   renderSigninIfNotSignedIn(component) {
     if (this.state.account === null) {
       sessionStorage.setItem("from", window.location.pathname);
-      return <Redirect to='/signin'/>
+      window.location.replace(Setting.getSigninUrl());
     } else if (this.state.account === undefined) {
       return null;
     } else {
@@ -274,39 +281,75 @@ class App extends Component {
     }
   }
 
-  renderContent() {
+  renderRouter() {
     return (
-      <div>
-        <Header style={{padding: '0', marginBottom: '3px'}}>
+      <Switch>
+        <Route exact path="/callback" component={AuthCallback} />
+        <Route exact path="/signin" render={(props) => this.renderHomeIfSignedIn(<SigninPage {...props} />)} />
+        <Route exact path="/" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
+        <Route exact path="/home" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
+        <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)} />
+      </Switch>
+    );
+  }
+
+  isWithoutCard() {
+    return Setting.isMobile() || window.location.pathname === "/chat";
+  }
+
+  renderContent() {
+    const onClick = ({key}) => {
+      // eslint-disable-next-line react/prop-types
+      this.props.history.push(key);
+    };
+    const menuStyleRight = Setting.isAdminUser(this.state.account) && !Setting.isMobile() ? "calc(180px + 260px)" : "260px";
+    return (
+      <Layout id="parent-area">
+        <Header style={{padding: "0", marginBottom: "3px", backgroundColor: "white"}}>
+          {Setting.isMobile() ? null : (
+            <Link to={"/"}>
+              <div className="logo" />
+            </Link>
+          )}
+          {(Setting.isMobile() ?
+              <React.Fragment>
+                <Drawer title={i18next.t("general:Close")} placement="left" visible={this.state.menuVisible} onClose={this.onClose}>
+                  <Menu
+                    items={this.getMenuItems()}
+                    mode={"inline"}
+                    selectedKeys={[this.state.selectedMenuKey]}
+                    style={{lineHeight: "64px"}}
+                    onClick={this.onClose}
+                  >
+                  </Menu>
+                </Drawer>
+                <Button icon={<BarsOutlined />} onClick={this.showMenu} type="text">
+                  {i18next.t("general:Menu")}
+                </Button>
+              </React.Fragment> :
+              <Menu
+                onClick={onClick}
+                items={this.getMenuItems()}
+                mode={"horizontal"}
+                selectedKeys={[this.state.selectedMenuKey]}
+                style={{position: "absolute", left: "145px", right: menuStyleRight}}
+              />
+          )}
           {
-            // eslint-disable-next-line jsx-a11y/anchor-has-content
-            Setting.isMobile() ? null : <a className="logo" href={"/"}/>
+            this.renderAccountMenu()
           }
-          <Menu
-            // theme="dark"
-            mode={"horizontal"}
-            selectedKeys={[`${this.state.selectedMenuKey}`]}
-            style={{lineHeight: '64px'}}
-          >
-            {
-              this.renderMenu()
-            }
-            {
-              this.renderAccount()
-            }
-            <SelectLanguageBox/>
-          </Menu>
         </Header>
-        <Switch>
-          <Route exact path="/callback" component={AuthCallback}/>
-          <Route exact path="/" render={(props) => <HomePage account={this.state.account} {...props} />}/>
-          <Route exact path="/signin" render={(props) => this.renderHomeIfSignedIn(<SigninPage {...props} />)}/>
-          <Route exact path="/datasets" render={(props) => this.renderSigninIfNotSignedIn(<DatasetListPage account={this.state.account} {...props} />)}/>
-          <Route exact path="/datasets/:datasetName" render={(props) => this.renderSigninIfNotSignedIn(<DatasetEditPage account={this.state.account} {...props} />)}/>
-          <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)}/>
-        </Switch>
-      </div>
-    )
+        <Content style={{display: "flex", flexDirection: "column"}}>
+          {this.isWithoutCard() ?
+            this.renderRouter() :
+            <Card className="content-warp-card">
+              {this.renderRouter()}
+            </Card>
+          }
+        </Content>
+        {this.renderFooter()}
+      </Layout>
+    );
   }
 
   renderFooter() {
@@ -314,31 +357,53 @@ class App extends Component {
     // https://www.freecodecamp.org/news/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c/
 
     return (
-      <Footer id="footer" style={
+      <React.Fragment>
+        <Footer id="footer" style={
+          {
+            borderTop: "1px solid #e8e8e8",
+            backgroundColor: "#f5f5f5",
+            textAlign: "center",
+          }
+        }>
+          Powered by <a style={{fontWeight: "bold", color: "black"}} target="_blank" rel="noreferrer" href="https://github.com/casbin/casvisor">Casvisor</a>
+        </Footer>
+      </React.Fragment>
+    );
+  }
+
+  renderPage() {
+    return (
+      <React.Fragment>
+        {/* { */}
+        {/*   this.renderBanner() */}
+        {/* } */}
+        <FloatButton.BackTop />
+        {/* <CustomGithubCorner />*/}
         {
-          borderTop: '1px solid #e8e8e8',
-          backgroundColor: 'white',
-          textAlign: 'center',
+          this.renderContent()
         }
-      }>
-        Made with <span style={{color: 'rgb(255, 255, 255)'}}>❤️</span> by <a style={{fontWeight: "bold", color: "black"}} target="_blank" href="https://github.com/casbin/casvisor">Casvisor</a>, { Setting.isMobile() ? "Mobile" : "Desktop" } View
-      </Footer>
-    )
+      </React.Fragment>
+    );
   }
 
   render() {
     return (
-      <div id="parent-area">
-        <BackTop/>
-        <div id="content-wrap">
-          {
-            this.renderContent()
-          }
-        </div>
-        {
-          this.renderFooter()
-        }
-      </div>
+      <React.Fragment>
+        <ConfigProvider theme={{
+          token: {
+            colorPrimary: this.state.themeData.colorPrimary,
+            colorInfo: this.state.themeData.colorPrimary,
+            borderRadius: this.state.themeData.borderRadius,
+          },
+          // algorithm: Setting.getAlgorithm(this.state.themeAlgorithm),
+        }}>
+          <StyleProvider hashPriority="high" transformers={[legacyLogicalPropertiesTransformer]}>
+            {
+              this.renderPage()
+            }
+          </StyleProvider>
+        </ConfigProvider>
+      </React.Fragment>
     );
   }
 }

@@ -258,3 +258,35 @@ export function getAcceptLanguage() {
   }
   return i18next.language + ";q=0.9,en;q=0.8";
 }
+
+
+export const StaticBaseUrl = "https://cdn.casbin.org";
+
+export const Countries = [{label: "English", key: "en", country: "US", alt: "English"},
+  {label: "Español", key: "es", country: "ES", alt: "Español"},
+  {label: "Français", key: "fr", country: "FR", alt: "Français"},
+  {label: "Deutsch", key: "de", country: "DE", alt: "Deutsch"},
+  {label: "中文", key: "zh", country: "CN", alt: "中文"},
+  {label: "Indonesia", key: "id", country: "ID", alt: "Indonesia"},
+  {label: "日本語", key: "ja", country: "JP", alt: "日本語"},
+  {label: "한국어", key: "ko", country: "KR", alt: "한국어"},
+  {label: "Русский", key: "ru", country: "RU", alt: "Русский"},
+  {label: "TiếngViệt", key: "vi", country: "VN", alt: "TiếngViệt"},
+  {label: "Português", key: "pt", country: "BR", alt: "Português"},
+  {label: "Itariano", key: "it", country: "IT", alt: "Itariano"},
+  {label: "Marley", key: "ms", country: "MY", alt: "Marley"},
+  {label: "Tkiš", key: "tr", country: "TR", alt: "Tkiš"},
+  {label: "لغة عربية", key: "ar", country: "DZ", alt: "لغة عربية"},
+  {label: "עִבְרִית", key: "he", country: "IL", alt: "עִבְרִית"},
+  {label: "Filipino", key: "fi", country: "PH", alt: "Filipino"},
+];
+
+export function getItem(label, key, icon, children, type) {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  };
+}

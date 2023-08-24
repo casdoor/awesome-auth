@@ -1,4 +1,4 @@
-// Copyright 2021 The Casdoor Authors. All Rights Reserved.
+// Copyright 2023 The casbin Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,43 @@
 
 import * as Setting from "../Setting";
 
-export function getRecords(organizationName, page, pageSize, field = "", value = "", sortField = "", sortOrder = "") {
-    return fetch(`${Setting.ServerUrl}/api/get-records?organizationName=${organizationName}&pageSize=${pageSize}&p=${page}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
+export function getRecords(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "") {
+    return fetch(`${Setting.ServerUrl}/api/get-records?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
         method: "GET",
         credentials: "include",
-        headers: {
-            "Accept-Language": Setting.getAcceptLanguage(),
-        },
+    }).then(res => res.json());
+}
+
+export function getRecord(owner, name) {
+    return fetch(`${Setting.ServerUrl}/api/get-record?id=${owner}/${encodeURIComponent(name)}`, {
+        method: "GET",
+        credentials: "include",
+    }).then(res => res.json());
+}
+
+export function updateRecord(owner, name, record) {
+    const newRecord = Setting.deepCopy(record);
+    return fetch(`${Setting.ServerUrl}/api/update-record?id=${owner}/${encodeURIComponent(name)}`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(newRecord),
+    }).then(res => res.json());
+}
+
+export function addRecord(record) {
+    const newRecord = Setting.deepCopy(record);
+    return fetch(`${Setting.ServerUrl}/api/add-record`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(newRecord),
+    }).then(res => res.json());
+}
+
+export function deleteRecord(record) {
+    const newRecord = Setting.deepCopy(record);
+    return fetch(`${Setting.ServerUrl}/api/delete-record`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(newRecord),
     }).then(res => res.json());
 }
