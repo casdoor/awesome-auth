@@ -99,32 +99,6 @@ func (c *ApiController) GetRecord() {
 	c.ResponseOk(record)
 }
 
-// GetRecordsByFilter
-// @Tag Record API
-// @Title GetRecordsByFilter
-// @Description get records by filter
-// @Param   filter  body string     true  "filter Record message"
-// @Success 200 {object} object.Record The Response object
-// @router /get-records-filter [post]
-func (c *ApiController) GetRecordsByFilter() {
-	body := string(c.Ctx.Input.RequestBody)
-
-	record := &object.Record{}
-	err := util.JsonToStruct(body, record)
-	if err != nil {
-		c.ResponseError(err.Error())
-		return
-	}
-
-	records, err := object.GetRecordsByField(record)
-	if err != nil {
-		c.ResponseError(err.Error())
-		return
-	}
-
-	c.ResponseOk(records)
-}
-
 // UpdateRecord
 // @Title UpdateRecord
 // @Tag Record API

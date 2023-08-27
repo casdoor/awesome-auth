@@ -13,12 +13,14 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Popconfirm, Switch, Table} from "antd";
+import {Button, Switch, Table} from "antd";
 import moment from "moment";
 import * as Setting from "./Setting";
 import * as RecordBackend from "./backend/RecordBackend";
 import i18next from "i18next";
 import BaseListPage from "./BaseListPage";
+import {GenerateId} from "./Setting";
+import PopconfirmModal from "./common/modal/PopconfirmModal";
 
 class RecordListPage extends BaseListPage {
   constructor(props) {
@@ -47,47 +49,28 @@ class RecordListPage extends BaseListPage {
       });
   }
 
-  // newRecord() {
-  //   const randomName = Setting.getRandomName();
-  //   return {
-  //     owner: this.props.account.name,
-  //     name: `record_${randomName}`,
-  //     createdTime: moment().format(),
-  //     updatedTime: moment().format(),
-  //     displayName: `New Record - ${randomName}`,
-  //     category: "Record Category - 1",
-  //     type: "AI",
-  //     user1: `${this.props.account.owner}/${this.props.account.name}`,
-  //     user2: "",
-  //     users: [`${this.props.account.owner}/${this.props.account.name}`],
-  //     messageCount: 0,
-  //   };
-  // }
-
   newRecord() {
     return {
-      owner: "built-in",
-      name: "1234",
-      id: "1234",
+      owner: this.props.account.owner,
+      name: GenerateId(),
+      createdTime: moment().format(),
+      organization: this.props.account.owner,
       clientIp: "::1",
-      timestamp: moment().format(),
-      organization: "built-in",
-      username: "admin",
+      user: this.props.account.name,
+      method: "POST",
       requestUri: "/api/get-account",
       action: "login",
       isTriggered: false,
     };
   }
-  // TODO: test
+
   addRecord() {
     const newRecord = this.newRecord();
     RecordBackend.addRecord(newRecord)
       .then((res) => {
         if (res.status === "ok") {
+          this.props.history.push({pathname: `/records/${newRecord.owner}/${newRecord.name}`, mode: "add"});
           Setting.showMessage("success", "Record added successfully");
-          this.setState({
-            records: Setting.prependRow(this.state.records, newRecord),
-          });
         } else {
           Setting.showMessage("error", `Failed to add Record: ${res.msg}`);
         }
@@ -96,7 +79,7 @@ class RecordListPage extends BaseListPage {
         Setting.showMessage("error", `Record failed to add: ${error}`);
       });
   }
-  // TODO: test
+
   deleteRecord(i) {
     RecordBackend.deleteRecord(this.state.records[i])
       .then((res) => {
@@ -117,6 +100,21 @@ class RecordListPage extends BaseListPage {
 
   renderTable(records) {
     const columns = [
+      {
+        title: i18next.t("general:Organization"),
+        dataIndex: "organization",
+        key: "organization",
+        width: "110px",
+        sorter: true,
+        ...this.getColumnSearchProps("organization"),
+        render: (text, record, index) => {
+          return (
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/organizations/${text}`)}>
+              {text}
+            </a>
+          );
+        },
+      },
       {
         title: i18next.t("general:Name"),
         dataIndex: "name",
@@ -149,7 +147,7 @@ class RecordListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Timestamp"),
+        title: i18next.t("general:Created Time"),
         dataIndex: "createdTime",
         key: "createdTime",
         width: "180px",
@@ -241,31 +239,41 @@ class RecordListPage extends BaseListPage {
         render: (text, record, index) => {
           return (
             <div>
-              <Button style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}} type="primary" onClick={() => this.props.history.push(`/records/${record.name}`)}>{i18next.t("general:Edit")}</Button>
-              <Popconfirm
-                title={`Sure to delete record: ${record.name} ?`}
+              <Button
+                disabled={!Setting.isAdminUser(this.props.account) && (record.owner !== this.props.account.owner)}
+                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
+                type="primary"
+                onClick={() => this.props.history.push(`/records/${record.owner}/${record.name}`)}
+              >{i18next.t("general:Edit")}
+              </Button>
+              <PopconfirmModal
+                disabled={!Setting.isAdminUser(this.props.account) && (record.owner !== this.props.account.owner)}
+                title={i18next.t("general:Sure to delete") + `: ${record.name} ?`}
                 onConfirm={() => this.deleteRecord(index)}
-                okText="OK"
-                cancelText="Cancel"
               >
-                <Button style={{marginBottom: "10px"}} type="primary" danger>{i18next.t("general:Delete")}</Button>
-              </Popconfirm>
+              </PopconfirmModal>
             </div>
           );
         },
       },
     ];
 
+    const paginationProps = {
+      showQuickJumper: true,
+      showSizeChanger: true,
+    };
+
     return (
       <div>
-        <Table scroll={{x: "max-content"}} columns={columns} dataSource={records} rowKey="name" size="middle" bordered pagination={{pageSize: 100}}
+        <Table scroll={{x: "max-content"}} columns={columns} dataSource={records} rowKey={(record) => `${record.owner}/${record.name}`} size="middle" bordered pagination={paginationProps}
                title={() => (
                  <div>
-                   {i18next.t("record:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
-                   {/*<Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button>*/}
+                   {i18next.t("general:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
+                   <Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button>
                  </div>
                )}
-               loading={records === null}
+               loading={this.state.loading}
+               onChange={this.handleTableChange}
         />
       </div>
     );
@@ -280,6 +288,42 @@ class RecordListPage extends BaseListPage {
       </div>
     );
   }
+
+  fetch = (params = {}) => {
+    let field = params.searchedColumn, value = params.searchText;
+    const sortField = params.sortField, sortOrder = params.sortOrder;
+    if (params.type !== undefined && params.type !== null) {
+      field = "type";
+      value = params.type;
+    }
+    this.setState({loading: true});
+    // RecordBackend.getRecord(Setting.isDefaultOrganizationSelected(this.props.account) ? "" : Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
+    RecordBackend.getRecords(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
+      .then((res) => {
+        this.setState({
+          loading: false,
+        });
+        if (res.status === "ok") {
+          this.setState({
+            data: res.data,
+            pagination: {
+              ...params.pagination,
+              // total: res.data2,
+            },
+            searchText: params.searchText,
+            searchedColumn: params.searchedColumn,
+          });
+        } else {
+          if (Setting.isResponseDenied(res)) {
+            this.setState({
+              isAuthorized: false,
+            });
+          } else {
+            Setting.showMessage("error", res.msg);
+          }
+        }
+      });
+  };
 }
 
 export default RecordListPage;

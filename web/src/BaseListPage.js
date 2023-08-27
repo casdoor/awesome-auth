@@ -117,6 +117,17 @@ class BaseListPage extends React.Component {
     this.fetch({pagination});
   };
 
+  handleTableChange = (pagination, filters, sorter) => {
+    this.fetch({
+      sortField: sorter.field,
+      sortOrder: sorter.order,
+      pagination,
+      ...filters,
+      searchText: this.state.searchText,
+      searchedColumn: this.state.searchedColumn,
+    });
+  };
+
   render() {
     if (!this.state.isAuthorized) {
       return (

@@ -67,16 +67,6 @@ func GetPaginationRecords(offset, limit int, field, value, sortField, sortOrder 
 	return records, nil
 }
 
-func GetRecordsByField(record *Record) ([]*Record, error) {
-	records := []*Record{}
-	err := adapter.engine.Find(&records, record)
-	if err != nil {
-		return records, err
-	}
-
-	return records, nil
-}
-
 func getRecord(owner string, name string) (*Record, error) {
 	if owner == "" || name == "" {
 		return nil, nil

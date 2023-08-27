@@ -25,8 +25,11 @@ import * as Conf from "./Conf";
 import HomePage from "./HomePage";
 import SigninPage from "./SigninPage";
 import i18next from "i18next";
+import {withTranslation} from "react-i18next";
 import LanguageSelect from "./LanguageSelect";
 import RecordListPage from "./RecordListPage";
+import RecordEditPage from "./RecordEditPage";
+
 
 const {Header, Footer, Content} = Layout;
 
@@ -273,6 +276,7 @@ class App extends Component {
         <Route exact path="/" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
         <Route exact path="/home" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
         <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
       </Switch>
     );
   }
@@ -392,4 +396,4 @@ class App extends Component {
   }
 }
 
-export default withRouter(App);
+export default withRouter(withTranslation()(App));

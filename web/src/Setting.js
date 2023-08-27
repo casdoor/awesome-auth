@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {message} from "antd";
+import React from "react";
+import {message, Tooltip} from "antd";
 import {isMobile as isMobileDevice} from "react-device-detect";
 import i18next from "i18next";
 import moment from "moment";
 import Sdk from "casdoor-js-sdk";
+import {QuestionCircleTwoTone} from "@ant-design/icons";
+import { v4 as uuidv4 } from "uuid";
 
 export let ServerUrl = '';
 export let CasdoorSdk;
@@ -281,6 +284,17 @@ export const Countries = [{label: "English", key: "en", country: "US", alt: "Eng
   {label: "Filipino", key: "fi", country: "PH", alt: "Filipino"},
 ];
 
+export function getLabel(text, tooltip) {
+  return (
+    <React.Fragment>
+      <span style={{marginRight: 4}}>{text}</span>
+      <Tooltip placement="top" title={tooltip}>
+        <QuestionCircleTwoTone twoToneColor="rgb(45,120,213)" />
+      </Tooltip>
+    </React.Fragment>
+  );
+}
+
 export function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -289,4 +303,22 @@ export function getItem(label, key, icon, children, type) {
     label,
     type,
   };
+}
+
+export function getOption(label, value) {
+  return {
+    label,
+    value,
+  };
+}
+
+export function isResponseDenied(data) {
+  if (data.msg === "Unauthorized operation" || data.msg === "未授权的操作") {
+    return true;
+  }
+  return false;
+}
+
+export function GenerateId() {
+  return uuidv4();
 }

@@ -1,0 +1,261 @@
+// Copyright 2023 The casbin Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// http://localhost:18001/records/dccb0b3e-aa59-443f-996b-c69a98b21ea9
+
+import React from "react";
+import {Button, Card, Col, Input, Row, Select, Switch} from "antd";
+import * as RecordBackend from "./backend/RecordBackend";
+import * as Setting from "./Setting";
+import i18next from "i18next";
+import {LinkOutlined} from "@ant-design/icons";
+import {Redirect, useHistory} from "react-router-dom";
+
+const {Option} = Select;
+
+class RecordEditPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      classes: props,
+      recordOwner: props.match.params.organizationName,
+      recordName: props.match.params.recordName,
+      record: null,
+      organizations: [],
+      mode: props.location.mode !== undefined ? props.location.mode : "edit",
+    };
+  }
+
+  UNSAFE_componentWillMount() {
+    this.getRecord();
+    // this.getOrganizations();
+  }
+
+  getRecord() {
+    RecordBackend.getRecord(this.props.account.owner, this.state.recordName)
+      .then((res) => {
+        if (res.status === "ok") {
+          this.setState({
+            record: res.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to get record: ${res.msg}`);
+        }
+      });
+  }
+
+  parseRecordField(key, value) {
+    if ([""].includes(key)) {
+      value = Setting.myParseInt(value);
+    }
+    return value;
+  }
+
+  updateRecordField(key, value) {
+    value = this.parseRecordField(key, value);
+
+    const record = this.state.record;
+    record[key] = value;
+    this.setState({
+      record: record,
+    });
+  }
+
+  renderRecord() {
+    // const history = useHistory();
+    return (
+      <Card size="small" title={
+        <div>
+          {this.state.mode === "add" ? i18next.t("record:New Record") : i18next.t("record:Edit Record")}&nbsp;&nbsp;&nbsp;&nbsp;
+          <Button onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
+          <Button style={{marginLeft: "20px"}} type="primary" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+          {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} onClick={() => this.deleteRecord()}>{i18next.t("general:Cancel")}</Button> : null}
+        </div>
+      } style={{marginLeft: "5px"}} type="inner">
+        <Row style={{marginTop: "10px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Owner"), i18next.t("general:Owner - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.owner} onChange={e => {
+              this.updateRecordField("owner", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "10px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Name"), i18next.t("general:Name - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.name} onChange={e => {
+              this.updateRecordField("name", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "10px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Created Time"), i18next.t("general:Created Time - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.createdTime} onChange={e => {
+              this.updateRecordField("createdTime", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "10px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:ClientIp"), i18next.t("general:ClientIp - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.clientIp} onChange={e => {
+              this.updateRecordField("clientIp", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "10px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:User"), i18next.t("general:User - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.user} onChange={e => {
+              this.updateRecordField("user", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Method"), i18next.t("general:Method - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Select virtual={false} style={{width: "100%"}} value={this.state.record.method} onChange={(value => {this.updateRecordField("method", value);})}>
+              {
+                [
+                  {id: "GET", name: "GET"},
+                  {id: "HEAD", name: "HEAD"},
+                  {id: "POST", name: "POST"},
+                  {id: "PUT", name: "PUT"},
+                  {id: "DELETE", name: "DELETE"},
+                  {id: "CONNECT", name: "CONNECT"},
+                  {id: "OPTIONS", name: "OPTIONS"},
+                  {id: "TRACE", name: "TRACE"},
+                  {id: "PATCH", name: "PATCH"},
+                ].map((item, index) => <Option key={index} value={item.id}>{item.name}</Option>)
+              }
+            </Select>
+          </Col>
+        </Row>
+        <Row style={{marginTop: "10px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Organization"), i18next.t("general:Organization - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.organization} onChange={e => {
+              this.updateRecordField("organization", e.target.value);
+            }} />
+          </Col>
+        </Row>
+
+        <Row style={{marginTop: "10px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Request Uri"), i18next.t("general:Request Uri - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.requestUri} onChange={e => {
+              this.updateRecordField("requestUri", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Action"), i18next.t("general:Action - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.record.action} onChange={e => {
+              this.updateRecordField("action", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 19 : 2}>
+            {Setting.getLabel(i18next.t("general:Is Triggered"), i18next.t("general:Is Triggered - Tooltip"))} :
+          </Col>
+          <Col span={1} >
+            <Switch checked={this.state.record.isTriggered} onChange={checked => {
+              this.updateRecordField("isTriggered", checked);
+            }} />
+          </Col>
+        </Row>
+      </Card>
+    );
+  }
+
+  submitRecordEdit(willExist) {
+    const record = Setting.deepCopy(this.state.record);
+    RecordBackend.updateRecord(this.state.record.owner, this.state.recordName, record)
+      .then((res) => {
+        if (res.status === "ok") {
+          if (res.data) {
+            Setting.showMessage("success", "Successfully saved");
+            this.setState({
+              recordName: this.state.record.name,
+            });
+            if (willExist) {
+              this.props.history.push("/records");
+            } else {
+              this.props.history.push(`/records/${this.state.record.owner}/${encodeURIComponent(this.state.record.name)}`);
+            }
+          } else {
+            Setting.showMessage("error", "failed to save: server side failure");
+            this.updateRecordField("name", this.state.recordName);
+          }
+        } else {
+          Setting.showMessage("error", `failed to save: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `failed to save: ${error}`);
+      });
+  }
+
+  deleteRecord() {
+    RecordBackend.deleteRecord(this.state.record)
+      .then((res) => {
+        if (res.status === "ok") {
+          this.props.history.push("/records");
+        } else {
+          Setting.showMessage("error", `${i18next.t("general:Failed to delete")}: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `${i18next.t("general:Failed to connect to server")}: ${error}`);
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        {
+          this.state.record !== null ? this.renderRecord() : null
+        }
+        <div style={{marginTop: "20px", marginLeft: "40px"}}>
+          <Button size="large" onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
+          <Button style={{marginLeft: "20px"}} type="primary" size="large" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+          {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} size="large" onClick={() => this.deleteRecord()}>{i18next.t("general:Cancel")}</Button> : null}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default RecordEditPage;
