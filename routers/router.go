@@ -47,4 +47,10 @@ func initAPI() {
 	beego.Router("/api/update-record", &controllers.ApiController{}, "POST:UpdateRecord")
 	beego.Router("/api/add-record", &controllers.ApiController{}, "POST:AddRecord")
 	beego.Router("/api/delete-record", &controllers.ApiController{}, "POST:DeleteRecord")
+
+	beego.Router("/api/get-assets", &controllers.ApiController{}, "GET:GetAssets")
+	beego.Router("/api/get-asset", &controllers.ApiController{}, "GET:GetAsset")
+	beego.Router("/api/update-asset", &controllers.ApiController{}, "POST:UpdateAsset")
+	beego.Router("/api/add-asset", &controllers.ApiController{}, "POST:AddAsset")
+	beego.Router("/api/delete-asset", &controllers.ApiController{}, "POST:DeleteAsset")
 }

@@ -36,7 +36,7 @@ func (c *ApiController) GetRecords() {
 		//
 		return
 	}
-
+	owner := c.Input().Get("owner")
 	limit := c.Input().Get("pageSize")
 	page := c.Input().Get("p")
 	field := c.Input().Get("field")
@@ -46,7 +46,7 @@ func (c *ApiController) GetRecords() {
 	organizationName := c.Input().Get("organizationName")
 
 	if limit == "" || page == "" {
-		records, err := object.GetRecords()
+		records, err := object.GetRecords(owner)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return

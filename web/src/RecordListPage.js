@@ -37,7 +37,9 @@ class RecordListPage extends BaseListPage {
 
   getRecords() {
     // eslint-disable-next-line react/prop-types
-    RecordBackend.getRecords(this.props.account.name)
+    // todo: check
+    // RecordBackend.getRecords(this.props.account.name)
+    RecordBackend.getRecords(this.props.account.owner)
       .then((res) => {
         if (res.status === "ok") {
           this.setState({

@@ -46,9 +46,9 @@ func GetRecordCount(field, value string, filterRecord *Record) (int64, error) {
 	return session.Count(filterRecord)
 }
 
-func GetRecords() ([]*Record, error) {
+func GetRecords(owner string) ([]*Record, error) {
 	records := []*Record{}
-	err := adapter.engine.Desc("id").Find(&records)
+	err := adapter.engine.Desc("id").Find(&records, &Record{Owner: owner})
 	if err != nil {
 		return records, err
 	}

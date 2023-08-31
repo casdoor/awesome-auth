@@ -29,6 +29,8 @@ import {withTranslation} from "react-i18next";
 import LanguageSelect from "./LanguageSelect";
 import RecordListPage from "./RecordListPage";
 import RecordEditPage from "./RecordEditPage";
+import AssetListPage from "./AssetListPage";
+import AssetEditPage from "./AssetEditPage";
 
 
 const {Header, Footer, Content} = Layout;
@@ -235,6 +237,8 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>,
       "/records"));
 
+    res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>,
+      "/assets"));
 
     // if (Setting.isLocalAdminUser(this.state.account)) {
     //
@@ -277,6 +281,8 @@ class App extends Component {
         <Route exact path="/home" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
         <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)} />
         <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/assets" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
       </Switch>
     );
   }
