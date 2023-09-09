@@ -244,7 +244,7 @@ class AssetListPage extends BaseListPage {
     };
 
     return (
-      <div>`
+      <div>
         <Table scroll={{x: "max-content"}} columns={columns} dataSource={assets} rowKey={(asset) => `${asset.owner}/${asset.name}`} size="middle" bordered pagination={paginationProps}
                title={() => (
                  <div>
