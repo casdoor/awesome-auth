@@ -43,7 +43,6 @@ class AssetEditPage extends React.Component {
   UNSAFE_componentWillMount() {
     this.getAsset();
     this.startTimer();
-    // this.getOrganizations();
   }
 
   componentWillUnmount() {
@@ -127,7 +126,6 @@ class AssetEditPage extends React.Component {
   }
 
   renderAsset() {
-    // const history = useHistory();
     return (
       <Card size="small" title={
         <div>
@@ -139,7 +137,7 @@ class AssetEditPage extends React.Component {
       } style={{marginLeft: "5px"}} type="inner">
         <Row style={{marginTop: "10px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Owner"), i18next.t("general:Owner - Tooltip"))} :
+            {Setting.getLabel(i18next.t("general:Organization"), i18next.t("general:Organization - Tooltip"))} :
           </Col>
           <Col span={22} >
             <Input value={this.state.asset.owner} onChange={e => {
@@ -147,7 +145,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Name"), i18next.t("general:Name - Tooltip"))} :
           </Col>
@@ -157,7 +155,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Description"), i18next.t("general:Description - Tooltip"))} :
           </Col>
@@ -167,7 +165,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:IP"), i18next.t("general:IP - Tooltip"))} :
           </Col>
@@ -177,7 +175,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Port"), i18next.t("general:Port - Tooltip"))} :
           </Col>
@@ -187,7 +185,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Username"), i18next.t("general:Username - Tooltip"))} :
           </Col>
@@ -197,7 +195,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Password"), i18next.t("general:Password - Tooltip"))} :
           </Col>
@@ -207,7 +205,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Language"), i18next.t("general:Language - Tooltip"))} :
           </Col>
@@ -217,7 +215,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Auto query"), i18next.t("general:Auto query - Tooltip"))} :
           </Col>
@@ -227,26 +225,14 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Created Time"), i18next.t("general:Created Time - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.asset.createdTime} onChange={e => {
-              this.updateAssetField("createdTime", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Services"), i18next.t("general:Services - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <ServiceTable
-              title={"Services"}
-              table={this.state.asset.services}
-              onUpdateTable={(value) => { this.updateAssetField('services', value)}}
-            />
+            <ServiceTable title={"Services"} table={this.state.asset.services} onUpdateTable={(value) => {
+              this.updateAssetField('services', value)
+            }} />
           </Col>
         </Row>
       </Card>

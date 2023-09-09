@@ -74,6 +74,8 @@ class App extends Component {
       this.setState({selectedMenuKey: "/"});
     } else if (uri.includes("/records")) {
       this.setState({selectedMenuKey: "/records"});
+    } else if (uri.includes("/assets")) {
+      this.setState({selectedMenuKey: "/assets"});
     } else {
       this.setState({selectedMenuKey: "null"});
     }
@@ -122,14 +124,6 @@ class App extends Component {
           Setting.showMessage("error", `Signout failed: ${res.msg}`);
         }
       });
-  }
-
-  handleRightDropdownClick(e) {
-    if (e.key === "/account") {
-      Setting.openLink(Setting.getMyProfileUrl(this.state.account));
-    } else if (e.key === "/logout") {
-      this.signout();
-    }
   }
 
   onClose = () => {

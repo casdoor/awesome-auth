@@ -85,50 +85,40 @@ class RecordEditPage extends React.Component {
       } style={{marginLeft: "5px"}} type="inner">
         <Row style={{marginTop: "10px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Owner"), i18next.t("general:Owner - Tooltip"))} :
+            {Setting.getLabel(i18next.t("general:Organization"), i18next.t("general:Organization - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.record.owner} onChange={e => {
+            <Input disabled={true} value={this.state.record.owner} onChange={e => {
               this.updateRecordField("owner", e.target.value);
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Name"), i18next.t("general:Name - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.record.name} onChange={e => {
+            <Input disabled={true} value={this.state.record.name} onChange={e => {
               this.updateRecordField("name", e.target.value);
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Created Time"), i18next.t("general:Created Time - Tooltip"))} :
+            {Setting.getLabel(i18next.t("general:Client IP"), i18next.t("general:Client IP - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.record.createdTime} onChange={e => {
-              this.updateRecordField("createdTime", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "10px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:ClientIp"), i18next.t("general:ClientIp - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.record.clientIp} onChange={e => {
+            <Input disabled={true} value={this.state.record.clientIp} onChange={e => {
               this.updateRecordField("clientIp", e.target.value);
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:User"), i18next.t("general:User - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.record.user} onChange={e => {
+            <Input disabled={true} value={this.state.record.user} onChange={e => {
               this.updateRecordField("user", e.target.value);
             }} />
           </Col>
@@ -138,7 +128,7 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Method"), i18next.t("general:Method - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.record.method} onChange={(value => {this.updateRecordField("method", value);})}>
+            <Select disabled={true} virtual={false} style={{width: "100%"}} value={this.state.record.method} onChange={(value => {this.updateRecordField("method", value);})}>
               {
                 [
                   {id: "GET", name: "GET"},
@@ -155,23 +145,12 @@ class RecordEditPage extends React.Component {
             </Select>
           </Col>
         </Row>
-        <Row style={{marginTop: "10px"}} >
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Organization"), i18next.t("general:Organization - Tooltip"))} :
+            {Setting.getLabel(i18next.t("general:Request URI"), i18next.t("general:Request URI - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.record.organization} onChange={e => {
-              this.updateRecordField("organization", e.target.value);
-            }} />
-          </Col>
-        </Row>
-
-        <Row style={{marginTop: "10px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Request Uri"), i18next.t("general:Request Uri - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input value={this.state.record.requestUri} onChange={e => {
+            <Input disabled={true} value={this.state.record.requestUri} onChange={e => {
               this.updateRecordField("requestUri", e.target.value);
             }} />
           </Col>
@@ -181,17 +160,17 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Action"), i18next.t("general:Action - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.record.action} onChange={e => {
+            <Input disabled={true} value={this.state.record.action} onChange={e => {
               this.updateRecordField("action", e.target.value);
             }} />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 19 : 2}>
-            {Setting.getLabel(i18next.t("general:Is Triggered"), i18next.t("general:Is Triggered - Tooltip"))} :
+            {Setting.getLabel(i18next.t("general:Is triggered"), i18next.t("general:Is triggered - Tooltip"))} :
           </Col>
           <Col span={1} >
-            <Switch checked={this.state.record.isTriggered} onChange={checked => {
+            <Switch disabled={true} checked={this.state.record.isTriggered} onChange={checked => {
               this.updateRecordField("isTriggered", checked);
             }} />
           </Col>

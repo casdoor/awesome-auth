@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import React from "react";
+import {Link} from "react-router-dom";
 import {Button, Switch, Table} from "antd";
 import moment from "moment";
 import * as Setting from "./Setting";
@@ -111,19 +112,11 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("organization"),
         render: (text, record, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/organizations/${text}`)}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/organizations/${text}`)}>
               {text}
             </a>
           );
         },
-      },
-      {
-        title: i18next.t("general:Name"),
-        dataIndex: "name",
-        key: "name",
-        width: "320px",
-        sorter: true,
-        ...this.getColumnSearchProps("name"),
       },
       {
         title: i18next.t("general:ID"),
@@ -132,6 +125,19 @@ class RecordListPage extends BaseListPage {
         width: "90px",
         sorter: true,
         ...this.getColumnSearchProps("id"),
+      },
+      {
+        title: i18next.t("general:Name"),
+        dataIndex: "name",
+        key: "name",
+        width: "320px",
+        sorter: true,
+        ...this.getColumnSearchProps("name"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/records/${record.organization}/${record.name}`}>{text}</Link>
+          )
+        }
       },
       {
         title: i18next.t("general:Client IP"),
@@ -149,28 +155,13 @@ class RecordListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Created Time"),
+        title: i18next.t("general:Created time"),
         dataIndex: "createdTime",
         key: "createdTime",
         width: "180px",
         sorter: true,
         render: (text, record, index) => {
           return Setting.getFormattedDate(text);
-        },
-      },
-      {
-        title: i18next.t("general:Organization"),
-        dataIndex: "organization",
-        key: "organization",
-        width: "110px",
-        sorter: true,
-        ...this.getColumnSearchProps("organization"),
-        render: (text, record, index) => {
-          return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/organizations/${text}`)}>
-              {text}
-            </a>
-          );
         },
       },
       {
@@ -182,7 +173,7 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("user"),
         render: (text, record, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/users/${record.organization}/${record.user}`)}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/users/${record.organization}/${record.user}`)}>
               {text}
             </a>
           );

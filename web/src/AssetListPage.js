@@ -13,15 +13,14 @@
 // limitations under the License.
 
 import React from "react";
+import {Link} from "react-router-dom";
 import {Button, Switch, Table} from "antd";
+import BaseListPage from "./BaseListPage";
 import moment from "moment";
 import * as Setting from "./Setting";
 import * as AssetBackend from "./backend/AssetBackend";
 import i18next from "i18next";
-import BaseListPage from "./BaseListPage";
-import {GenerateId} from "./Setting";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
-import {Link} from "react-router-dom";
 
 class AssetListPage extends BaseListPage {
   constructor(props) {
@@ -104,7 +103,7 @@ class AssetListPage extends BaseListPage {
   renderTable(assets) {
     const columns = [
       {
-        title: i18next.t("general:Onwer"),
+        title: i18next.t("general:Organization"),
         dataIndex: "owner",
         key: "owner",
         width: "110px",
@@ -112,7 +111,7 @@ class AssetListPage extends BaseListPage {
         ...this.getColumnSearchProps("owner"),
         render: (text, asset, index) => {
           return (
-            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", `/organizations/${text}`)}>
+            <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.props.account).replace("/account", `/organizations/${text}`)}>
               {text}
             </a>
           );
@@ -127,13 +126,12 @@ class AssetListPage extends BaseListPage {
         ...this.getColumnSearchProps("name"),
         render: (text, record, index) => {
           return (
-            <Link to={`/asset/${text}`}>{text}</Link>
+            <Link to={`/assets/${record.organization}/${record.name}`}>{text}</Link>
           )
         }
       },
-
       {
-        title: i18next.t("general:Created Time"),
+        title: i18next.t("general:Created time"),
         dataIndex: "createdTime",
         key: "createdTime",
         width: "160px",
@@ -179,7 +177,7 @@ class AssetListPage extends BaseListPage {
         sorter: (a, b) => a.language.localeCompare(b.language),
       },
       {
-        title: i18next.t("general:Auto Query"),
+        title: i18next.t("general:Auto query"),
         dataIndex: 'autoQuery',
         key: 'autoQuery',
         width: '100px',
@@ -190,7 +188,7 @@ class AssetListPage extends BaseListPage {
         }
       },
       {
-        title: i18next.t("general:Is Permanent"),
+        title: i18next.t("general:Is permanent"),
         dataIndex: 'isPermanent',
         key: 'isPermanent',
         width: '110px',
