@@ -75,8 +75,9 @@ const GuacdPage = () => {
 
   const renderDisplay = (assetOwner, assetName, protocol, width, height) => {
     let sessionId = "123"
-    const websocketUrl = Setting.ServerUrl.replace("http://", "ws://");
-    let tunnel = new Guacamole.WebSocketTunnel(`${websocketUrl}/api/${assetOwner}/${assetName}/get-asset-tunnel`);
+    const wsEndpoint = Setting.ServerUrl.replace("http://", "ws://");
+    const wsUrl = `${wsEndpoint}/api/get-asset-tunnel?owner=${assetOwner}&name=${assetName}&`;
+    let tunnel = new Guacamole.WebSocketTunnel(wsUrl);
     let client = new Guacamole.Client(tunnel);
 
     // Handling clipboard content received from a virtual machine.
@@ -104,22 +105,14 @@ const GuacdPage = () => {
 
     let token = getToken();
 
-    let params = {
-      'width': width,
-      'height': height,
-      'dpi': dpi,
-      'X-Auth-Token': token
-    };
+    let params = {'width': width, 'height': height, 'dpi': dpi, 'X-Auth-Token': token};
 
     let paramStr = qs.stringify(params);
 
     client.connect(paramStr);
     let display = client.getDisplay();
     display.onresize = function (width, height) {
-      display.scale(Math.min(
-        window.innerHeight / display.getHeight(),
-        window.innerWidth / display.getHeight()
-      ))
+      display.scale(Math.min(window.innerHeight / display.getHeight(), window.innerWidth / display.getHeight()));
     }
 
     const sink = new Guacamole.InputSink();
@@ -129,7 +122,6 @@ const GuacdPage = () => {
     const keyboard = new Guacamole.Keyboard(sink.getElement());
 
     keyboard.onkeydown = (keysym) => {
-      console.log('aaa')
       client.sendKeyEvent(1, keysym);
       if (keysym === 65288) {
         return false;
@@ -207,7 +199,6 @@ const GuacdPage = () => {
   }
 
   const focus = () => {
-    console.log(guacd.sink)
     if (guacd.sink) {
       guacd.sink.focus();
     }

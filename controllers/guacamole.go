@@ -20,6 +20,7 @@ import (
 
 	"github.com/beego/beego"
 	"github.com/casbin/casvisor/object"
+	"github.com/casbin/casvisor/util"
 	"github.com/casbin/casvisor/util/tunnel"
 	"github.com/gorilla/websocket"
 )
@@ -45,7 +46,7 @@ var UpGrader = websocket.Upgrader{
 	Subprotocols: []string{"guacamole"},
 }
 
-func (c *ApiController) GetAssertTunnel() error {
+func (c *ApiController) GetAssetTunnel() error {
 	ctx := c.Ctx
 	ws, err := UpGrader.Upgrade(ctx.ResponseWriter, ctx.Request, nil)
 	if err != nil {
@@ -53,13 +54,16 @@ func (c *ApiController) GetAssertTunnel() error {
 		return err
 	}
 
-	assetOwner := c.Ctx.Input.Param(":owner")
-	assetName := c.Ctx.Input.Param(":name")
+	owner := c.Input().Get("owner")
+	name := c.Input().Get("name")
 	width := c.Input().Get("width")
 	height := c.Input().Get("height")
 	dpi := c.Input().Get("dpi")
 
-	asset, _ := object.GetAsset(assetOwner + "/" + assetName)
+	asset, err := object.GetAsset(util.GetIdFromOwnerAndName(owner, name))
+	if err != nil {
+		return err
+	}
 
 	configuration := tunnel.NewConfiguration()
 

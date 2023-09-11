@@ -53,5 +53,5 @@ func initAPI() {
 	beego.Router("/api/update-asset", &controllers.ApiController{}, "POST:UpdateAsset")
 	beego.Router("/api/add-asset", &controllers.ApiController{}, "POST:AddAsset")
 	beego.Router("/api/delete-asset", &controllers.ApiController{}, "POST:DeleteAsset")
-	beego.Router("/api/:owner/:name/get-asset-tunnel", &controllers.ApiController{}, "GET:GetAssertTunnel")
+	beego.Router("/api/get-asset-tunnel", &controllers.ApiController{}, "GET:GetAssetTunnel")
 }
