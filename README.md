@@ -86,6 +86,12 @@ After creating an organization and an application for Casvisor in a Casdoor, you
 
   Casvisor uses Casdoor to upload files to cloud storage, send Emails and send SMSs. See Casdoor for more details.
 
+#### RDP service
+Run guacd for rdp connection.
+```azure
+docker run --name some-guacd -d -p 4822:4822 guacamole/guacd
+```
+
 ## Contribute
 
 For Casvisor, if you have any questions, you can give Issues, or you can also directly start Pull Requests(but we recommend giving issues first to communicate with the community).

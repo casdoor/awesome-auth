@@ -212,15 +212,24 @@ class AssetListPage extends BaseListPage {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
-        width: "180px",
+        width: "260px",
         fixed: (Setting.isMobile()) ? "false" : "right",
         render: (text, asset, index) => {
           return (
             <div>
               <Button
                 disabled={!Setting.isAdminUser(this.props.account) && (asset.owner !== this.props.account.owner)}
-                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
+                style={{ marginTop: "10px", marginBottom: "10px", marginRight: "10px" }}
                 type="primary"
+                onClick={() => {
+                  Setting.openLink(`access?owner=${asset.owner}&name=${asset.name}&protocol=rdp`);
+                }}
+              >
+                {i18next.t("general:Connect")}
+              </Button>
+              <Button
+                disabled={!Setting.isAdminUser(this.props.account) && (asset.owner !== this.props.account.owner)}
+                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                 onClick={() => this.props.history.push(`/assets/${asset.owner}/${asset.name}`)}
               >{i18next.t("general:Edit")}
               </Button>

@@ -7,6 +7,7 @@ require (
 	github.com/casdoor/casdoor-go-sdk v0.3.3
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/uuid v1.3.0
+	github.com/gorilla/websocket v1.5.0
 	xorm.io/core v0.7.3
 	xorm.io/xorm v1.2.5
 )
