@@ -15,7 +15,7 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation} from "react-router-dom";
 import {Affix, Button, Dropdown, Menu, message, Modal} from "antd";
-import {CopyOutlined, ExclamationCircleOutlined, ExpandOutlined, WindowsOutlined} from "@ant-design/icons";
+import {CloseCircleOutlined, CopyOutlined, ExpandOutlined, WindowsOutlined} from "@ant-design/icons";
 import Guacamole from "guacamole-common-js";
 import {exitFull, getToken, requestFullScreen, debounce} from "./Util";
 import * as Setting from "../../Setting";
@@ -34,7 +34,7 @@ const STATE_CONNECTED = 3;
 const STATE_DISCONNECTING = 4;
 const STATE_DISCONNECTED = 5;
 
-const Guacd = () => {
+const GuacdPage = () => {
   const location = useLocation();
   let searchParams = new URLSearchParams(location.search);
 
@@ -304,7 +304,7 @@ const Guacd = () => {
         // Handle disconnecting state if needed
         break;
       case STATE_DISCONNECTED:
-        message.info({content: 'Connection closed', duration: 3, key: key});
+        message.error({content: 'Connection closed', duration: 3, key: key});
         break;
       default:
         break;
@@ -327,12 +327,13 @@ const Guacd = () => {
   const showMessage = (msg) => {
     message.destroy();
     Modal.confirm({
-      title: 'Pormpt',
-      icon: <ExclamationCircleOutlined/>,
+      title: `Failed to connect to: ${assetName}`,
+      icon: <CloseCircleOutlined />,
       content: msg,
       centered: true,
       okText: 'Reconnect',
-      cancelText: 'Close the webpage',
+      cancelText: 'Close this page',
+      cancelButtonProps: {'danger': true},
       onOk() {
         window.location.reload();
       },
@@ -416,7 +417,6 @@ const Guacd = () => {
         } else {
           showMessage('Unknown error.');
         }
-
     }
   };
 
@@ -433,20 +433,13 @@ const Guacd = () => {
 
   const hotKeyMenu = (
     <Menu>
-      <Menu.Item key={'ctrl+alt+delete'}
-             onClick={() => sendCombinationKey(['65507', '65513', '65535'])}>Ctrl+Alt+Delete</Menu.Item>
-      <Menu.Item key={'ctrl+alt+backspace'}
-             onClick={() => sendCombinationKey(['65507', '65513', '65288'])}>Ctrl+Alt+Backspace</Menu.Item>
-      <Menu.Item key={'windows+d'}
-             onClick={() => sendCombinationKey(['65515', '100'])}>Windows+D</Menu.Item>
-      <Menu.Item key={'windows+e'}
-             onClick={() => sendCombinationKey(['65515', '101'])}>Windows+E</Menu.Item>
-      <Menu.Item key={'windows+r'}
-             onClick={() => sendCombinationKey(['65515', '114'])}>Windows+R</Menu.Item>
-      <Menu.Item key={'windows+x'}
-             onClick={() => sendCombinationKey(['65515', '120'])}>Windows+X</Menu.Item>
-      <Menu.Item key={'windows'}
-             onClick={() => sendCombinationKey(['65515'])}>Windows</Menu.Item>
+      <Menu.Item key={'ctrl+alt+delete'} onClick={() => sendCombinationKey(['65507', '65513', '65535'])}>Ctrl+Alt+Delete</Menu.Item>
+      <Menu.Item key={'ctrl+alt+backspace'} onClick={() => sendCombinationKey(['65507', '65513', '65288'])}>Ctrl+Alt+Backspace</Menu.Item>
+      <Menu.Item key={'windows+d'} onClick={() => sendCombinationKey(['65515', '100'])}>Windows+D</Menu.Item>
+      <Menu.Item key={'windows+e'} onClick={() => sendCombinationKey(['65515', '101'])}>Windows+E</Menu.Item>
+      <Menu.Item key={'windows+r'} onClick={() => sendCombinationKey(['65515', '114'])}>Windows+R</Menu.Item>
+      <Menu.Item key={'windows+x'} onClick={() => sendCombinationKey(['65515', '120'])}>Windows+X</Menu.Item>
+      <Menu.Item key={'windows'} onClick={() => sendCombinationKey(['65515'])}>Windows</Menu.Item>
     </Menu>
   );
 
@@ -460,7 +453,6 @@ const Guacd = () => {
       }}>
         <div id="display"/>
       </div>
-
       <Draggable>
         <Affix style={{position: 'absolute', top: 50, right: 50}}>
           <Button icon={<ExpandOutlined/>} onClick={() => {
@@ -468,7 +460,6 @@ const Guacd = () => {
           }}/>
         </Affix>
       </Draggable>
-
       {
         session['copy'] === '1' || session['paste'] === '1' ?
           <Draggable>
@@ -480,8 +471,6 @@ const Guacd = () => {
             </Affix>
           </Draggable> : undefined
       }
-
-
       {
         protocol === 'vnc' &&
         <Draggable>
@@ -492,8 +481,6 @@ const Guacd = () => {
           </Affix>
         </Draggable>
       }
-
-
       {
         protocol === 'rdp' &&
         <Draggable>
@@ -504,9 +491,7 @@ const Guacd = () => {
           </Affix>
         </Draggable>
       }
-
-      <GuacdClipboard
-        visible={clipboardVisible}
+      <GuacdClipboard visible={clipboardVisible}
         clipboardText={clipboardText}
         handleOk={(text) => {
           sendClipboard({
@@ -526,4 +511,4 @@ const Guacd = () => {
   );
 };
 
-export default Guacd;
+export default GuacdPage;

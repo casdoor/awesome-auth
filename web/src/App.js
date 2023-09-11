@@ -31,7 +31,7 @@ import RecordListPage from "./RecordListPage";
 import RecordEditPage from "./RecordEditPage";
 import AssetListPage from "./AssetListPage";
 import AssetEditPage from "./AssetEditPage";
-import Guacd from "./component/access/Guacd";
+import GuacdPage from "./component/access/GuacdPage";
 
 const {Header, Footer, Content} = Layout;
 
@@ -277,7 +277,7 @@ class App extends Component {
         <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
-        <Route exact path="/access" render={() => <Guacd />} />
+        <Route exact path="/access" render={() => <GuacdPage />} />
       </Switch>
     );
   }
