@@ -12,32 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export const debounce = function (fn, delay = 500) {
+export const debounce = function(fn, delay = 500) {
   let timer = null;
 
-  return function () {
+  return function() {
     if (timer) {
-      clearTimeout(timer)
+      clearTimeout(timer);
     }
     timer = setTimeout(() => {
-      fn.apply(this, arguments)
-      timer = null
-    }, delay)
-  }
-}
+      fn.apply(this, arguments);
+      timer = null;
+    }, delay);
+  };
+};
 
-export const getToken = function () {
-  return localStorage.getItem('X-Auth-Token');
-}
+export const getToken = function() {
+  return localStorage.getItem("X-Auth-Token");
+};
 
 export function requestFullScreen(element) {
-  const requestMethod = element.requestFullScreen || //W3C
-    element.webkitRequestFullScreen || //FireFox
-    element.mozRequestFullScreen || //Chrome
-    element.msRequestFullScreen; //IE11
+  const requestMethod = element.requestFullScreen || // W3C
+    element.webkitRequestFullScreen || // FireFox
+    element.mozRequestFullScreen || // Chrome
+    element.msRequestFullScreen; // IE11
   if (requestMethod) {
     requestMethod.call(element);
-  } else if (typeof window.ActiveXObject !== "undefined") { //for Internet Explorer
+  } else if (typeof window.ActiveXObject !== "undefined") { // for Internet Explorer
     const wScript = new window.ActiveXObject("WScript.Shell");
     if (wScript !== null) {
       wScript.SendKeys("{F11}");
@@ -47,13 +47,13 @@ export function requestFullScreen(element) {
 
 // exit full screen
 export function exitFull() {
-  const exitMethod = document.exitFullscreen || //W3C
-    document.mozCancelFullScreen || //FireFox
-    document.webkitExitFullscreen || //Chrome
-    document.webkitExitFullscreen; //IE11
+  const exitMethod = document.exitFullscreen || // W3C
+    document.mozCancelFullScreen || // FireFox
+    document.webkitExitFullscreen || // Chrome
+    document.webkitExitFullscreen; // IE11
   if (exitMethod) {
     exitMethod.call(document);
-  } else if (typeof window.ActiveXObject !== "undefined") { //for Internet Explorer
+  } else if (typeof window.ActiveXObject !== "undefined") { // for Internet Explorer
     const wScript = new window.ActiveXObject("WScript.Shell");
     if (wScript !== null) {
       wScript.SendKeys("{F11}");

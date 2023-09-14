@@ -33,7 +33,6 @@ const container = document.getElementById("root");
 
 const app = createRoot(container);
 
-
 app.render(
   <BrowserRouter>
     <App />

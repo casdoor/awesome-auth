@@ -63,7 +63,7 @@ class AssetListPage extends BaseListPage {
       autoQuery: false,
       isPermanent: true,
       services: [],
-    }
+    };
   }
 
   addAsset() {
@@ -127,8 +127,8 @@ class AssetListPage extends BaseListPage {
         render: (text, record, index) => {
           return (
             <Link to={`/assets/${record.organization}/${record.name}`}>{text}</Link>
-          )
-        }
+          );
+        },
       },
       {
         title: i18next.t("general:Created time"),
@@ -143,70 +143,70 @@ class AssetListPage extends BaseListPage {
       },
       {
         title: i18next.t("general:Description"),
-        dataIndex: 'description',
-        key: 'description',
+        dataIndex: "description",
+        key: "description",
         // width: '200px',
         sorter: (a, b) => a.description.localeCompare(b.description),
       },
       {
         title: i18next.t("general:IP"),
-        dataIndex: 'ip',
-        key: 'ip',
-        width: '120px',
+        dataIndex: "ip",
+        key: "ip",
+        width: "120px",
         sorter: (a, b) => a.ip.localeCompare(b.ip),
       },
       {
         title: i18next.t("general:Port"),
-        dataIndex: 'port',
-        key: 'port',
-        width: '120px',
+        dataIndex: "port",
+        key: "port",
+        width: "120px",
         sorter: (a, b) => a.port - b.port,
       },
       {
         title: i18next.t("general:Username"),
-        dataIndex: 'username',
-        key: 'username',
-        width: '130px',
+        dataIndex: "username",
+        key: "username",
+        width: "130px",
         sorter: (a, b) => a.username.localeCompare(b.username),
       },
       {
         title: i18next.t("general:Language"),
-        dataIndex: 'language',
-        key: 'language',
-        width: '130px',
+        dataIndex: "language",
+        key: "language",
+        width: "130px",
         sorter: (a, b) => a.language.localeCompare(b.language),
       },
       {
         title: i18next.t("general:Auto query"),
-        dataIndex: 'autoQuery',
-        key: 'autoQuery',
-        width: '100px',
+        dataIndex: "autoQuery",
+        key: "autoQuery",
+        width: "100px",
         render: (text, record, index) => {
           return (
             <Switch disabled checked={text} />
-          )
-        }
+          );
+        },
       },
       {
         title: i18next.t("general:Is permanent"),
-        dataIndex: 'isPermanent',
-        key: 'isPermanent',
-        width: '110px',
+        dataIndex: "isPermanent",
+        key: "isPermanent",
+        width: "110px",
         render: (text, record, index) => {
           return (
             <Switch disabled checked={text} />
-          )
-        }
+          );
+        },
       },
       {
         title: i18next.t("general:Services"),
-        dataIndex: 'services',
-        key: 'services',
-        width: '90px',
+        dataIndex: "services",
+        key: "services",
+        width: "90px",
         // todo: fix filter
         render: (text, record, index) => {
           return `${record.services.filter(service => service.status === "Running").length} / ${record.services.length}`;
-        }
+        },
       },
       {
         title: i18next.t("general:Action"),
@@ -219,7 +219,7 @@ class AssetListPage extends BaseListPage {
             <div>
               <Button
                 disabled={!Setting.isAdminUser(this.props.account) && (asset.owner !== this.props.account.owner)}
-                style={{ marginTop: "10px", marginBottom: "10px", marginRight: "10px" }}
+                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                 type="primary"
                 onClick={() => {
                   Setting.openLink(`access?owner=${asset.owner}&name=${asset.name}&protocol=rdp`);
@@ -253,14 +253,14 @@ class AssetListPage extends BaseListPage {
     return (
       <div>
         <Table scroll={{x: "max-content"}} columns={columns} dataSource={assets} rowKey={(asset) => `${asset.owner}/${asset.name}`} size="middle" bordered pagination={paginationProps}
-               title={() => (
-                 <div>
-                   {i18next.t("general:Assets")}&nbsp;&nbsp;&nbsp;&nbsp;
-                   <Button type="primary" size="small" disabled={!Setting.isAdminUser(this.props.account)} onClick={this.addAsset.bind(this)}>{i18next.t("general:Add")}</Button>
-                 </div>
-               )}
-               loading={this.state.loading}
-               onChange={this.handleTableChange}
+          title={() => (
+            <div>
+              {i18next.t("general:Assets")}&nbsp;&nbsp;&nbsp;&nbsp;
+              <Button type="primary" size="small" disabled={!Setting.isAdminUser(this.props.account)} onClick={this.addAsset.bind(this)}>{i18next.t("general:Add")}</Button>
+            </div>
+          )}
+          loading={this.state.loading}
+          onChange={this.handleTableChange}
         />
       </div>
     );

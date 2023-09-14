@@ -227,7 +227,6 @@ class App extends Component {
 
     res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, "/"));
 
-
     res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>,
       "/records"));
 
@@ -301,28 +300,28 @@ class App extends Component {
             </Link>
           )}
           {(Setting.isMobile() ?
-              <React.Fragment>
-                <Drawer title={i18next.t("general:Close")} placement="left" visible={this.state.menuVisible} onClose={this.onClose}>
-                  <Menu
-                    items={this.getMenuItems()}
-                    mode={"inline"}
-                    selectedKeys={[this.state.selectedMenuKey]}
-                    style={{lineHeight: "64px"}}
-                    onClick={this.onClose}
-                  >
-                  </Menu>
-                </Drawer>
-                <Button icon={<BarsOutlined />} onClick={this.showMenu} type="text">
-                  {i18next.t("general:Menu")}
-                </Button>
-              </React.Fragment> :
-              <Menu
-                onClick={onClick}
-                items={this.getMenuItems()}
-                mode={"horizontal"}
-                selectedKeys={[this.state.selectedMenuKey]}
-                style={{position: "absolute", left: "145px", right: menuStyleRight}}
-              />
+            <React.Fragment>
+              <Drawer title={i18next.t("general:Close")} placement="left" visible={this.state.menuVisible} onClose={this.onClose}>
+                <Menu
+                  items={this.getMenuItems()}
+                  mode={"inline"}
+                  selectedKeys={[this.state.selectedMenuKey]}
+                  style={{lineHeight: "64px"}}
+                  onClick={this.onClose}
+                >
+                </Menu>
+              </Drawer>
+              <Button icon={<BarsOutlined />} onClick={this.showMenu} type="text">
+                {i18next.t("general:Menu")}
+              </Button>
+            </React.Fragment> :
+            <Menu
+              onClick={onClick}
+              items={this.getMenuItems()}
+              mode={"horizontal"}
+              selectedKeys={[this.state.selectedMenuKey]}
+              style={{position: "absolute", left: "145px", right: menuStyleRight}}
+            />
           )}
           {
             this.renderAccountMenu()

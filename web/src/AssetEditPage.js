@@ -15,15 +15,11 @@
 // http://localhost:18001/assets/dccb0b3e-aa59-443f-996b-c69a98b21ea9
 
 import React from "react";
-import {Button, Card, Col, Input, Row, Select, Switch} from "antd";
+import {Button, Card, Col, Input, Row} from "antd";
 import * as AssetBackend from "./backend/AssetBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
 import ServiceTable from "./ServiceTable";
-import {LinkOutlined} from "@ant-design/icons";
-import {Redirect, useHistory} from "react-router-dom";
-
-const {Option} = Select;
 
 class AssetEditPage extends React.Component {
   constructor(props) {
@@ -54,7 +50,7 @@ class AssetEditPage extends React.Component {
       .then((res) => {
         if (res.status === "ok") {
           // Clone the fetched asset data using the spread operator
-          const newAsset = { ...res.data };
+          const newAsset = {...res.data};
 
           if (!updateFromRemote && this.state.asset !== null) {
             newAsset.autoQuery = this.state.asset.autoQuery;
@@ -161,7 +157,7 @@ class AssetEditPage extends React.Component {
           </Col>
           <Col span={22} >
             <Input value={this.state.asset.description} onChange={e => {
-              this.updateAssetField('description', e.target.value);
+              this.updateAssetField("description", e.target.value);
             }} />
           </Col>
         </Row>
@@ -231,7 +227,7 @@ class AssetEditPage extends React.Component {
           </Col>
           <Col span={22} >
             <ServiceTable title={"Services"} table={this.state.asset.services} onUpdateTable={(value) => {
-              this.updateAssetField('services', value)
+              this.updateAssetField("services", value);
             }} />
           </Col>
         </Row>

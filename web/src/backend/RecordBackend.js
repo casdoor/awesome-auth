@@ -15,42 +15,42 @@
 import * as Setting from "../Setting";
 
 export function getRecords(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "") {
-    return fetch(`${Setting.ServerUrl}/api/get-records?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
-        method: "GET",
-        credentials: "include",
-    }).then(res => res.json());
+  return fetch(`${Setting.ServerUrl}/api/get-records?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
+    method: "GET",
+    credentials: "include",
+  }).then(res => res.json());
 }
 
 export function getRecord(owner, name) {
-    return fetch(`${Setting.ServerUrl}/api/get-record?id=${owner}/${encodeURIComponent(name)}`, {
-        method: "GET",
-        credentials: "include",
-    }).then(res => res.json());
+  return fetch(`${Setting.ServerUrl}/api/get-record?id=${owner}/${encodeURIComponent(name)}`, {
+    method: "GET",
+    credentials: "include",
+  }).then(res => res.json());
 }
 
 export function updateRecord(owner, name, record) {
-    const newRecord = Setting.deepCopy(record);
-    return fetch(`${Setting.ServerUrl}/api/update-record?id=${owner}/${encodeURIComponent(name)}`, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(newRecord),
-    }).then(res => res.json());
+  const newRecord = Setting.deepCopy(record);
+  return fetch(`${Setting.ServerUrl}/api/update-record?id=${owner}/${encodeURIComponent(name)}`, {
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify(newRecord),
+  }).then(res => res.json());
 }
 
 export function addRecord(record) {
-    const newRecord = Setting.deepCopy(record);
-    return fetch(`${Setting.ServerUrl}/api/add-record`, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(newRecord),
-    }).then(res => res.json());
+  const newRecord = Setting.deepCopy(record);
+  return fetch(`${Setting.ServerUrl}/api/add-record`, {
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify(newRecord),
+  }).then(res => res.json());
 }
 
 export function deleteRecord(record) {
-    const newRecord = Setting.deepCopy(record);
-    return fetch(`${Setting.ServerUrl}/api/delete-record`, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(newRecord),
-    }).then(res => res.json());
+  const newRecord = Setting.deepCopy(record);
+  return fetch(`${Setting.ServerUrl}/api/delete-record`, {
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify(newRecord),
+  }).then(res => res.json());
 }

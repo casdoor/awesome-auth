@@ -19,8 +19,6 @@ import {Button, Card, Col, Input, Row, Select, Switch} from "antd";
 import * as RecordBackend from "./backend/RecordBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
-import {LinkOutlined} from "@ant-design/icons";
-import {Redirect, useHistory} from "react-router-dom";
 
 const {Option} = Select;
 

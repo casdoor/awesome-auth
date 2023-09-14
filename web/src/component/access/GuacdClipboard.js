@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from "react";
 import {Form, Input, Modal} from "antd";
 
 const GuacdClipboard = ({visible, clipboardText, handleOk, handleCancel}) => {
   const [form] = Form.useForm();
-  let [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   useEffect(() => {
     form.setFieldsValue({
-      'clipboard': clipboardText
-    })
+      "clipboard": clipboardText,
+    });
   }, [visible]);
 
   return (
@@ -36,7 +36,7 @@ const GuacdClipboard = ({visible, clipboardText, handleOk, handleCancel}) => {
             .then(values => {
               setConfirmLoading(true);
               try {
-                handleOk(values['clipboard']);
+                handleOk(values["clipboard"]);
               } finally {
                 setConfirmLoading(false);
               }
@@ -49,8 +49,8 @@ const GuacdClipboard = ({visible, clipboardText, handleOk, handleCancel}) => {
         onCancel={handleCancel}
       >
         <Form form={form}>
-          <Form.Item name='clipboard'>
-            <Input.TextArea rows={10}/>
+          <Form.Item name="clipboard">
+            <Input.TextArea rows={10} />
           </Form.Item>
         </Form>
       </Modal>

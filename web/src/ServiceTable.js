@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import React from "react";
-import {DownOutlined, DeleteOutlined, UpOutlined, SyncOutlined, CheckCircleOutlined, MinusCircleOutlined} from '@ant-design/icons';
-import {Button, Col, Input, Row, Select, Table, Tag, Tooltip} from 'antd';
+import {CheckCircleOutlined, DeleteOutlined, DownOutlined, MinusCircleOutlined, SyncOutlined, UpOutlined} from "@ant-design/icons";
+import {Button, Col, Input, Row, Select, Table, Tag, Tooltip} from "antd";
 import * as Setting from "./Setting";
 
-const { Option } = Select;
+const {Option} = Select;
 
 class ServiceTable extends React.Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class ServiceTable extends React.Component {
   }
 
   addRow(table) {
-    let row = {no: table.length, name: `New Service - ${table.length}`, path: "C:/github_repos/casbin-oa", port: 10000, processId: -1, expectedStatus: "Stopped", status: "", subStatus: "", message: ""};
+    const row = {no: table.length, name: `New Service - ${table.length}`, path: "C:/github_repos/casbin-oa", port: 10000, processId: -1, expectedStatus: "Stopped", status: "", subStatus: "", message: ""};
     if (table === undefined) {
       table = [];
     }
@@ -72,110 +72,110 @@ class ServiceTable extends React.Component {
   renderTable(table) {
     const columns = [
       {
-        title: 'No.',
-        dataIndex: 'no',
-        key: 'no',
-        width: '60px',
+        title: "No.",
+        dataIndex: "no",
+        key: "no",
+        width: "60px",
         render: (text, record, index) => {
           return (
             <Input value={text} onChange={e => {
-              this.updateField(table, index, 'no', e.target.value);
+              this.updateField(table, index, "no", e.target.value);
             }} />
-          )
-        }
+          );
+        },
       },
       {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        width: '180px',
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+        width: "180px",
         render: (text, record, index) => {
           return (
             <Input value={text} onChange={e => {
-              this.updateField(table, index, 'name', e.target.value);
+              this.updateField(table, index, "name", e.target.value);
             }} />
-          )
-        }
+          );
+        },
       },
       {
-        title: 'Path',
-        dataIndex: 'path',
-        key: 'path',
-        width: '300px',
+        title: "Path",
+        dataIndex: "path",
+        key: "path",
+        width: "300px",
         render: (text, record, index) => {
           return (
             <Input value={text} onChange={e => {
-              this.updateField(table, index, 'path', e.target.value);
+              this.updateField(table, index, "path", e.target.value);
             }} />
-          )
-        }
+          );
+        },
       },
       {
-        title: 'Port',
-        dataIndex: 'port',
-        key: 'port',
-        width: '100px',
+        title: "Port",
+        dataIndex: "port",
+        key: "port",
+        width: "100px",
         render: (text, record, index) => {
           return (
             <Input value={text} onChange={e => {
-              this.updateField(table, index, 'port', e.target.value);
+              this.updateField(table, index, "port", e.target.value);
             }} />
-          )
-        }
+          );
+        },
       },
       {
-        title: 'Process ID',
-        dataIndex: 'processId',
-        key: 'processId',
-        width: '100px',
+        title: "Process ID",
+        dataIndex: "processId",
+        key: "processId",
+        width: "100px",
         render: (text, record, index) => {
           if (text === -1) {
             return null;
           } else {
             return text;
           }
-        }
+        },
       },
       {
-        title: 'Expected status',
-        dataIndex: 'expectedStatus',
-        key: 'expectedStatus',
-        width: '150px',
+        title: "Expected status",
+        dataIndex: "expectedStatus",
+        key: "expectedStatus",
+        width: "150px",
         render: (text, record, index) => {
           return (
-            <Select virtual={false} style={{width: '100%'}} value={text} onChange={value => {this.updateField(table, index, 'expectedStatus', value);}}>
+            <Select virtual={false} style={{width: "100%"}} value={text} onChange={value => {this.updateField(table, index, "expectedStatus", value);}}>
               {
                 [
-                  {id: 'Running', name: 'Running'},
-                  {id: 'Stopped', name: 'Stopped'},
+                  {id: "Running", name: "Running"},
+                  {id: "Stopped", name: "Stopped"},
                 ].map((item, index) => <Option key={index} value={item.id}>{item.name}</Option>)
               }
             </Select>
-          )
-        }
+          );
+        },
       },
       {
-        title: 'Status',
-        dataIndex: 'status',
-        key: 'status',
-        width: '150px',
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        width: "150px",
         render: (text, record, index) => {
           if (record.subStatus === "In Progress") {
             return (
               <Tag icon={<SyncOutlined spin />} color="processing">{`${text} (${record.subStatus})`}</Tag>
-            )
+            );
           } else if (record.status === "Running") {
             return (
               <Tag icon={<CheckCircleOutlined />} color="success">{text}</Tag>
-            )
+            );
           } else if (record.status === "Stopped") {
             return (
               <Tag icon={<MinusCircleOutlined />} color="error">{text}</Tag>
-            )
+            );
           } else {
             return `${text} (${record.subStatus})`;
           }
-        }
+        },
       },
       // {
       //   title: 'Sub Status',
@@ -190,14 +190,14 @@ class ServiceTable extends React.Component {
       //   }
       // },
       {
-        title: 'Message',
-        dataIndex: 'message',
-        key: 'message',
+        title: "Message",
+        dataIndex: "message",
+        key: "message",
       },
       {
-        title: 'Action',
-        key: 'action',
-        width: '100px',
+        title: "Action",
+        key: "action",
+        width: "100px",
         render: (text, record, index) => {
           return (
             <div>
@@ -212,18 +212,18 @@ class ServiceTable extends React.Component {
               </Tooltip>
             </div>
           );
-        }
+        },
       },
     ];
 
     return (
       <Table rowKey="index" columns={columns} dataSource={table} size="middle" bordered pagination={false}
-             title={() => (
-               <div>
-                 {this.props.title}&nbsp;&nbsp;&nbsp;&nbsp;
-                 <Button style={{marginRight: "5px"}} type="primary" size="small" onClick={() => this.addRow(table)}>{"Add"}</Button>
-               </div>
-             )}
+        title={() => (
+          <div>
+            {this.props.title}&nbsp;&nbsp;&nbsp;&nbsp;
+            <Button style={{marginRight: "5px"}} type="primary" size="small" onClick={() => this.addRow(table)}>{"Add"}</Button>
+          </div>
+        )}
       />
     );
   }
@@ -231,7 +231,7 @@ class ServiceTable extends React.Component {
   render() {
     return (
       <div>
-        <Row style={{marginTop: '20px'}} >
+        <Row style={{marginTop: "20px"}} >
           <Col span={24}>
             {
               this.renderTable(this.props.table)
@@ -239,7 +239,7 @@ class ServiceTable extends React.Component {
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 

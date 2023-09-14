@@ -136,8 +136,8 @@ class RecordListPage extends BaseListPage {
         render: (text, record, index) => {
           return (
             <Link to={`/records/${record.organization}/${record.name}`}>{text}</Link>
-          )
-        }
+          );
+        },
       },
       {
         title: i18next.t("general:Client IP"),
@@ -202,7 +202,7 @@ class RecordListPage extends BaseListPage {
         title: i18next.t("general:Request URI"),
         dataIndex: "requestUri",
         key: "requestUri",
-        width: '200px',
+        width: "200px",
         sorter: true,
         ...this.getColumnSearchProps("requestUri"),
       },
@@ -219,7 +219,7 @@ class RecordListPage extends BaseListPage {
           }
 
           return (
-            <Switch disabled checkedChildren="ON" unCheckedChildren="OFF" checked={text}/>
+            <Switch disabled checkedChildren="ON" unCheckedChildren="OFF" checked={text} />
           );
         },
       },
@@ -259,14 +259,14 @@ class RecordListPage extends BaseListPage {
     return (
       <div>
         <Table scroll={{x: "max-content"}} columns={columns} dataSource={records} rowKey={(record) => `${record.owner}/${record.name}`} size="middle" bordered pagination={paginationProps}
-               title={() => (
-                 <div>
-                   {i18next.t("general:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
-                   <Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button>
-                 </div>
-               )}
-               loading={this.state.loading}
-               onChange={this.handleTableChange}
+          title={() => (
+            <div>
+              {i18next.t("general:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
+              <Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button>
+            </div>
+          )}
+          loading={this.state.loading}
+          onChange={this.handleTableChange}
         />
       </div>
     );

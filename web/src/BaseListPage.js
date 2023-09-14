@@ -35,7 +35,6 @@ class BaseListPage extends React.Component {
     };
   }
 
-
   UNSAFE_componentWillMount() {
     const {pagination} = this.state;
     this.fetch({pagination});
