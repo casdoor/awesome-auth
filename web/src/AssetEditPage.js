@@ -15,11 +15,13 @@
 // http://localhost:18001/assets/dccb0b3e-aa59-443f-996b-c69a98b21ea9
 
 import React from "react";
-import {Button, Card, Col, Input, Row} from "antd";
+import {Button, Card, Col, Input, Row, Select} from "antd";
 import * as AssetBackend from "./backend/AssetBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
 import ServiceTable from "./ServiceTable";
+
+const {Option} = Select;
 
 class AssetEditPage extends React.Component {
   constructor(props) {
@@ -159,6 +161,23 @@ class AssetEditPage extends React.Component {
             <Input value={this.state.asset.description} onChange={e => {
               this.updateAssetField("description", e.target.value);
             }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Protocol"), i18next.t("general:Protocol - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Select virtual={false} style={{width: "100%"}} value={this.state.asset.protocol} onChange={(value => {this.updateAssetField("protocol", value);})}>
+              {
+                [
+                  {id: "rdp", name: "rdp"},
+                  {id: "vnc", name: "vnc"},
+                  {id: "ssh", name: "ssh"},
+                  {id: "", name: "None"},
+                ].map((item, index) => <Option key={index} value={item.id}>{item.name}</Option>)
+              }
+            </Select>
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}} >

@@ -39,6 +39,7 @@ type Asset struct {
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 
 	Description string `xorm:"varchar(100)" json:"description"`
+	Protocol    string `xorm:"varchar(100)" json:"protocol"`
 	Ip          string `xorm:"varchar(100)" json:"ip"`
 	Port        int    `json:"port"`
 	Username    string `xorm:"varchar(100)" json:"username"`

@@ -55,6 +55,7 @@ class AssetListPage extends BaseListPage {
       name: `machine_${this.state.assets.length}`,
       createdTime: moment().format(),
       description: `New Machine - ${this.state.assets.length}`,
+      protocol: "rdp",
       ip: "127.0.0.1",
       port: 22,
       username: "Administrator",
@@ -126,7 +127,7 @@ class AssetListPage extends BaseListPage {
         ...this.getColumnSearchProps("name"),
         render: (text, record, index) => {
           return (
-            <Link to={`/assets/${record.organization}/${record.name}`}>{text}</Link>
+            <Link to={`/assets/${record.owner}/${record.name}`}>{text}</Link>
           );
         },
       },
@@ -147,6 +148,20 @@ class AssetListPage extends BaseListPage {
         key: "description",
         // width: '200px',
         sorter: (a, b) => a.description.localeCompare(b.description),
+      },
+      {
+        title: i18next.t("general:Protocol"),
+        dataIndex: "protocol",
+        key: "protocol",
+        width: "100px",
+        sorter: true,
+        filterMultiple: false,
+        filters: [
+          {text: "RDP", value: "RDP"},
+          {text: "VNC", value: "VNC"},
+          {text: "SSH", value: "SSH"},
+          {text: "", value: "-"},
+        ],
       },
       {
         title: i18next.t("general:IP"),
@@ -222,7 +237,7 @@ class AssetListPage extends BaseListPage {
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                 type="primary"
                 onClick={() => {
-                  Setting.openLink(`access?owner=${asset.owner}&name=${asset.name}&protocol=rdp`);
+                  Setting.openLink(`access?owner=${asset.owner}&name=${asset.name}&protocol=${asset.protocol}`);
                 }}
               >
                 {i18next.t("general:Connect")}

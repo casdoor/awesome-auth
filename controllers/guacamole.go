@@ -71,7 +71,7 @@ func (c *ApiController) GetAssetTunnel() error {
 	configuration.SetParameter("height", height)
 	configuration.SetParameter("dpi", dpi)
 
-	configuration.Protocol = "rdp"
+	configuration.Protocol = asset.Protocol
 	configuration.SetParameter("hostname", asset.Ip)
 	configuration.SetParameter("port", strconv.Itoa(asset.Port))
 	configuration.SetParameter("username", asset.Username)
@@ -99,7 +99,6 @@ func (c *ApiController) GetAssetTunnel() error {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
 			// log.Debug("WebSocket shutdown", log.String("sessionId", sessionId), log.NamedError("err", err))
-			// guacdTunnel.Read()
 			_ = guacdTunnel.Close()
 
 			return nil
