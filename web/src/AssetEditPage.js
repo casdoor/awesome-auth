@@ -15,11 +15,12 @@
 // http://localhost:18001/assets/dccb0b3e-aa59-443f-996b-c69a98b21ea9
 
 import React from "react";
-import {Button, Card, Col, Input, Row, Select} from "antd";
+import {Button, Card, Col, Input, Row, Select, Switch} from "antd";
 import * as AssetBackend from "./backend/AssetBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
 import ServiceTable from "./ServiceTable";
+import RemoteAppTable from "./RemoteAppTable";
 
 const {Option} = Select;
 
@@ -56,6 +57,19 @@ class AssetEditPage extends React.Component {
 
           if (!updateFromRemote && this.state.asset !== null) {
             newAsset.autoQuery = this.state.asset.autoQuery;
+
+            // Update or add remote Apps to the asset data
+            newAsset.remoteApps = newAsset.remoteApps.map((newApp, i) => {
+              if (i < this.state.asset.remoteApps.length) {
+                const oldApp = this.state.asset.remoteApps[i];
+                return {
+                  ...oldApp, // Preserve old attributes
+                  ...newApp, // Override with new attributes
+                };
+              } else {
+                return newApp; // Add new service
+              }
+            }).slice(0, this.state.asset.remoteApps.length);
 
             // Update or add services to the asset data
             newAsset.services = newAsset.services.map((newService, i) => {
@@ -235,11 +249,42 @@ class AssetEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Auto query"), i18next.t("general:Auto query - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.asset.autoQuery} onChange={e => {
-              this.updateAssetField("autoQuery", e.target.value);
+            <Switch checked={this.state.asset.autoQuery} onChange={checked => {
+              this.updateAssetField("autoQuery", checked);
             }} />
           </Col>
         </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Is Permanent"), i18next.t("application:Is Permanent - Tooltip"))} :
+          </Col>
+          <Col span={1} >
+            <Switch checked={this.state.asset.isPermanent} onChange={checked => {
+              this.updateAssetField("isPermanent", checked);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Enable Remote App"), i18next.t("general:Enable Remote App - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Switch checked={this.state.asset.enableRemoteApp} onChange={checked => {
+              this.updateAssetField("enableRemoteApp", checked);
+            }} />
+          </Col>
+        </Row>
+        {this.state.asset.enableRemoteApp && (
+          <Row style={{marginTop: "20px"}} >
+            <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+              {Setting.getLabel(i18next.t("general:Remote Apps"), i18next.t("general:Remote Apps - Tooltip"))} :
+            </Col>
+            <Col span={22} >
+              <RemoteAppTable title={"Remote Apps"} table={this.state.asset.remoteApps} onUpdateTable={(value) => {
+                this.updateAssetField("remoteApps", value);
+              }} />
+            </Col>
+          </Row>)}
         <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Services"), i18next.t("general:Services - Tooltip"))} :

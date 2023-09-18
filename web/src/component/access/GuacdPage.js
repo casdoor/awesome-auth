@@ -44,6 +44,10 @@ const GuacdPage = () => {
   let width = searchParams.get("width");
   let height = searchParams.get("height");
 
+  const remoteAppName = searchParams.get("remoteApp");
+  const remoteAppDir = searchParams.get("remoteAppDir");
+  const remoteAppArgs = searchParams.get("remoteAppArgs");
+
   if (width && height) {
     fixedSize = true;
   } else {
@@ -99,7 +103,14 @@ const GuacdPage = () => {
 
     const token = getToken();
 
-    const params = {"width": width, "height": height, "dpi": dpi, "X-Auth-Token": token};
+    const params = {
+      "width": width,
+      "height": height,
+      "dpi": dpi, "X-Auth-Token": token,
+      "remoteApp": remoteAppName,
+      "remoteAppDir": remoteAppDir,
+      "remoteAppArgs": remoteAppArgs,
+    };
 
     const paramStr = qs.stringify(params);
 

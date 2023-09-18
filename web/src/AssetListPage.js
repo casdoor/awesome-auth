@@ -63,6 +63,10 @@ class AssetListPage extends BaseListPage {
       language: "zh",
       autoQuery: false,
       isPermanent: true,
+      // remoteAppName:"",
+      // remoteAppDir:"",
+      // remoteAppArgs:"",
+      remoteApps: [],
       services: [],
     };
   }
@@ -153,7 +157,7 @@ class AssetListPage extends BaseListPage {
         title: i18next.t("general:Protocol"),
         dataIndex: "protocol",
         key: "protocol",
-        width: "100px",
+        width: "50px",
         sorter: true,
         filterMultiple: false,
         filters: [
@@ -214,6 +218,27 @@ class AssetListPage extends BaseListPage {
         },
       },
       {
+        title: i18next.t("general:Enable Remote App"),
+        dataIndex: "enableRemoteApp",
+        key: "enableRemoteApp",
+        width: "110px",
+        render: (text, record, index) => {
+          return (
+            <Switch disabled checked={text} />
+          );
+        },
+      },
+      {
+        title: i18next.t("general:Remote Apps"),
+        dataIndex: "remoteApps",
+        key: "remoteApps",
+        width: "90px",
+        // todo: fix filter
+        render: (text, record, index) => {
+          return `${record.enableRemoteApp ? 1 : 0}  / ${record.remoteApps === null ? 0 : record.remoteApps.length}`;
+        },
+      },
+      {
         title: i18next.t("general:Services"),
         dataIndex: "services",
         key: "services",
@@ -237,7 +262,11 @@ class AssetListPage extends BaseListPage {
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                 type="primary"
                 onClick={() => {
-                  Setting.openLink(`access?owner=${asset.owner}&name=${asset.name}&protocol=${asset.protocol}`);
+                  let link = `access?owner=${asset.owner}&name=${asset.name}&protocol=${asset.protocol}`;
+                  if (asset.enableRemoteApp) {
+                    link += `&remoteApp=${asset.remoteApps[0].remoteAppName}&remoteAppDir=${asset.remoteApps[0].remoteAppDir}&remoteAppArgs=${asset.remoteApps[0].remoteAppArgs}`;
+                  }
+                  Setting.openLink(link);
                 }}
               >
                 {i18next.t("general:Connect")}

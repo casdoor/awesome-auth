@@ -60,6 +60,10 @@ func (c *ApiController) GetAssetTunnel() error {
 	height := c.Input().Get("height")
 	dpi := c.Input().Get("dpi")
 
+	remoteAppName := c.Input().Get("remoteApp")
+	remoteAppDir := c.Input().Get("remoteAppDir")
+	remoteAppArgs := c.Input().Get("remoteAppArgs")
+
 	asset, err := object.GetAsset(util.GetIdFromOwnerAndName(owner, name))
 	if err != nil {
 		return err
@@ -79,6 +83,10 @@ func (c *ApiController) GetAssetTunnel() error {
 	configuration.SetParameter("security", "any")
 	configuration.SetParameter("ignore-cert", "true")
 	configuration.SetParameter("resize-method", "reconnect")
+
+	configuration.SetParameter("remote-app", "||"+remoteAppName)
+	configuration.SetParameter("remote-app-dir", remoteAppDir)
+	configuration.SetParameter("remote-app-args", remoteAppArgs)
 
 	addr := beego.AppConfig.String("guacamoleEndpoint")
 	// fmt.Sprintf("%s:%s", configuration.GetParameter("hostname"), configuration.GetParameter("port"))

@@ -33,6 +33,13 @@ type Service struct {
 	Message        string `json:"message"`
 }
 
+type RemoteApp struct {
+	No            int    `json:"no"`
+	RemoteAppName string `xorm:"varchar(100)" json:"remoteAppName"`
+	RemoteAppDir  string `xorm:"varchar(100)" json:"remoteAppDir"`
+	RemoteAppArgs string `xorm:"varchar(100)" json:"remoteAppArgs"`
+}
+
 type Asset struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
@@ -48,7 +55,9 @@ type Asset struct {
 	AutoQuery   bool   `json:"autoQuery"`
 	IsPermanent bool   `json:"isPermanent"`
 
-	Services []*Service `json:"services"`
+	EnableRemoteApp bool         `json:"enableRemoteApp"`
+	RemoteApps      []*RemoteApp `json:"remoteApps"`
+	Services        []*Service   `json:"services"`
 }
 
 func GetAssetCount(owner, field, value string) (int64, error) {
