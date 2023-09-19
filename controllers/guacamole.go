@@ -84,9 +84,11 @@ func (c *ApiController) GetAssetTunnel() error {
 	configuration.SetParameter("ignore-cert", "true")
 	configuration.SetParameter("resize-method", "reconnect")
 
-	configuration.SetParameter("remote-app", "||"+remoteAppName)
-	configuration.SetParameter("remote-app-dir", remoteAppDir)
-	configuration.SetParameter("remote-app-args", remoteAppArgs)
+	if asset.Protocol == "rdp" && asset.EnableRemoteApp {
+		configuration.SetParameter("remote-app", "||"+remoteAppName)
+		configuration.SetParameter("remote-app-dir", remoteAppDir)
+		configuration.SetParameter("remote-app-args", remoteAppArgs)
+	}
 
 	addr := beego.AppConfig.String("guacamoleEndpoint")
 	// fmt.Sprintf("%s:%s", configuration.GetParameter("hostname"), configuration.GetParameter("port"))
