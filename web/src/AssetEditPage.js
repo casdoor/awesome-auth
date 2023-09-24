@@ -137,6 +137,20 @@ class AssetEditPage extends React.Component {
     });
   }
 
+  getDefaultPort(protocol) {
+    if (protocol === "rdp") {
+      return "3389";
+    } else if (protocol === "vnc") {
+      return "5900";
+    } else if (protocol === "ssh") {
+      return "22";
+    } else if (protocol === "telnet") {
+      return "23";
+    } else {
+      return "";
+    }
+  }
+
   renderAsset() {
     return (
       <Card size="small" title={
@@ -177,18 +191,21 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px"}} >
+        <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Protocol"), i18next.t("general:Protocol - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Select virtual={false} style={{width: "100%"}} value={this.state.asset.protocol} onChange={(value => {this.updateAssetField("protocol", value);})}>
+            <Select virtual={false} style={{width: "100%"}} value={this.state.asset.protocol} onChange={value => {
+              this.updateAssetField("protocol", value);
+              this.updateAssetField("port", this.getDefaultPort(value));
+            }}>
               {
                 [
                   {id: "rdp", name: "rdp"},
                   {id: "vnc", name: "vnc"},
                   {id: "ssh", name: "ssh"},
-                  {id: "", name: "None"},
+                  {id: "telnet", name: "telnet"},
                 ].map((item, index) => <Option key={index} value={item.id}>{item.name}</Option>)
               }
             </Select>
@@ -204,14 +221,18 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px"}} >
+        <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Port"), i18next.t("general:Port - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.asset.port} onChange={e => {
-              this.updateAssetField("port", e.target.value);
-            }} />
+            <Input
+              value={this.state.asset.port}
+              defaultValue={this.getDefaultPort(this.state.asset.protocol)}
+              onChange={e => {
+                this.updateAssetField("port", e.target.value);
+              }}
+            />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}} >
@@ -220,7 +241,7 @@ class AssetEditPage extends React.Component {
           </Col>
           <Col span={22} >
             <Input value={this.state.asset.username} onChange={e => {
-              this.updateAssetField("port", e.target.value);
+              this.updateAssetField("username", e.target.value);
             }} />
           </Col>
         </Row>
@@ -264,27 +285,36 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Enable Remote App"), i18next.t("general:Enable Remote App - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Switch checked={this.state.asset.enableRemoteApp} onChange={checked => {
-              this.updateAssetField("enableRemoteApp", checked);
-            }} />
-          </Col>
-        </Row>
-        {this.state.asset.enableRemoteApp && (
-          <Row style={{marginTop: "20px"}} >
-            <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-              {Setting.getLabel(i18next.t("general:Remote Apps"), i18next.t("general:Remote Apps - Tooltip"))} :
-            </Col>
-            <Col span={22} >
-              <RemoteAppTable title={"Remote Apps"} table={this.state.asset.remoteApps} onUpdateTable={(value) => {
-                this.updateAssetField("remoteApps", value);
-              }} />
-            </Col>
-          </Row>)}
+        {this.state.asset.protocol === "rdp" && (
+          <div>
+            <Row style={{marginTop: "20px"}}>
+              <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+                {Setting.getLabel(i18next.t("general:Enable Remote App"), i18next.t("general:Enable Remote App - Tooltip"))} :
+              </Col>
+              <Col span={22}>
+                <Switch checked={this.state.asset.enableRemoteApp} onChange={checked => {
+                  this.updateAssetField("enableRemoteApp", checked);
+                }} />
+              </Col>
+            </Row>
+            {this.state.asset.enableRemoteApp && (
+              <Row style={{marginTop: "20px"}} >
+                <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2} >
+                  {Setting.getLabel(i18next.t("general:Remote Apps"), i18next.t("general:Remote Apps - Tooltip"))} :
+                </Col>
+                <Col span={22} >
+                  <RemoteAppTable title={"Remote Apps"} table={this.state.asset.remoteApps} onUpdateTable={(value) => {
+                    this.updateAssetField("remoteApps", value);
+                  }} />
+                </Col>
+              </Row>
+            )}
+          </div>
+        )}
+        {this.state.asset.protocol === "ssh" && (
+          <div>
+          </div>
+        )}
         <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Services"), i18next.t("general:Services - Tooltip"))} :

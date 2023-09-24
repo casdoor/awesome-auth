@@ -116,6 +116,29 @@ func (opt *Configuration) GetParameter(name string) string {
 	return opt.Parameters[name]
 }
 
+func (opt *Configuration) LoadConfig() map[string]string {
+	configMap := map[string]string{
+		"color-scheme":               "gray-black",
+		"cron-log-saved-limit":       "360",
+		"disable-bitmap-caching":     "false",
+		"disable-offscreen-caching":  "false",
+		"enable-desktop-composition": "true",
+		"enable-font-smoothing":      "true",
+		"enable-full-window-drag":    "true",
+		"enable-menu-animations":     "true",
+		"enable-recording":           "true",
+		"enable-theming":             "true",
+		"enable-wallpaper":           "true",
+		"font-name":                  "menlo",
+		"font-size":                  "12",
+		"login-log-saved-limit":      "360",
+		"session-saved-limit":        "360",
+		"user-default-storage-size":  "5120",
+	}
+
+	return configMap
+}
+
 type Instruction struct {
 	Opcode       string
 	Args         []string

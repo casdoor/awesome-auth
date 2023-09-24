@@ -57,7 +57,7 @@ class AssetListPage extends BaseListPage {
       description: `New Machine - ${this.state.assets.length}`,
       protocol: "rdp",
       ip: "127.0.0.1",
-      port: 22,
+      port: 3389,
       username: "Administrator",
       password: "123",
       language: "zh",

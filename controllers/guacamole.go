@@ -70,25 +70,37 @@ func (c *ApiController) GetAssetTunnel() error {
 	}
 
 	configuration := tunnel.NewConfiguration()
+	configuration.Protocol = asset.Protocol
+	propertyMap := configuration.LoadConfig()
+
+	c.setConfig(propertyMap, configuration)
 
 	configuration.SetParameter("width", width)
 	configuration.SetParameter("height", height)
 	configuration.SetParameter("dpi", dpi)
 
-	configuration.Protocol = asset.Protocol
 	configuration.SetParameter("hostname", asset.Ip)
 	configuration.SetParameter("port", strconv.Itoa(asset.Port))
 	configuration.SetParameter("username", asset.Username)
 	configuration.SetParameter("password", asset.Password)
-	configuration.SetParameter("security", "any")
-	configuration.SetParameter("ignore-cert", "true")
-	configuration.SetParameter("resize-method", "reconnect")
 
 	if asset.Protocol == "rdp" && asset.EnableRemoteApp {
 		configuration.SetParameter("remote-app", "||"+remoteAppName)
 		configuration.SetParameter("remote-app-dir", remoteAppDir)
 		configuration.SetParameter("remote-app-args", remoteAppArgs)
 	}
+
+	// Todo: Support ssh via privateKey
+	//if asset.Protocol == "ssh"  {
+	//	if len(asset.PrivateKey) > 0 && asset.PrivateKey != "-" {
+	//		configuration.SetParameter("username", asset.Username)
+	//		configuration.SetParameter("private-key", asset.PrivateKey)
+	//		configuration.SetParameter("passphrase", asset.Passphrase)
+	//	} else {
+	//		configuration.SetParameter("username", asset.Username)
+	//		configuration.SetParameter("password", asset.Password)
+	//	}
+	//}
 
 	addr := beego.AppConfig.String("guacamoleEndpoint")
 	// fmt.Sprintf("%s:%s", configuration.GetParameter("hostname"), configuration.GetParameter("port"))
@@ -119,5 +131,43 @@ func (c *ApiController) GetAssetTunnel() error {
 			//panic(err)
 			return nil
 		}
+	}
+}
+
+func (c ApiController) setConfig(propertyMap map[string]string, configuration *tunnel.Configuration) {
+	switch configuration.Protocol {
+	case "rdp":
+
+		configuration.SetParameter("security", "any")
+		configuration.SetParameter("ignore-cert", "true")
+		configuration.SetParameter("create-drive-path", "true")
+		configuration.SetParameter("resize-method", "reconnect")
+		configuration.SetParameter(tunnel.EnableWallpaper, propertyMap[tunnel.EnableWallpaper])
+		configuration.SetParameter(tunnel.EnableTheming, propertyMap[tunnel.EnableTheming])
+		configuration.SetParameter(tunnel.EnableFontSmoothing, propertyMap[tunnel.EnableFontSmoothing])
+		configuration.SetParameter(tunnel.EnableFullWindowDrag, propertyMap[tunnel.EnableFullWindowDrag])
+		configuration.SetParameter(tunnel.EnableDesktopComposition, propertyMap[tunnel.EnableDesktopComposition])
+		configuration.SetParameter(tunnel.EnableMenuAnimations, propertyMap[tunnel.EnableMenuAnimations])
+		configuration.SetParameter(tunnel.DisableBitmapCaching, propertyMap[tunnel.DisableBitmapCaching])
+		configuration.SetParameter(tunnel.DisableOffscreenCaching, propertyMap[tunnel.DisableOffscreenCaching])
+		configuration.SetParameter(tunnel.ColorDepth, propertyMap[tunnel.ColorDepth])
+		configuration.SetParameter(tunnel.ForceLossless, propertyMap[tunnel.ForceLossless])
+		configuration.SetParameter(tunnel.PreConnectionId, propertyMap[tunnel.PreConnectionId])
+		configuration.SetParameter(tunnel.PreConnectionBlob, propertyMap[tunnel.PreConnectionBlob])
+	case "ssh":
+
+		configuration.SetParameter(tunnel.FontSize, propertyMap[tunnel.FontSize])
+		//configuration.SetParameter(tunnel.FontName, propertyMap[tunnel.FontName])
+		configuration.SetParameter(tunnel.ColorScheme, propertyMap[tunnel.ColorScheme])
+		configuration.SetParameter(tunnel.Backspace, propertyMap[tunnel.Backspace])
+		configuration.SetParameter(tunnel.TerminalType, propertyMap[tunnel.TerminalType])
+	case "telnet":
+		configuration.SetParameter(tunnel.FontSize, propertyMap[tunnel.FontSize])
+		configuration.SetParameter(tunnel.FontName, propertyMap[tunnel.FontName])
+		configuration.SetParameter(tunnel.ColorScheme, propertyMap[tunnel.ColorScheme])
+		configuration.SetParameter(tunnel.Backspace, propertyMap[tunnel.Backspace])
+		configuration.SetParameter(tunnel.TerminalType, propertyMap[tunnel.TerminalType])
+	default:
+
 	}
 }

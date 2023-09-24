@@ -104,13 +104,17 @@ const GuacdPage = () => {
     const token = getToken();
 
     const params = {
+      "protocol": protocol,
       "width": width,
       "height": height,
       "dpi": dpi, "X-Auth-Token": token,
-      "remoteApp": remoteAppName,
-      "remoteAppDir": remoteAppDir,
-      "remoteAppArgs": remoteAppArgs,
     };
+
+    if (protocol === "rdp") {
+      params.remoteApp = remoteAppName;
+      params.remoteAppDir = remoteAppDir;
+      params.remoteAppArgs = remoteAppArgs;
+    }
 
     const paramStr = qs.stringify(params);
 
