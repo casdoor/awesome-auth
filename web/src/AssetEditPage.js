@@ -139,15 +139,15 @@ class AssetEditPage extends React.Component {
 
   getDefaultPort(protocol) {
     if (protocol === "rdp") {
-      return "3389";
+      return 3389;
     } else if (protocol === "vnc") {
-      return "5900";
+      return 5900;
     } else if (protocol === "ssh") {
-      return "22";
+      return 22;
     } else if (protocol === "telnet") {
-      return "23";
+      return 23;
     } else {
-      return "";
+      return 0;
     }
   }
 
@@ -191,7 +191,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px"}}>
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Protocol"), i18next.t("general:Protocol - Tooltip"))} :
           </Col>
@@ -202,10 +202,10 @@ class AssetEditPage extends React.Component {
             }}>
               {
                 [
-                  {id: "rdp", name: "rdp"},
-                  {id: "vnc", name: "vnc"},
-                  {id: "ssh", name: "ssh"},
-                  {id: "telnet", name: "telnet"},
+                  {id: "rdp", name: "RDP"},
+                  {id: "vnc", name: "VNC"},
+                  {id: "ssh", name: "SSH"},
+                  {id: "telnet", name: "Telnet"},
                 ].map((item, index) => <Option key={index} value={item.id}>{item.name}</Option>)
               }
             </Select>
@@ -221,7 +221,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        <Row style={{marginTop: "20px"}}>
+        <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Port"), i18next.t("general:Port - Tooltip"))} :
           </Col>
@@ -287,7 +287,7 @@ class AssetEditPage extends React.Component {
         </Row>
         {this.state.asset.protocol === "rdp" && (
           <div>
-            <Row style={{marginTop: "20px"}}>
+            <Row style={{marginTop: "20px"}} >
               <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
                 {Setting.getLabel(i18next.t("general:Enable Remote App"), i18next.t("general:Enable Remote App - Tooltip"))} :
               </Col>

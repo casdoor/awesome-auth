@@ -73,7 +73,7 @@ func (c *ApiController) GetAssetTunnel() error {
 	configuration.Protocol = asset.Protocol
 	propertyMap := configuration.LoadConfig()
 
-	c.setConfig(propertyMap, configuration)
+	setConfig(propertyMap, configuration)
 
 	configuration.SetParameter("width", width)
 	configuration.SetParameter("height", height)
@@ -134,10 +134,9 @@ func (c *ApiController) GetAssetTunnel() error {
 	}
 }
 
-func (c ApiController) setConfig(propertyMap map[string]string, configuration *tunnel.Configuration) {
+func setConfig(propertyMap map[string]string, configuration *tunnel.Configuration) {
 	switch configuration.Protocol {
 	case "rdp":
-
 		configuration.SetParameter("security", "any")
 		configuration.SetParameter("ignore-cert", "true")
 		configuration.SetParameter("create-drive-path", "true")
@@ -155,7 +154,6 @@ func (c ApiController) setConfig(propertyMap map[string]string, configuration *t
 		configuration.SetParameter(tunnel.PreConnectionId, propertyMap[tunnel.PreConnectionId])
 		configuration.SetParameter(tunnel.PreConnectionBlob, propertyMap[tunnel.PreConnectionBlob])
 	case "ssh":
-
 		configuration.SetParameter(tunnel.FontSize, propertyMap[tunnel.FontSize])
 		//configuration.SetParameter(tunnel.FontName, propertyMap[tunnel.FontName])
 		configuration.SetParameter(tunnel.ColorScheme, propertyMap[tunnel.ColorScheme])
@@ -168,6 +166,5 @@ func (c ApiController) setConfig(propertyMap map[string]string, configuration *t
 		configuration.SetParameter(tunnel.Backspace, propertyMap[tunnel.Backspace])
 		configuration.SetParameter(tunnel.TerminalType, propertyMap[tunnel.TerminalType])
 	default:
-
 	}
 }
