@@ -34,6 +34,7 @@ import AssetEditPage from "./AssetEditPage";
 import GuacdPage from "./component/access/GuacdPage";
 
 const {Header, Footer, Content} = Layout;
+const hiddenPages = ["/access"];
 
 class App extends Component {
   constructor(props) {
@@ -276,7 +277,7 @@ class App extends Component {
         <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
-        <Route exact path="/access" render={() => <GuacdPage />} />
+        <Route exact path="/access" render={(props) => this.renderSigninIfNotSignedIn(<GuacdPage account={this.state.account} {...props} />)} />
       </Switch>
     );
   }
@@ -291,51 +292,52 @@ class App extends Component {
       this.props.history.push(key);
     };
     const menuStyleRight = Setting.isAdminUser(this.state.account) && !Setting.isMobile() ? "calc(180px + 260px)" : "260px";
+    const currentPath = window.location.pathname;
+    const isHiddenPage = hiddenPages.includes(currentPath);
+
     return (
       <Layout id="parent-area">
-        <Header style={{padding: "0", marginBottom: "3px", backgroundColor: "white"}}>
-          {Setting.isMobile() ? null : (
-            <Link to={"/"}>
-              <div className="logo" />
-            </Link>
-          )}
-          {(Setting.isMobile() ?
-            <React.Fragment>
-              <Drawer title={i18next.t("general:Close")} placement="left" visible={this.state.menuVisible} onClose={this.onClose}>
-                <Menu
-                  items={this.getMenuItems()}
-                  mode={"inline"}
-                  selectedKeys={[this.state.selectedMenuKey]}
-                  style={{lineHeight: "64px"}}
-                  onClick={this.onClose}
-                >
-                </Menu>
-              </Drawer>
-              <Button icon={<BarsOutlined />} onClick={this.showMenu} type="text">
-                {i18next.t("general:Menu")}
-              </Button>
-            </React.Fragment> :
-            <Menu
-              onClick={onClick}
-              items={this.getMenuItems()}
-              mode={"horizontal"}
-              selectedKeys={[this.state.selectedMenuKey]}
-              style={{position: "absolute", left: "145px", right: menuStyleRight}}
-            />
-          )}
-          {
-            this.renderAccountMenu()
-          }
-        </Header>
+        {!isHiddenPage && (
+          <Header style={{padding: "0", marginBottom: "3px", backgroundColor: "white"}}>
+            {Setting.isMobile() ? null : (
+              <Link to={"/"}>
+                <div className="logo" />
+              </Link>
+            )}
+            {Setting.isMobile() ? (
+              <React.Fragment>
+                <Drawer title={i18next.t("general:Close")} placement="left" visible={this.state.menuVisible} onClose={this.onClose}>
+                  <Menu
+                    items={this.getMenuItems()}
+                    mode={"inline"}
+                    selectedKeys={[this.state.selectedMenuKey]}
+                    style={{lineHeight: "64px"}}
+                    onClick={this.onClose}
+                  >
+                  </Menu>
+                </Drawer>
+                <Button icon={<BarsOutlined />} onClick={this.showMenu} type="text">
+                  {i18next.t("general:Menu")}
+                </Button>
+              </React.Fragment>
+            ) : (
+              <Menu
+                onClick={onClick}
+                items={this.getMenuItems()}
+                mode={"horizontal"}
+                selectedKeys={[this.state.selectedMenuKey]}
+                style={{position: "absolute", left: "145px", right: menuStyleRight}}
+              />
+            )}
+            {this.renderAccountMenu()}
+          </Header>
+        )}
+
         <Content style={{display: "flex", flexDirection: "column"}}>
-          {this.isWithoutCard() ?
-            this.renderRouter() :
-            <Card className="content-warp-card">
-              {this.renderRouter()}
-            </Card>
-          }
+          {this.isWithoutCard() || isHiddenPage ? this.renderRouter() : <Card className="content-warp-card">{this.renderRouter()}</Card>}
         </Content>
-        {this.renderFooter()}
+
+        {!isHiddenPage && this.renderFooter()}
       </Layout>
     );
   }

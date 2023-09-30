@@ -140,7 +140,8 @@ func setConfig(propertyMap map[string]string, configuration *tunnel.Configuratio
 		configuration.SetParameter("security", "any")
 		configuration.SetParameter("ignore-cert", "true")
 		configuration.SetParameter("create-drive-path", "true")
-		configuration.SetParameter("resize-method", "reconnect")
+		//configuration.SetParameter("resize-method", "reconnect")
+		configuration.SetParameter("resize-method", "display-update")
 		configuration.SetParameter(tunnel.EnableWallpaper, propertyMap[tunnel.EnableWallpaper])
 		configuration.SetParameter(tunnel.EnableTheming, propertyMap[tunnel.EnableTheming])
 		configuration.SetParameter(tunnel.EnableFontSmoothing, propertyMap[tunnel.EnableFontSmoothing])
@@ -161,7 +162,7 @@ func setConfig(propertyMap map[string]string, configuration *tunnel.Configuratio
 		configuration.SetParameter(tunnel.TerminalType, propertyMap[tunnel.TerminalType])
 	case "telnet":
 		configuration.SetParameter(tunnel.FontSize, propertyMap[tunnel.FontSize])
-		configuration.SetParameter(tunnel.FontName, propertyMap[tunnel.FontName])
+		//configuration.SetParameter(tunnel.FontName, propertyMap[tunnel.FontName])
 		configuration.SetParameter(tunnel.ColorScheme, propertyMap[tunnel.ColorScheme])
 		configuration.SetParameter(tunnel.Backspace, propertyMap[tunnel.Backspace])
 		configuration.SetParameter(tunnel.TerminalType, propertyMap[tunnel.TerminalType])

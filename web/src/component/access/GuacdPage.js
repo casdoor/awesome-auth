@@ -460,15 +460,14 @@ const GuacdPage = () => {
         </Affix>
       </Draggable>
       {
-        session["copy"] === "1" || session["paste"] === "1" ?
-          <Draggable>
-            <Affix style={{position: "absolute", top: 50, right: 100}}>
-              <Button icon={<CopyOutlined />}
-                onClick={() => {
-                  setClipboardVisible(true);
-                }} />
-            </Affix>
-          </Draggable> : undefined
+        <Draggable>
+          <Affix style={{position: "absolute", top: 50, right: 100}}>
+            <Button icon={<CopyOutlined />}
+              onClick={() => {
+                setClipboardVisible(true);
+              }} />
+          </Affix>
+        </Draggable>
       }
       {
         protocol === "vnc" &&
