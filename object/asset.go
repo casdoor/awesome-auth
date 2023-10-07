@@ -125,26 +125,8 @@ func UpdateAsset(id string, asset *Asset) (bool, error) {
 	return affected != 0, nil
 }
 
-func AddAsset(asset *Asset) bool {
+func AddAsset(asset *Asset) (bool, error) {
 	affected, err := adapter.engine.Insert(asset)
-	if err != nil {
-		panic(err)
-	}
-
-	return affected != 0
-}
-
-func AddAssets(assets []*Asset) bool {
-	affected, err := adapter.engine.Insert(assets)
-	if err != nil {
-		panic(err)
-	}
-
-	return affected != 0
-}
-
-func DeleteAsset(asset *Asset) (bool, error) {
-	affected, err := adapter.engine.ID(core.PK{asset.Owner, asset.Name}).Delete(&Asset{})
 	if err != nil {
 		return false, err
 	}
@@ -152,8 +134,8 @@ func DeleteAsset(asset *Asset) (bool, error) {
 	return affected != 0, nil
 }
 
-func deleteImpermanentAssets() (bool, error) {
-	affected, err := adapter.engine.Where("is_permanent=?", false).Delete(&Asset{})
+func DeleteAsset(asset *Asset) (bool, error) {
+	affected, err := adapter.engine.ID(core.PK{asset.Owner, asset.Name}).Delete(&Asset{})
 	if err != nil {
 		return false, err
 	}

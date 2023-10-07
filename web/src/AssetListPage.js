@@ -36,7 +36,6 @@ class AssetListPage extends BaseListPage {
   }
 
   getAssets() {
-    // eslint-disable-next-line react/prop-types
     AssetBackend.getAssets(this.props.account.owner)
       .then((res) => {
         if (res.status === "ok") {
