@@ -15,11 +15,26 @@
 package routers
 
 import (
+	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/beego/beego/context"
+	"github.com/casbin/casvisor/conf"
 	"github.com/casbin/casvisor/util"
+)
+
+var (
+	oldCasdoorEndpoint     = "https://door.casdoor.com"
+	newCasdoorEndpoint     = conf.GetConfigString("casdoorEndpoint")
+	oldClientId            = "b108dacba027db36ec26"
+	newClientId            = conf.GetConfigString("clientId")
+	oldCasdoorOrganization = "casbin"
+	newCasdoorOrganization = conf.GetConfigString("casdoorOrganization")
+	oldCasdoorApplication  = "app-casvisor"
+	newCasdoorApplication  = conf.GetConfigString("casdoorApplication")
 )
 
 func TransparentStatic(ctx *context.Context) {
@@ -35,9 +50,38 @@ func TransparentStatic(ctx *context.Context) {
 		path += urlPath
 	}
 
-	if util.FileExist(path) {
-		http.ServeFile(ctx.ResponseWriter, ctx.Request, path)
-	} else {
-		http.ServeFile(ctx.ResponseWriter, ctx.Request, "web/build/index.html")
+	if !util.FileExist(path) {
+		path = "web/build/index.html"
 	}
+
+	serveFileWithReplace(ctx.ResponseWriter, ctx.Request, path)
+}
+
+func serveFileWithReplace(w http.ResponseWriter, r *http.Request, name string) {
+	f, err := os.Open(filepath.Clean(name))
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	d, err := f.Stat()
+	if err != nil {
+		panic(err)
+	}
+
+	content := util.ReadStringFromPath(name)
+	if oldCasdoorEndpoint != newCasdoorEndpoint {
+		content = strings.ReplaceAll(content, fmt.Sprintf("\"%s\"", oldCasdoorEndpoint), fmt.Sprintf("\"%s\"", newCasdoorEndpoint))
+	}
+	if oldClientId != newClientId {
+		content = strings.ReplaceAll(content, fmt.Sprintf("\"%s\"", oldClientId), fmt.Sprintf("\"%s\"", newClientId))
+	}
+	if oldCasdoorOrganization != newCasdoorOrganization {
+		content = strings.ReplaceAll(content, fmt.Sprintf("\"%s\"", oldCasdoorOrganization), fmt.Sprintf("\"%s\"", newCasdoorOrganization))
+	}
+	if oldCasdoorApplication != newCasdoorApplication {
+		content = strings.ReplaceAll(content, fmt.Sprintf("\"%s\"", oldCasdoorApplication), fmt.Sprintf("\"%s\"", newCasdoorApplication))
+	}
+
+	http.ServeContent(w, r, d.Name(), d.ModTime(), strings.NewReader(content))
 }
