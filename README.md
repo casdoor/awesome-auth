@@ -33,28 +33,41 @@
   </a>
 </p>
 
+## Online demo
+
+- Read-only site: https://door.casvisor.com (any modification operation will fail)
+- Writable site: https://demo.casvisor.com (original data will be restored for every 5 minutes)
+
+## Documentation
+
+https://casvisor.org
+
 ## Architecture
+
 Casvisor contains 2 parts:
-Name | Description | Language | Source code
-----|------|----|----
-Frontend | Web frontend UI for Casvisor | Javascript + React | https://github.com/casbin/casvisor/tree/master/web
-Backend | RESTful API backend for Casvisor | Golang + Beego + MySQL | https://github.com/casbin/casvisor
+
+| Name     | Description                      | Language               | Source code                                        |
+|----------|----------------------------------|------------------------|----------------------------------------------------|
+| Frontend | Web frontend UI for Casvisor     | Javascript + React     | https://github.com/casbin/casvisor/tree/master/web |
+| Backend  | RESTful API backend for Casvisor | Golang + Beego + MySQL | https://github.com/casbin/casvisor                 |
 
 ## Installation
+
 Casvisor uses Casdoor to manage members. So you need to create an organization and an application for Casvisor in a Casdoor instance.
 
 ### Necessary configuration
 
 #### Get the code
-```bash
-go get github.com/casbin/casdoor
+
+```shell
+go get github.com/casdoor/casdoor
 go get github.com/casbin/casvisor
 ```
 
 or
 
-```bash
-git clone https://github.com/casbin/casdoor
+```shell
+git clone https://github.com/casdoor/casdoor
 git clone https://github.com/casbin/casvisor
 ```
 
@@ -65,6 +78,7 @@ Casvisor will store its users, nodes and topics informations in a MySQL database
 ```ini
 dataSourceName = root:123@tcp(localhost:3306)/
 ```
+
 Casvisor uses XORM to connect to DB, so all DBs supported by XORM can also be used.
 
 #### Configure Casdoor
@@ -87,8 +101,10 @@ After creating an organization and an application for Casvisor in a Casdoor, you
   Casvisor uses Casdoor to upload files to cloud storage, send Emails and send SMSs. See Casdoor for more details.
 
 #### RDP service
+
 Run guacd for rdp connection.
-```azure
+
+```shell
 docker run --name some-guacd -d -p 4822:4822 guacamole/guacd
 ```
 
