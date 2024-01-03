@@ -19,7 +19,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego"
-	"github.com/casdoor/casdoor-go-sdk/auth"
+	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 )
 
 type ApiController struct {
@@ -27,10 +27,10 @@ type ApiController struct {
 }
 
 func init() {
-	gob.Register(auth.Claims{})
+	gob.Register(casdoorsdk.Claims{})
 }
 
-func GetUserName(user *auth.User) string {
+func GetUserName(user *casdoorsdk.User) string {
 	if user == nil {
 		return ""
 	}
@@ -53,7 +53,7 @@ func (c *ApiController) IsAdmin() bool {
 	return isGlobalAdmin || user.IsAdmin
 }
 
-func (c *ApiController) IsAdminOrSelf(user2 *auth.User) bool {
+func (c *ApiController) IsAdminOrSelf(user2 *casdoorsdk.User) bool {
 	isGlobalAdmin, user := c.isGlobalAdmin()
 	if isGlobalAdmin || (user != nil && user.IsAdmin) {
 		return true
@@ -65,7 +65,7 @@ func (c *ApiController) IsAdminOrSelf(user2 *auth.User) bool {
 	return false
 }
 
-func (c *ApiController) isGlobalAdmin() (bool, *auth.User) {
+func (c *ApiController) isGlobalAdmin() (bool, *casdoorsdk.User) {
 	username := c.GetSessionUsername()
 	if strings.HasPrefix(username, "app/") {
 		// e.g., "app/app-casnode"
@@ -77,18 +77,18 @@ func (c *ApiController) isGlobalAdmin() (bool, *auth.User) {
 		return false, nil
 	}
 
-	return user.Owner == "built-in" || user.IsGlobalAdmin, user
+	return user.Owner == "built-in", user
 }
 
-func (c *ApiController) getCurrentUser() *auth.User {
-	var user *auth.User
+func (c *ApiController) getCurrentUser() *casdoorsdk.User {
+	var user *casdoorsdk.User
 	var err error
 	userId := c.GetSessionUsername()
 	if userId == "" {
 		user = nil
 	} else {
-		// user, err = auth..GetUser(userId)
-		user, err = auth.GetUser(userId)
+		// user, err = casdoorsdk..GetUser(userId)
+		user, err = casdoorsdk.GetUser(userId)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return nil
@@ -107,17 +107,17 @@ func wrapActionResponse(affected bool, e ...error) *Response {
 	}
 }
 
-func (c *ApiController) GetSessionClaims() *auth.Claims {
+func (c *ApiController) GetSessionClaims() *casdoorsdk.Claims {
 	s := c.GetSession("user")
 	if s == nil {
 		return nil
 	}
 
-	claims := s.(auth.Claims)
+	claims := s.(casdoorsdk.Claims)
 	return &claims
 }
 
-func (c *ApiController) SetSessionClaims(claims *auth.Claims) {
+func (c *ApiController) SetSessionClaims(claims *casdoorsdk.Claims) {
 	if claims == nil {
 		c.DelSession("user")
 		return
@@ -126,7 +126,7 @@ func (c *ApiController) SetSessionClaims(claims *auth.Claims) {
 	c.SetSession("user", *claims)
 }
 
-func (c *ApiController) GetSessionUser() *auth.User {
+func (c *ApiController) GetSessionUser() *casdoorsdk.User {
 	claims := c.GetSessionClaims()
 	if claims == nil {
 		return nil
@@ -135,7 +135,7 @@ func (c *ApiController) GetSessionUser() *auth.User {
 	return &claims.User
 }
 
-func (c *ApiController) SetSessionUser(user *auth.User) {
+func (c *ApiController) SetSessionUser(user *casdoorsdk.User) {
 	if user == nil {
 		c.DelSession("user")
 		return

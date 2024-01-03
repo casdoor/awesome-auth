@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/beego/beego v1.12.12
-	github.com/casdoor/casdoor-go-sdk v0.3.3
+	github.com/casdoor/casdoor-go-sdk v0.34.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
@@ -24,11 +24,8 @@ require (
 )
 
 require (
-	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/prometheus/client_golang v1.11.1 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/stretchr/testify v1.8.3 // indirect
-	golang.org/x/net v0.13.0 // indirect
-	golang.org/x/oauth2 v0.10.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

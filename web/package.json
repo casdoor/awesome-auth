@@ -7,8 +7,7 @@
     "@ant-design/icons": "4.6.2",
     "@craco/craco": "6.4.5",
     "antd": "5.2.3",
-    "casdoor-js-sdk": "^0.2.7",
-    "copy-to-clipboard": "^3.3.1",
+    "casdoor-js-sdk": "^0.11.0",
     "craco-less": "2.0.0",
     "guacamole-common-js": "1.4.0-a",
     "i18next": "^19.8.9",
@@ -53,6 +52,7 @@
     "@babel/eslint-parser": "^7.19.1",
     "eslint": "^8.25.0",
     "eslint-plugin-react": "^7.31.10",
-    "eslint-plugin-unused-imports": "^2.0.0"
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "babel-preset-react-app": "^10.0.0"
   }
 }
