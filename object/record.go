@@ -41,9 +41,9 @@ type Record struct {
 	IsTriggered bool `json:"isTriggered"`
 }
 
-func GetRecordCount(field, value string, filterRecord *Record) (int64, error) {
-	session := GetSession("", -1, -1, field, value, "", "")
-	return session.Count(filterRecord)
+func GetRecordCount(owner, field, value string) (int64, error) {
+	session := GetSession(owner, -1, -1, field, value, "", "")
+	return session.Count(&Record{Owner: owner})
 }
 
 func GetRecords(owner string) ([]*Record, error) {
@@ -56,10 +56,10 @@ func GetRecords(owner string) ([]*Record, error) {
 	return records, nil
 }
 
-func GetPaginationRecords(offset, limit int, field, value, sortField, sortOrder string, filterRecord *Record) ([]*Record, error) {
+func GetPaginationRecords(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Record, error) {
 	records := []*Record{}
-	session := GetSession("", offset, limit, field, value, sortField, sortOrder)
-	err := session.Find(&records, filterRecord)
+	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)
+	err := session.Find(&records)
 	if err != nil {
 		return records, err
 	}

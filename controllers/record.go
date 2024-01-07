@@ -31,7 +31,7 @@ import (
 // @Success 200 {object} object.Record The Response object
 // @router /get-records [get]
 func (c *ApiController) GetRecords() {
-	organization, ok := c.RequireAdmin()
+	_, ok := c.RequireAdmin()
 	if !ok {
 		//
 		return
@@ -43,7 +43,6 @@ func (c *ApiController) GetRecords() {
 	value := c.Input().Get("value")
 	sortField := c.Input().Get("sortField")
 	sortOrder := c.Input().Get("sortOrder")
-	organizationName := c.Input().Get("organizationName")
 
 	if limit == "" || page == "" {
 		records, err := object.GetRecords(owner)
@@ -55,22 +54,15 @@ func (c *ApiController) GetRecords() {
 		c.ResponseOk(records)
 	} else {
 		limit := util.ParseInt(limit)
-		if c.IsGlobalAdmin() && organizationName != "" {
-			organization = organizationName
-		}
-		if c.IsAdmin() {
-			organization = ""
-		}
 
-		filterRecord := &object.Record{Organization: organization}
-		count, err := object.GetRecordCount(field, value, filterRecord)
+		count, err := object.GetRecordCount(owner, field, value)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
 
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		records, err := object.GetPaginationRecords(paginator.Offset(), limit, field, value, sortField, sortOrder, filterRecord)
+		records, err := object.GetPaginationRecords(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return

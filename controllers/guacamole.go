@@ -21,7 +21,7 @@ import (
 	"github.com/beego/beego"
 	"github.com/casbin/casvisor/object"
 	"github.com/casbin/casvisor/util"
-	"github.com/casbin/casvisor/util/tunnel"
+	"github.com/casbin/casvisor/util/guacamole"
 	"github.com/gorilla/websocket"
 )
 
@@ -46,12 +46,12 @@ var UpGrader = websocket.Upgrader{
 	Subprotocols: []string{"guacamole"},
 }
 
-func (c *ApiController) GetAssetTunnel() error {
+func (c *ApiController) GetAssetTunnel() {
 	ctx := c.Ctx
 	ws, err := UpGrader.Upgrade(ctx.ResponseWriter, ctx.Request, nil)
 	if err != nil {
-		beego.Error("WebSocket upgrade failed:", err)
-		return err
+		c.ResponseError("WebSocket upgrade failed:", err)
+		return
 	}
 
 	owner := c.Input().Get("owner")
@@ -60,16 +60,28 @@ func (c *ApiController) GetAssetTunnel() error {
 	height := c.Input().Get("height")
 	dpi := c.Input().Get("dpi")
 
+	intWidth, err := strconv.Atoi(width)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+	intHeight, err := strconv.Atoi(height)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
 	remoteAppName := c.Input().Get("remoteApp")
 	remoteAppDir := c.Input().Get("remoteAppDir")
 	remoteAppArgs := c.Input().Get("remoteAppArgs")
 
 	asset, err := object.GetAsset(util.GetIdFromOwnerAndName(owner, name))
 	if err != nil {
-		return err
+		c.ResponseError(err.Error())
+		return
 	}
 
-	configuration := tunnel.NewConfiguration()
+	configuration := guacamole.NewConfiguration()
 	configuration.Protocol = asset.Protocol
 	propertyMap := configuration.LoadConfig()
 
@@ -90,51 +102,49 @@ func (c *ApiController) GetAssetTunnel() error {
 		configuration.SetParameter("remote-app-args", remoteAppArgs)
 	}
 
-	// Todo: Support ssh via privateKey
-	//if asset.Protocol == "ssh"  {
-	//	if len(asset.PrivateKey) > 0 && asset.PrivateKey != "-" {
-	//		configuration.SetParameter("username", asset.Username)
-	//		configuration.SetParameter("private-key", asset.PrivateKey)
-	//		configuration.SetParameter("passphrase", asset.Passphrase)
-	//	} else {
-	//		configuration.SetParameter("username", asset.Username)
-	//		configuration.SetParameter("password", asset.Password)
-	//	}
-	//}
-
 	addr := beego.AppConfig.String("guacamoleEndpoint")
-	// fmt.Sprintf("%s:%s", configuration.GetParameter("hostname"), configuration.GetParameter("port"))
-	// log.Debug("Intializing guacd.go session", log.String("sessionId", sessionId), log.String("addr", addr), log.String("asset", asset))
-
-	guacdTunnel, err := tunnel.NewTunnel(addr, configuration)
+	tunnel, err := guacamole.NewTunnel(addr, configuration)
 	if err != nil {
-		tunnel.Disconnect(ws, NewTunnelError, err.Error())
-		// log.Error("Failed to start session", log.String("sessionId", sessionId), log.NamedError("err", err))
+		guacamole.Disconnect(ws, NewTunnelError, err.Error())
 		panic(err)
 	}
 
-	guacamoleHandler := NewGuacamoleHandler(ws, guacdTunnel)
+	session := object.Session{
+		ConnectionId: tunnel.ConnectionID,
+		Width:        intWidth,
+		Height:       intHeight,
+		Status:       object.Connecting,
+		Recording:    configuration.GetParameter(guacamole.RecordingPath),
+	}
+	if session.Recording == "" {
+		// No audit is required when no screen is recorded
+		session.Reviewed = true
+	}
+
+	_, err = object.AddSession(&session)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	guacamoleHandler := NewGuacamoleHandler(ws, tunnel)
 	guacamoleHandler.Start()
 	defer guacamoleHandler.Stop()
 
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
-			// log.Debug("WebSocket shutdown", log.String("sessionId", sessionId), log.NamedError("err", err))
-			_ = guacdTunnel.Close()
-
-			return nil
+			_ = tunnel.Close()
+			return
 		}
-		_, err = guacdTunnel.WriteAndFlush(message)
+		_, err = tunnel.WriteAndFlush(message)
 		if err != nil {
-			//service.SessionService.CloseSessionById(sessionId, TunnelClosed, "Remote connection shut down")
-			//panic(err)
-			return nil
+			return
 		}
 	}
 }
 
-func setConfig(propertyMap map[string]string, configuration *tunnel.Configuration) {
+func setConfig(propertyMap map[string]string, configuration *guacamole.Configuration) {
 	switch configuration.Protocol {
 	case "rdp":
 		configuration.SetParameter("security", "any")
@@ -142,30 +152,30 @@ func setConfig(propertyMap map[string]string, configuration *tunnel.Configuratio
 		configuration.SetParameter("create-drive-path", "true")
 		//configuration.SetParameter("resize-method", "reconnect")
 		configuration.SetParameter("resize-method", "display-update")
-		configuration.SetParameter(tunnel.EnableWallpaper, propertyMap[tunnel.EnableWallpaper])
-		configuration.SetParameter(tunnel.EnableTheming, propertyMap[tunnel.EnableTheming])
-		configuration.SetParameter(tunnel.EnableFontSmoothing, propertyMap[tunnel.EnableFontSmoothing])
-		configuration.SetParameter(tunnel.EnableFullWindowDrag, propertyMap[tunnel.EnableFullWindowDrag])
-		configuration.SetParameter(tunnel.EnableDesktopComposition, propertyMap[tunnel.EnableDesktopComposition])
-		configuration.SetParameter(tunnel.EnableMenuAnimations, propertyMap[tunnel.EnableMenuAnimations])
-		configuration.SetParameter(tunnel.DisableBitmapCaching, propertyMap[tunnel.DisableBitmapCaching])
-		configuration.SetParameter(tunnel.DisableOffscreenCaching, propertyMap[tunnel.DisableOffscreenCaching])
-		configuration.SetParameter(tunnel.ColorDepth, propertyMap[tunnel.ColorDepth])
-		configuration.SetParameter(tunnel.ForceLossless, propertyMap[tunnel.ForceLossless])
-		configuration.SetParameter(tunnel.PreConnectionId, propertyMap[tunnel.PreConnectionId])
-		configuration.SetParameter(tunnel.PreConnectionBlob, propertyMap[tunnel.PreConnectionBlob])
+		configuration.SetParameter(guacamole.EnableWallpaper, propertyMap[guacamole.EnableWallpaper])
+		configuration.SetParameter(guacamole.EnableTheming, propertyMap[guacamole.EnableTheming])
+		configuration.SetParameter(guacamole.EnableFontSmoothing, propertyMap[guacamole.EnableFontSmoothing])
+		configuration.SetParameter(guacamole.EnableFullWindowDrag, propertyMap[guacamole.EnableFullWindowDrag])
+		configuration.SetParameter(guacamole.EnableDesktopComposition, propertyMap[guacamole.EnableDesktopComposition])
+		configuration.SetParameter(guacamole.EnableMenuAnimations, propertyMap[guacamole.EnableMenuAnimations])
+		configuration.SetParameter(guacamole.DisableBitmapCaching, propertyMap[guacamole.DisableBitmapCaching])
+		configuration.SetParameter(guacamole.DisableOffscreenCaching, propertyMap[guacamole.DisableOffscreenCaching])
+		configuration.SetParameter(guacamole.ColorDepth, propertyMap[guacamole.ColorDepth])
+		configuration.SetParameter(guacamole.ForceLossless, propertyMap[guacamole.ForceLossless])
+		configuration.SetParameter(guacamole.PreConnectionId, propertyMap[guacamole.PreConnectionId])
+		configuration.SetParameter(guacamole.PreConnectionBlob, propertyMap[guacamole.PreConnectionBlob])
 	case "ssh":
-		configuration.SetParameter(tunnel.FontSize, propertyMap[tunnel.FontSize])
-		//configuration.SetParameter(tunnel.FontName, propertyMap[tunnel.FontName])
-		configuration.SetParameter(tunnel.ColorScheme, propertyMap[tunnel.ColorScheme])
-		configuration.SetParameter(tunnel.Backspace, propertyMap[tunnel.Backspace])
-		configuration.SetParameter(tunnel.TerminalType, propertyMap[tunnel.TerminalType])
+		configuration.SetParameter(guacamole.FontSize, propertyMap[guacamole.FontSize])
+		//configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
+		configuration.SetParameter(guacamole.ColorScheme, propertyMap[guacamole.ColorScheme])
+		configuration.SetParameter(guacamole.Backspace, propertyMap[guacamole.Backspace])
+		configuration.SetParameter(guacamole.TerminalType, propertyMap[guacamole.TerminalType])
 	case "telnet":
-		configuration.SetParameter(tunnel.FontSize, propertyMap[tunnel.FontSize])
-		//configuration.SetParameter(tunnel.FontName, propertyMap[tunnel.FontName])
-		configuration.SetParameter(tunnel.ColorScheme, propertyMap[tunnel.ColorScheme])
-		configuration.SetParameter(tunnel.Backspace, propertyMap[tunnel.Backspace])
-		configuration.SetParameter(tunnel.TerminalType, propertyMap[tunnel.TerminalType])
+		configuration.SetParameter(guacamole.FontSize, propertyMap[guacamole.FontSize])
+		//configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
+		configuration.SetParameter(guacamole.ColorScheme, propertyMap[guacamole.ColorScheme])
+		configuration.SetParameter(guacamole.Backspace, propertyMap[guacamole.Backspace])
+		configuration.SetParameter(guacamole.TerminalType, propertyMap[guacamole.TerminalType])
 	default:
 	}
 }

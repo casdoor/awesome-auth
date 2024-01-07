@@ -32,6 +32,7 @@ import RecordEditPage from "./RecordEditPage";
 import AssetListPage from "./AssetListPage";
 import AssetEditPage from "./AssetEditPage";
 import GuacdPage from "./component/access/GuacdPage";
+import SessionListPage from "./SessionListPage";
 
 const {Header, Footer, Content} = Layout;
 const hiddenPages = ["/access"];
@@ -234,15 +235,8 @@ class App extends Component {
     res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>,
       "/assets"));
 
-    // if (Setting.isLocalAdminUser(this.state.account)) {
-    //
-    //   res.push(Setting.getItem(
-    //     <a target="_blank" rel="noreferrer" href={Setting.getMyProfileUrl(this.state.account).replace("/account", "/records")}>
-    //       {i18next.t("general:Logs")}
-    //       {Setting.renderExternalLink()}
-    //     </a>,
-    //     "###"));
-    // }
+    res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>,
+      "/sessions"));
 
     return res;
   }
@@ -278,6 +272,7 @@ class App extends Component {
         <Route exact path="/assets" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/access" render={(props) => this.renderSigninIfNotSignedIn(<GuacdPage account={this.state.account} {...props} />)} />
+        <Route exact path="/sessions" render={(props) => this.renderSigninIfNotSignedIn(<SessionListPage account={this.state.account} {...props} />)} />
       </Switch>
     );
   }

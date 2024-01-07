@@ -43,7 +43,6 @@ func (c *ApiController) GetAssets() {
 	value := c.Input().Get("value")
 	sortField := c.Input().Get("sortField")
 	sortOrder := c.Input().Get("sortOrder")
-	// organizationName := c.Input().Get("organizationName")
 
 	if limit == "" || page == "" {
 		assets, err := object.GetAssets(owner)

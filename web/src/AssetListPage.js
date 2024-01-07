@@ -327,7 +327,6 @@ class AssetListPage extends BaseListPage {
       value = params.type;
     }
     this.setState({loading: true});
-    // AssetBackend.getAsset(Setting.isDefaultOrganizationSelected(this.props.account) ? "" : Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
     AssetBackend.getAssets(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
       .then((res) => {
         this.setState({

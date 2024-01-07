@@ -319,3 +319,16 @@ export function isResponseDenied(data) {
 export function GenerateId() {
   return uuidv4();
 }
+
+export function getTimeDifference(startTime, endTime) {
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+
+  const timeDiff = Math.abs(end - start);
+
+  const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+  return hours + "h " + minutes + "m " + seconds + "s";
+}
