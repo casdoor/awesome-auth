@@ -293,6 +293,10 @@ class AssetEditPage extends React.Component {
               </Col>
               <Col span={22}>
                 <Switch checked={this.state.asset.enableRemoteApp} onChange={checked => {
+                  if (checked && this.state.asset.remoteApps.length === 0) {
+                    Setting.showMessage("error", i18next.t("asset:Cannot enable Remote App when Remote Apps are empty. Please add at least one Remote App in below table first, then enable again"));
+                    return;
+                  }
                   this.updateAssetField("enableRemoteApp", checked);
                 }} />
               </Col>
