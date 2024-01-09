@@ -23,6 +23,7 @@ import qs from "qs";
 import {Base64} from "js-base64";
 import Draggable from "react-draggable";
 import GuacdClipboard from "./GuacdClipboard";
+import * as SessionBackend from "../../backend/SessionBackend";
 import "./Guacd.css";
 
 let fixedSize = false;
@@ -38,7 +39,7 @@ const GuacdPage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
-  const assetOwner = searchParams.get("owner");
+  const owner = searchParams.get("owner");
   const assetName = searchParams.get("name");
   const protocol = searchParams.get("protocol");
   let width = searchParams.get("width");
@@ -57,24 +58,34 @@ const GuacdPage = () => {
 
   const [box, setBox] = useState({width, height});
   const [guacd, setGuacd] = useState({});
-  const [session] = useState({});
+  const [session, setSession] = useState({});
   const [clipboardText, setClipboardText] = useState("");
   const [fullScreened, setFullScreened] = useState(false);
   const [clipboardVisible, setClipboardVisible] = useState(false);
 
+  const getId = (owner, name) => {
+    return `${owner}/${name}`;
+  };
+
   useEffect(() => {
     document.title = assetName;
     createSession();
-  }, [assetOwner, assetName]);
+  }, [owner, assetName]);
 
   const createSession = async() => {
-    renderDisplay(assetOwner, assetName, protocol, width, height);
+    SessionBackend.CreateSession(getId(owner, assetName)).then((res) => {
+      if (res.status === "ok") {
+        setSession(res.data);
+        renderDisplay(getId(owner, res.data.name), protocol, width, height);
+      } else {
+        message.error("Failed to create session:" + res.msg);
+      }
+    });
   };
 
-  const renderDisplay = (assetOwner, assetName, protocol, width, height) => {
-    const sessionId = "123";
+  const renderDisplay = (sessionId, protocol, width, height) => {
     const wsEndpoint = Setting.ServerUrl.replace("http://", "ws://");
-    const wsUrl = `${wsEndpoint}/api/get-asset-tunnel?owner=${assetOwner}&name=${assetName}&`;
+    const wsUrl = `${wsEndpoint}/api/get-asset-tunnel?sessionId=${sessionId}&`;
     const tunnel = new Guacamole.WebSocketTunnel(wsUrl);
     const client = new Guacamole.Client(tunnel);
 
@@ -297,7 +308,7 @@ const GuacdPage = () => {
       message.destroy(key);
       message.success({content: "Connection successful", duration: 3, key: key});
       // Send a request to the backend to update the session's status
-      // SessionBackend.connect(sessionId);
+      SessionBackend.connect(sessionId);
       break;
     case STATE_DISCONNECTING:
       // Handle disconnecting state if needed

@@ -42,6 +42,7 @@ func (c *ApiController) GetSessions() {
 	value := c.Input().Get("value")
 	sortField := c.Input().Get("sortField")
 	sortOrder := c.Input().Get("sortOrder")
+	status := c.Input().Get("status")
 
 	if limit == "" || page == "" {
 		sessions, err := object.GetSessions(owner)
@@ -54,14 +55,14 @@ func (c *ApiController) GetSessions() {
 	} else {
 		limit := util.ParseInt(limit)
 
-		count, err := object.GetSessionCount(owner, field, value)
+		count, err := object.GetSessionCount(owner, status, field, value)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
 		}
 
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		sessions, err := object.GetPaginationSessions(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
+		sessions, err := object.GetPaginationSessions(owner, status, paginator.Offset(), limit, field, value, sortField, sortOrder)
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
@@ -98,15 +99,21 @@ func (c *ApiController) GetConnSession() {
 // @Success 200 {object} Response
 // @router /delete-session [post]
 func (c *ApiController) DeleteSession() {
-	id := c.Input().Get("id")
-
-	affected, err := object.DeleteSession(id)
+	var session object.Session
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &session)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
-	c.ResponseOk(affected)
+	affected, err := object.DeleteSession(&session)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	c.Data["json"] = wrapActionResponse(affected)
+	c.ServeJSON()
 }
 
 // UpdateSession
@@ -148,4 +155,70 @@ func (c *ApiController) AddSession() {
 
 	c.Data["json"] = wrapActionResponse(object.AddSession(&session))
 	c.ServeJSON()
+}
+
+// AddSessionInternal
+// @Title AddSessionInternal
+// @Tag Session API
+// @Description add session
+// @Param   assetId    query   string  true        "The id of asset"
+// @Success 200 {object} Response
+// @router /add-session-internal [get]
+func (c *ApiController) AddSessionInternal() {
+	assetId := c.Input().Get("assetId")
+	mode := c.Input().Get("mode")
+
+	user := c.getCurrentUser()
+
+	s, err := object.CreateSession(c.Ctx.Input.IP(), assetId, mode, user)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	session := object.Session{
+		Owner:      s.Owner,
+		Name:       s.Name,
+		Upload:     s.Upload,
+		Download:   s.Download,
+		Delete:     s.Delete,
+		Rename:     s.Rename,
+		Edit:       s.Edit,
+		FileSystem: s.FileSystem,
+		Copy:       s.Copy,
+		Paste:      s.Paste,
+	}
+	c.ResponseOk(session)
+}
+
+func (c *ApiController) StartSession() {
+	sessionId := c.Input().Get("id")
+
+	s := object.Session{}
+	s.Status = object.Connected
+	s.ConnectedTime = util.GetCurrentTime()
+
+	_, err := object.UpdateSession(sessionId, &s, []string{"status", "connected_time"}...)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	c.ResponseOk()
+}
+
+func (c *ApiController) StopSession() {
+	sessionId := c.Input().Get("id")
+
+	s := object.Session{}
+	s.Status = object.Disconnected
+	s.DisconnectedTime = util.GetCurrentTime()
+
+	err := object.CloseSession(sessionId, ForcedDisconnect, "The administrator forcibly closes the session")
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	c.ResponseOk()
 }

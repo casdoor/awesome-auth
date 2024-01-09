@@ -219,9 +219,9 @@ func (t *Tunnel) Close() error {
 	return err
 }
 
-func Disconnect(ws *websocket.Conn, code int, reason string) {
+func Disconnect(ws *websocket.Conn, code int, msg string) {
 	// guacd cannot handle Chinese characters, so base64 encoding is done
-	encodeReason := base64.StdEncoding.EncodeToString([]byte(reason))
+	encodeReason := base64.StdEncoding.EncodeToString([]byte(msg))
 	err := NewInstruction("error", encodeReason, strconv.Itoa(code))
 	_ = ws.WriteMessage(websocket.TextMessage, []byte(err.String()))
 	disconnect := NewInstruction("disconnect")

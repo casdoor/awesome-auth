@@ -14,26 +14,50 @@
 
 import * as SessionBackend from "./backend/SessionBackend";
 import * as Setting from "./Setting";
-import {Table} from "antd";
+import {Radio, Table} from "antd";
 import i18next from "i18next";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
 import {Link} from "react-router-dom";
 import BaseListPage from "./BaseListPage";
 import moment from "moment";
+import React from "react";
+
+export const Connected = "connected";
+const Disconnected = "disconnected";
 
 class SessionListPage extends BaseListPage {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...this.state,
+      status: Connected,
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.status !== prevState.status) {
+      this.fetch({
+        pagination: this.state.pagination,
+      });
+    }
+  }
+
   deleteSession(i) {
-    const session = this.state.sessions[i];
-    SessionBackend.deleteSession(session).then((res) => {
-      if (res.status === "ok") {
-        Setting.showMessage("success", "Successfully deleted session");
-        this.setState({
-          sessions: Setting.deleteRow(this.state.sessions, i),
-        });
-      } else {
-        Setting.showMessage("error", `Failed to delete session: ${res.msg}`);
-      }
-    });
+    SessionBackend.deleteSession(this.state.data[i])
+      .then((res) => {
+        if (res.status === "ok") {
+          Setting.showMessage("success", i18next.t("general:Successfully deleted"));
+          this.setState({
+            data: Setting.deleteRow(this.state.data, i),
+            pagination: {total: this.state.pagination.total - 1},
+          });
+        } else {
+          Setting.showMessage("error", `${i18next.t("general:Failed to delete")}: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `${i18next.t("general:Failed to connect to server")}: ${error}`);
+      });
   }
 
   renderTable(sessions) {
@@ -97,15 +121,23 @@ class SessionListPage extends BaseListPage {
         width: "180px",
         fixed: (Setting.isMobile()) ? "false" : "right",
         render: (text, record, index) => {
-          return (
-            <div>
+          return this.state.status === Connected ?
+            (
+              <div>
+                <PopconfirmModal
+                  style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
+                  text={i18next.t("general:Stop")}
+                  title={i18next.t("general:Sure to disconnect?")}
+                  onConfirm={() => {SessionBackend.disconnect(`${record.owner}/${record.name}`);}}
+                />
+              </div>
+            ) : (
               <PopconfirmModal
-                title={i18next.t("general:Sure to delete") + `: ${record.name} ?`}
+                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
+                title={i18next.t("general:Sure to delet") + `: ${record.name} ?`}
                 onConfirm={() => this.deleteSession(index)}
-              >
-              </PopconfirmModal>
-            </div>
-          );
+              />
+            );
         },
       },
     ];
@@ -118,16 +150,27 @@ class SessionListPage extends BaseListPage {
     };
 
     return (
-      <Table scroll={{x: "max-content"}} columns={columns} dataSource={sessions} rowKey={(record) => `${record.owner}/${record.name}`} size="middle" bordered
-        pagination={paginationProps}
-        title={() => (
-          <div>
-            {i18next.t("general:Sessions")}&nbsp;&nbsp;&nbsp;&nbsp;
-          </div>
-        )}
-        loading={this.state.loading}
-        onChange={this.handleTableChange}
-      />
+      <div>
+        <Radio.Group style={{marginBottom: "10px"}} defaultValue={Connected}
+          onChange={(e) => {
+            this.setState({
+              status: e.target.value,
+            });
+          }}>
+          <Radio.Button value={Connected}>{i18next.t("session:online session")}</Radio.Button>
+          <Radio.Button value={Disconnected}>{i18next.t("session:history session")}</Radio.Button>
+        </Radio.Group>
+        <Table scroll={{x: "max-content"}} columns={columns} dataSource={sessions} rowKey={(record) => `${record.owner}/${record.name}`} size="middle" bordered
+          pagination={paginationProps}
+          title={() => (
+            <div>
+              {i18next.t("general:Sessions")}&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+          )}
+          loading={this.state.loading}
+          onChange={this.handleTableChange}
+        />
+      </div>
     );
   }
 
@@ -143,7 +186,7 @@ class SessionListPage extends BaseListPage {
       loading: true,
     });
 
-    SessionBackend.getSessions(Setting.isDefaultOrganizationSelected(this.props.account) ? "" : Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder).then((res) => {
+    SessionBackend.getSessions(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder, this.state.status).then((res) => {
       this.setState({
         loading: false,
       });

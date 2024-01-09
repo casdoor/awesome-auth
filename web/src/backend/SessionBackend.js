@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import * as Setting from "../Setting";
+import {Connected} from "../SessionListPage";
 
-export function getSessions(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "") {
-  return fetch(`${Setting.ServerUrl}/api/get-sessions?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}`, {
+export function getSessions(owner, page = "", pageSize = "", field = "", value = "", sortField = "", sortOrder = "", status = Connected) {
+  return fetch(`${Setting.ServerUrl}/api/get-sessions?owner=${owner}&p=${page}&pageSize=${pageSize}&field=${field}&value=${value}&sortField=${sortField}&sortOrder=${sortOrder}&status=${status}`, {
     method: "GET",
     credentials: "include",
   }).then(res => res.json());
@@ -37,12 +38,10 @@ export function updateSession(owner, name, session) {
   }).then(res => res.json());
 }
 
-export function addSession(session) {
-  const newSession = Setting.deepCopy(session);
-  return fetch(`${Setting.ServerUrl}/api/add-session`, {
+export function CreateSession(assetId, mode = "guacd") {
+  return fetch(`${Setting.ServerUrl}/api/add-session-internal?assetId=${assetId}&mode=${mode}`, {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify(newSession),
   }).then(res => res.json());
 }
 
@@ -52,5 +51,19 @@ export function deleteSession(session) {
     method: "POST",
     credentials: "include",
     body: JSON.stringify(newSession),
+  }).then(res => res.json());
+}
+
+export function connect(sessionId) {
+  return fetch(`${Setting.ServerUrl}/api/start-session?id=${sessionId} `, {
+    method: "POST",
+    credentials: "include",
+  }).then(res => res.json());
+}
+
+export function disconnect(sessionId) {
+  return fetch(`${Setting.ServerUrl}/api/stop-session?id=${sessionId} `, {
+    method: "POST",
+    credentials: "include",
   }).then(res => res.json());
 }
