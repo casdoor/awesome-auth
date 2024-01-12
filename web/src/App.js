@@ -22,7 +22,6 @@ import * as Setting from "./Setting";
 import * as AccountBackend from "./backend/AccountBackend";
 import AuthCallback from "./AuthCallback";
 import * as Conf from "./Conf";
-import HomePage from "./HomePage";
 import SigninPage from "./SigninPage";
 import i18next from "i18next";
 import {withTranslation} from "react-i18next";
@@ -33,6 +32,7 @@ import SessionListPage from "./SessionListPage";
 import RecordListPage from "./RecordListPage";
 import RecordEditPage from "./RecordEditPage";
 import GuacdPage from "./component/access/GuacdPage";
+import ShortcutsPage from "./basic/ShortcutsPage";
 
 const {Header, Footer, Content} = Layout;
 const hiddenPages = ["/access"];
@@ -72,7 +72,7 @@ class App extends Component {
     this.setState({
       uri: uri,
     });
-    if (uri === "/" || uri === "/home") {
+    if (uri === "/") {
       this.setState({selectedMenuKey: "/"});
     } else if (uri.includes("/assets")) {
       this.setState({selectedMenuKey: "/assets"});
@@ -261,8 +261,7 @@ class App extends Component {
       <Switch>
         <Route exact path="/callback" component={AuthCallback} />
         <Route exact path="/signin" render={(props) => this.renderHomeIfSignedIn(<SigninPage {...props} />)} />
-        <Route exact path="/" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
-        <Route exact path="/home" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
+        <Route exact path="/" render={(props) => this.renderSigninIfNotSignedIn(<ShortcutsPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/sessions" render={(props) => this.renderSigninIfNotSignedIn(<SessionListPage account={this.state.account} {...props} />)} />
