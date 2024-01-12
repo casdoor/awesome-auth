@@ -66,7 +66,7 @@ class SessionListPage extends BaseListPage {
         title: i18next.t("general:Name"),
         dataIndex: "name",
         key: "name",
-        width: "180px",
+        width: "350px",
         sorter: (a, b) => a.name.localeCompare(b.name),
         render: (text, record, index) => {
           return (
@@ -78,7 +78,7 @@ class SessionListPage extends BaseListPage {
         title: i18next.t("general:Protocol"),
         dataIndex: "protocol",
         key: "protocol",
-        width: "50px",
+        width: "120px",
         filterMultiple: false,
         filters: [
           {text: "RDP", value: "RDP"},
@@ -87,23 +87,26 @@ class SessionListPage extends BaseListPage {
         ],
       },
       {
-        title: i18next.t("general:IP"),
+        title: i18next.t("general:Client IP"),
         dataIndex: "ip",
         key: "ip",
-        width: "120px",
+        width: "150px",
       },
       {
-        title: i18next.t("general:Connected time"),
+        title: i18next.t("general:Connection start time"),
         dataIndex: "connectedTime",
         key: "connectedTime",
-        width: "200px",
+        width: "220px",
         sorter: (a, b) => a.connectedTime.localeCompare(b.connectedTime),
+        render: (text, asset, index) => {
+          return Setting.getFormattedDate(text);
+        },
       },
       {
-        title: i18next.t("general:Connected time duration"),
+        title: i18next.t("general:Connection duration"),
         dataIndex: "connectedTimeDur",
         key: "connectedTimeDur",
-        width: "200px",
+        // width: "200px",
         render: (text, record) => {
           if (!record["connectedTime"]) {
             return "-";
@@ -115,10 +118,10 @@ class SessionListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("general:Actions"),
-        dataIndex: "",
-        key: "op",
-        width: "180px",
+        title: i18next.t("general:Action"),
+        dataIndex: "action",
+        key: "action",
+        width: "120px",
         fixed: (Setting.isMobile()) ? "false" : "right",
         render: (text, record, index) => {
           return this.state.status === Connected ?
@@ -128,7 +131,9 @@ class SessionListPage extends BaseListPage {
                   style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                   text={i18next.t("general:Stop")}
                   title={i18next.t("general:Sure to disconnect?")}
-                  onConfirm={() => {SessionBackend.disconnect(`${record.owner}/${record.name}`);}}
+                  onConfirm={() => {
+                    SessionBackend.disconnect(`${record.owner}/${record.name}`);
+                  }}
                 />
               </div>
             ) : (
@@ -151,20 +156,19 @@ class SessionListPage extends BaseListPage {
 
     return (
       <div>
-        <Radio.Group style={{marginBottom: "10px"}} defaultValue={Connected}
-          onChange={(e) => {
-            this.setState({
-              status: e.target.value,
-            });
-          }}>
-          <Radio.Button value={Connected}>{i18next.t("session:online session")}</Radio.Button>
-          <Radio.Button value={Disconnected}>{i18next.t("session:history session")}</Radio.Button>
-        </Radio.Group>
-        <Table scroll={{x: "max-content"}} columns={columns} dataSource={sessions} rowKey={(record) => `${record.owner}/${record.name}`} size="middle" bordered
-          pagination={paginationProps}
+        <Table scroll={{x: "max-content"}} columns={columns} dataSource={sessions} rowKey={(record) => `${record.owner}/${record.name}`} size="middle" bordered pagination={paginationProps}
           title={() => (
             <div>
               {i18next.t("general:Sessions")}&nbsp;&nbsp;&nbsp;&nbsp;
+              <Radio.Group size={"small"} buttonStyle="solid" defaultValue={Connected}
+                onChange={(e) => {
+                  this.setState({
+                    status: e.target.value,
+                  });
+                }}>
+                <Radio.Button value={Connected}>{i18next.t("session:Online")}</Radio.Button>
+                <Radio.Button value={Disconnected}>{i18next.t("session:History")}</Radio.Button>
+              </Radio.Group>
             </div>
           )}
           loading={this.state.loading}
