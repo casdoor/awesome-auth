@@ -24,7 +24,10 @@ require (
 )
 
 require (
+	github.com/casbin/casbin/v2 v2.63.0
+	github.com/casdoor/xorm-adapter/v3 v3.1.0
 	github.com/prometheus/client_golang v1.11.1 // indirect
+	github.com/qiangmzsx/string-adapter/v2 v2.2.0
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/stretchr/testify v1.8.3 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

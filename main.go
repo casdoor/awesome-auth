@@ -18,12 +18,14 @@ import (
 	"github.com/beego/beego"
 	"github.com/beego/beego/plugins/cors"
 	_ "github.com/beego/beego/session/redis"
+	"github.com/casbin/casvisor/authz"
 	"github.com/casbin/casvisor/object"
 	"github.com/casbin/casvisor/routers"
 )
 
 func main() {
 	object.InitAdapter()
+	authz.InitAuthz()
 
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowOrigins:     []string{"*"},
@@ -38,6 +40,7 @@ func main() {
 	// https://studygolang.com/articles/2303
 	beego.InsertFilter("/", beego.BeforeRouter, routers.TransparentStatic) // must has this for default page
 	beego.InsertFilter("/*", beego.BeforeRouter, routers.TransparentStatic)
+	beego.InsertFilter("*", beego.BeforeRouter, routers.ApiFilter)
 
 	if beego.AppConfig.String("redisEndpoint") == "" {
 		beego.BConfig.WebConfig.Session.SessionProvider = "file"

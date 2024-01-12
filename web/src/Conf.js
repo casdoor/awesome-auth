@@ -23,6 +23,7 @@ export const AuthConfig = {
 
 export const ForceLanguage = "";
 export const DefaultLanguage = "en";
+export const IsDemoMode = false;
 
 export const ThemeDefault = {
   themeType: "default",

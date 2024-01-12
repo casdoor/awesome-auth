@@ -53,48 +53,18 @@ func (c *ApiController) IsAdmin() bool {
 	return isGlobalAdmin || user.IsAdmin
 }
 
-func (c *ApiController) IsAdminOrSelf(user2 *casdoorsdk.User) bool {
-	isGlobalAdmin, user := c.isGlobalAdmin()
-	if isGlobalAdmin || (user != nil && user.IsAdmin) {
-		return true
-	}
-
-	if user.Owner == user2.Owner && user.Name == user2.Name {
-		return true
-	}
-	return false
-}
-
 func (c *ApiController) isGlobalAdmin() (bool, *casdoorsdk.User) {
 	username := c.GetSessionUsername()
 	if strings.HasPrefix(username, "app/") {
 		// e.g., "app/app-casnode"
 		return true, nil
 	}
-
-	user := c.getCurrentUser()
+	user := c.GetSessionUser()
 	if user == nil {
 		return false, nil
 	}
 
 	return user.Owner == "built-in", user
-}
-
-func (c *ApiController) getCurrentUser() *casdoorsdk.User {
-	var user *casdoorsdk.User
-	var err error
-	userId := c.GetSessionUsername()
-	if userId == "" {
-		user = nil
-	} else {
-		// user, err = casdoorsdk..GetUser(userId)
-		user, err = casdoorsdk.GetUser(userId)
-		if err != nil {
-			c.ResponseError(err.Error())
-			return nil
-		}
-	}
-	return user
 }
 
 func wrapActionResponse(affected bool, e ...error) *Response {

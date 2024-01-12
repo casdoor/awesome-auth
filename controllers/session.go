@@ -168,7 +168,7 @@ func (c *ApiController) AddSessionInternal() {
 	assetId := c.Input().Get("assetId")
 	mode := c.Input().Get("mode")
 
-	user := c.getCurrentUser()
+	user := c.GetSessionUser()
 
 	s, err := object.CreateSession(c.Ctx.Input.IP(), assetId, mode, user)
 	if err != nil {

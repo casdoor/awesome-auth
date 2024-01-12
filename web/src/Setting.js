@@ -309,8 +309,8 @@ export function getOption(label, value) {
   };
 }
 
-export function isResponseDenied(data) {
-  if (data.msg === "Unauthorized operation" || data.msg === "未授权的操作") {
+export function isResponseDenied(res) {
+  if (res.msg === "Unauthorized operation" || res.msg === "未授权的操作") {
     return true;
   }
   return false;

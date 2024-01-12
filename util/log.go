@@ -18,6 +18,9 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/beego/beego/context"
+	"github.com/beego/beego/logs"
 )
 
 func GetIPInfo(clientIP string) string {
@@ -56,4 +59,9 @@ func GetIPFromRequest(req *http.Request) string {
 	}
 
 	return GetIPInfo(clientIP)
+}
+
+func LogInfo(ctx *context.Context, f string, v ...interface{}) {
+	ipString := fmt.Sprintf("(%s) ", GetIPFromRequest(ctx.Request))
+	logs.Info(ipString+f, v...)
 }
