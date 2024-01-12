@@ -27,12 +27,12 @@ import SigninPage from "./SigninPage";
 import i18next from "i18next";
 import {withTranslation} from "react-i18next";
 import LanguageSelect from "./LanguageSelect";
-import RecordListPage from "./RecordListPage";
-import RecordEditPage from "./RecordEditPage";
 import AssetListPage from "./AssetListPage";
 import AssetEditPage from "./AssetEditPage";
-import GuacdPage from "./component/access/GuacdPage";
 import SessionListPage from "./SessionListPage";
+import RecordListPage from "./RecordListPage";
+import RecordEditPage from "./RecordEditPage";
+import GuacdPage from "./component/access/GuacdPage";
 
 const {Header, Footer, Content} = Layout;
 const hiddenPages = ["/access"];
@@ -74,10 +74,12 @@ class App extends Component {
     });
     if (uri === "/" || uri === "/home") {
       this.setState({selectedMenuKey: "/"});
-    } else if (uri.includes("/records")) {
-      this.setState({selectedMenuKey: "/records"});
     } else if (uri.includes("/assets")) {
       this.setState({selectedMenuKey: "/assets"});
+    } else if (uri.includes("/sessions")) {
+      this.setState({selectedMenuKey: "/sessions"});
+    } else if (uri.includes("/records")) {
+      this.setState({selectedMenuKey: "/records"});
     } else {
       this.setState({selectedMenuKey: "null"});
     }
@@ -228,15 +230,9 @@ class App extends Component {
     }
 
     res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, "/"));
-
-    res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>,
-      "/records"));
-
-    res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>,
-      "/assets"));
-
-    res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>,
-      "/sessions"));
+    res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>, "/assets"));
+    res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>, "/sessions"));
+    res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>, "/records"));
 
     return res;
   }
@@ -267,12 +263,12 @@ class App extends Component {
         <Route exact path="/signin" render={(props) => this.renderHomeIfSignedIn(<SigninPage {...props} />)} />
         <Route exact path="/" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
         <Route exact path="/home" render={(props) => this.renderSigninIfNotSignedIn(<HomePage account={this.state.account} {...props} />)} />
-        <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)} />
-        <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets" render={(props) => this.renderSigninIfNotSignedIn(<AssetListPage account={this.state.account} {...props} />)} />
         <Route exact path="/assets/:organizationName/:assetName" render={(props) => this.renderSigninIfNotSignedIn(<AssetEditPage account={this.state.account} {...props} />)} />
-        <Route exact path="/access" render={(props) => this.renderSigninIfNotSignedIn(<GuacdPage account={this.state.account} {...props} />)} />
         <Route exact path="/sessions" render={(props) => this.renderSigninIfNotSignedIn(<SessionListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)} />
+        <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
+        <Route exact path="/access" render={(props) => this.renderSigninIfNotSignedIn(<GuacdPage account={this.state.account} {...props} />)} />
       </Switch>
     );
   }
