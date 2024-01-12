@@ -237,7 +237,7 @@ class RecordListPage extends BaseListPage {
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                 type="primary"
                 onClick={() => this.props.history.push(`/records/${record.owner}/${record.name}`)}
-              >{i18next.t("general:Edit")}
+              >{i18next.t("general:View")}
               </Button>
               <PopconfirmModal
                 disabled={!Setting.isAdminUser(this.props.account) && (record.owner !== this.props.account.owner)}

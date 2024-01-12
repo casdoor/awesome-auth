@@ -177,7 +177,7 @@ class AssetListPage extends BaseListPage {
         title: i18next.t("general:Port"),
         dataIndex: "port",
         key: "port",
-        width: "120px",
+        width: "90px",
         sorter: (a, b) => a.port - b.port,
       },
       {
@@ -191,7 +191,7 @@ class AssetListPage extends BaseListPage {
         title: i18next.t("general:Language"),
         dataIndex: "language",
         key: "language",
-        width: "130px",
+        width: "90px",
         sorter: (a, b) => a.language.localeCompare(b.language),
       },
       {
@@ -220,7 +220,7 @@ class AssetListPage extends BaseListPage {
         title: i18next.t("general:Enable Remote App"),
         dataIndex: "enableRemoteApp",
         key: "enableRemoteApp",
-        width: "110px",
+        width: "150px",
         render: (text, record, index) => {
           return (
             <Switch disabled checked={text} />
@@ -231,7 +231,7 @@ class AssetListPage extends BaseListPage {
         title: i18next.t("general:Remote Apps"),
         dataIndex: "remoteApps",
         key: "remoteApps",
-        width: "90px",
+        width: "120px",
         // todo: fix filter
         render: (text, record, index) => {
           return `${record.enableRemoteApp ? 1 : 0}  / ${record.remoteApps === null ? 0 : record.remoteApps.length}`;
