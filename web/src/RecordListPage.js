@@ -26,30 +26,6 @@ import PopconfirmModal from "./common/modal/PopconfirmModal";
 class RecordListPage extends BaseListPage {
   constructor(props) {
     super(props);
-    this.state = {
-      classes: props,
-      records: null,
-    };
-  }
-
-  UNSAFE_componentWillMount() {
-    this.getRecords();
-  }
-
-  getRecords() {
-    // eslint-disable-next-line react/prop-types
-    // todo: check
-    // RecordBackend.getRecords(this.props.account.name)
-    RecordBackend.getRecords(this.props.account.owner)
-      .then((res) => {
-        if (res.status === "ok") {
-          this.setState({
-            records: res.data,
-          });
-        } else {
-          Setting.showMessage("error", `Failed to get records: ${res.msg}`);
-        }
-      });
   }
 
   newRecord() {
@@ -84,13 +60,13 @@ class RecordListPage extends BaseListPage {
   }
 
   deleteRecord(i) {
-    RecordBackend.deleteRecord(this.state.records[i])
+    RecordBackend.deleteRecord(this.state.data[i])
       .then((res) => {
         if (res.status === "ok") {
           Setting.showMessage("success", "Record deleted successfully");
           this.setState({
-            records: Setting.deleteRow(this.state.records, i),
-            // pagination: {total: this.state.pagination.total - 1},
+            data: Setting.deleteRow(this.state.data, i),
+            pagination: {total: this.state.pagination.total - 1},
           });
         } else {
           Setting.showMessage("error", `Failed to delete Record: ${res.msg}`);
@@ -272,16 +248,6 @@ class RecordListPage extends BaseListPage {
     );
   }
 
-  render() {
-    return (
-      <div>
-        {
-          this.renderTable(this.state.records)
-        }
-      </div>
-    );
-  }
-
   fetch = (params = {}) => {
     let field = params.searchedColumn, value = params.searchText;
     const sortField = params.sortField, sortOrder = params.sortOrder;
@@ -290,7 +256,7 @@ class RecordListPage extends BaseListPage {
       value = params.type;
     }
     this.setState({loading: true});
-    RecordBackend.getRecord(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
+    RecordBackend.getRecords(Setting.getRequestOrganization(this.props.account), params.pagination.current, params.pagination.pageSize, field, value, sortField, sortOrder)
       .then((res) => {
         this.setState({
           loading: false,
@@ -300,7 +266,7 @@ class RecordListPage extends BaseListPage {
             data: res.data,
             pagination: {
               ...params.pagination,
-              // total: res.data2,
+              total: res.data2,
             },
             searchText: params.searchText,
             searchedColumn: params.searchedColumn,

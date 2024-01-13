@@ -25,35 +25,14 @@ import PopconfirmModal from "./common/modal/PopconfirmModal";
 class AssetListPage extends BaseListPage {
   constructor(props) {
     super(props);
-    this.state = {
-      classes: props,
-      assets: null,
-    };
-  }
-
-  UNSAFE_componentWillMount() {
-    this.getAssets();
-  }
-
-  getAssets() {
-    AssetBackend.getAssets(this.props.account.owner)
-      .then((res) => {
-        if (res.status === "ok") {
-          this.setState({
-            assets: res.data,
-          });
-        } else {
-          Setting.showMessage("error", `Failed to get assets: ${res.msg}`);
-        }
-      });
   }
 
   newAsset() {
     return {
       owner: this.props.account.owner,
-      name: `machine_${this.state.assets.length}`,
+      name: `machine_${this.state.data.length + 1}`,
       createdTime: moment().format(),
-      description: `New Machine - ${this.state.assets.length}`,
+      description: `New Machine - ${this.state.data.length}`,
       protocol: "rdp",
       ip: "127.0.0.1",
       port: 3389,
@@ -87,13 +66,13 @@ class AssetListPage extends BaseListPage {
   }
 
   deleteAsset(i) {
-    AssetBackend.deleteAsset(this.state.assets[i])
+    AssetBackend.deleteAsset(this.state.data[i])
       .then((res) => {
         if (res.status === "ok") {
           Setting.showMessage("success", "Asset deleted successfully");
           this.setState({
-            assets: Setting.deleteRow(this.state.assets, i),
-            // pagination: {total: this.state.pagination.total - 1},
+            data: Setting.deleteRow(this.state.data, i),
+            pagination: {total: this.state.pagination.total - 1},
           });
         } else {
           Setting.showMessage("error", `Failed to delete Asset: ${res.msg}`);
@@ -309,16 +288,6 @@ class AssetListPage extends BaseListPage {
     );
   }
 
-  render() {
-    return (
-      <div>
-        {
-          this.renderTable(this.state.assets)
-        }
-      </div>
-    );
-  }
-
   fetch = (params = {}) => {
     let field = params.searchedColumn, value = params.searchText;
     const sortField = params.sortField, sortOrder = params.sortOrder;
@@ -337,7 +306,7 @@ class AssetListPage extends BaseListPage {
             data: res.data,
             pagination: {
               ...params.pagination,
-              // total: res.data2,
+              total: res.data2,
             },
             searchText: params.searchText,
             searchedColumn: params.searchedColumn,
