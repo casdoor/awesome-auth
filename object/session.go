@@ -15,7 +15,6 @@
 package object
 
 import (
-	"errors"
 	"strconv"
 	"sync"
 
@@ -164,10 +163,6 @@ func CreateSession(ip, assetId, mode string, user *casdoorsdk.User) (*Session, e
 
 	if asset == nil {
 		return nil, nil
-	}
-
-	if !user.IsAdmin && user.Owner != "built-in" {
-		return nil, errors.New("you have no permission to access this asset")
 	}
 
 	session := Session{

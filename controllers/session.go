@@ -16,6 +16,7 @@ package controllers
 
 import (
 	"encoding/json"
+
 	"github.com/beego/beego/utils/pagination"
 	"github.com/casbin/casvisor/object"
 	"github.com/casbin/casvisor/util"
@@ -155,40 +156,6 @@ func (c *ApiController) AddSession() {
 
 	c.Data["json"] = wrapActionResponse(object.AddSession(&session))
 	c.ServeJSON()
-}
-
-// AddSessionInternal
-// @Title AddSessionInternal
-// @Tag Session API
-// @Description add session
-// @Param   assetId    query   string  true        "The id of asset"
-// @Success 200 {object} Response
-// @router /add-session-internal [get]
-func (c *ApiController) AddSessionInternal() {
-	assetId := c.Input().Get("assetId")
-	mode := c.Input().Get("mode")
-
-	user := c.GetSessionUser()
-
-	s, err := object.CreateSession(c.Ctx.Input.IP(), assetId, mode, user)
-	if err != nil {
-		c.ResponseError(err.Error())
-		return
-	}
-
-	session := object.Session{
-		Owner:      s.Owner,
-		Name:       s.Name,
-		Upload:     s.Upload,
-		Download:   s.Download,
-		Delete:     s.Delete,
-		Rename:     s.Rename,
-		Edit:       s.Edit,
-		FileSystem: s.FileSystem,
-		Copy:       s.Copy,
-		Paste:      s.Paste,
-	}
-	c.ResponseOk(session)
 }
 
 func (c *ApiController) StartSession() {

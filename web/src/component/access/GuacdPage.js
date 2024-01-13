@@ -69,16 +69,16 @@ const GuacdPage = () => {
 
   useEffect(() => {
     document.title = assetName;
-    createSession();
+    addAssetTunnel();
   }, [owner, assetName]);
 
-  const createSession = async() => {
-    SessionBackend.CreateSession(getId(owner, assetName)).then((res) => {
+  const addAssetTunnel = async() => {
+    SessionBackend.addAssetTunnel(getId(owner, assetName)).then((res) => {
       if (res.status === "ok") {
         setSession(res.data);
         renderDisplay(getId(owner, res.data.name), protocol, width, height);
       } else {
-        message.error("Failed to create session:" + res.msg);
+        Setting.showMessage("error", "Failed to connect: " + res.msg);
       }
     });
   };

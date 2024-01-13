@@ -38,8 +38,8 @@ export function updateSession(owner, name, session) {
   }).then(res => res.json());
 }
 
-export function CreateSession(assetId, mode = "guacd") {
-  return fetch(`${Setting.ServerUrl}/api/add-session-internal?assetId=${assetId}&mode=${mode}`, {
+export function addAssetTunnel(assetId, mode = "guacd") {
+  return fetch(`${Setting.ServerUrl}/api/add-asset-tunnel?assetId=${assetId}&mode=${mode}`, {
     method: "POST",
     credentials: "include",
   }).then(res => res.json());

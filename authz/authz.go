@@ -79,7 +79,7 @@ p, *, *, POST, /api/signin, *, *
 p, *, *, POST, /api/signout, *, *
 p, *, *, GET, /api/get-account, *, *
 p, *, *, GET, /api/get-asset-tunnel, *, *
-p, *, *, POST, /api/add-session-internal, *, *
+p, *, *, POST, /api/add-asset-tunnel, *, *
 p, *, *, POST, /api/start-session, *, *
 `
 

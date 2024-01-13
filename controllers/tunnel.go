@@ -46,6 +46,40 @@ var UpGrader = websocket.Upgrader{
 	Subprotocols: []string{"guacamole"},
 }
 
+// AddAssetTunnel
+// @Title AddAssetTunnel
+// @Tag Session API
+// @Description add session
+// @Param   assetId    query   string  true        "The id of asset"
+// @Success 200 {object} Response
+// @router /add-asset-tunnel [get]
+func (c *ApiController) AddAssetTunnel() {
+	assetId := c.Input().Get("assetId")
+	mode := c.Input().Get("mode")
+
+	user := c.GetSessionUser()
+
+	s, err := object.CreateSession(c.Ctx.Input.IP(), assetId, mode, user)
+	if err != nil {
+		c.ResponseError(err.Error())
+		return
+	}
+
+	session := object.Session{
+		Owner:      s.Owner,
+		Name:       s.Name,
+		Upload:     s.Upload,
+		Download:   s.Download,
+		Delete:     s.Delete,
+		Rename:     s.Rename,
+		Edit:       s.Edit,
+		FileSystem: s.FileSystem,
+		Copy:       s.Copy,
+		Paste:      s.Paste,
+	}
+	c.ResponseOk(session)
+}
+
 func (c *ApiController) GetAssetTunnel() {
 	ctx := c.Ctx
 	ws, err := UpGrader.Upgrade(ctx.ResponseWriter, ctx.Request, nil)
