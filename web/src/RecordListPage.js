@@ -66,7 +66,10 @@ class RecordListPage extends BaseListPage {
           Setting.showMessage("success", "Record deleted successfully");
           this.setState({
             data: Setting.deleteRow(this.state.data, i),
-            pagination: {total: this.state.pagination.total - 1},
+            pagination: {
+              ...this.state.pagination,
+              total: this.state.pagination.total - 1,
+            },
           });
         } else {
           Setting.showMessage("error", `Failed to delete Record: ${res.msg}`);
@@ -228,8 +231,10 @@ class RecordListPage extends BaseListPage {
     ];
 
     const paginationProps = {
+      total: this.state.pagination.total,
       showQuickJumper: true,
       showSizeChanger: true,
+      showTotal: () => i18next.t("general:{total} in total").replace("{total}", this.state.pagination.total),
     };
 
     return (
@@ -238,7 +243,6 @@ class RecordListPage extends BaseListPage {
           title={() => (
             <div>
               {i18next.t("general:Records")}&nbsp;&nbsp;&nbsp;&nbsp;
-              {/* <Button type="primary" size="small" onClick={this.addRecord.bind(this)}>{i18next.t("general:Add")}</Button> */}
             </div>
           )}
           loading={this.state.loading}

@@ -72,7 +72,10 @@ class AssetListPage extends BaseListPage {
           Setting.showMessage("success", "Asset deleted successfully");
           this.setState({
             data: Setting.deleteRow(this.state.data, i),
-            pagination: {total: this.state.pagination.total - 1},
+            pagination: {
+              ...this.state.pagination,
+              total: this.state.pagination.total - 1,
+            },
           });
         } else {
           Setting.showMessage("error", `Failed to delete Asset: ${res.msg}`);

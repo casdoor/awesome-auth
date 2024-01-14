@@ -49,10 +49,31 @@ class SessionListPage extends BaseListPage {
           Setting.showMessage("success", i18next.t("general:Successfully deleted"));
           this.setState({
             data: Setting.deleteRow(this.state.data, i),
-            pagination: {total: this.state.pagination.total - 1},
+            pagination: {
+              ...this.state.pagination,
+              total: this.state.pagination.total - 1,
+            },
           });
         } else {
           Setting.showMessage("error", `${i18next.t("general:Failed to delete")}: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `${i18next.t("general:Failed to connect to server")}: ${error}`);
+      });
+  }
+
+  stopSession(i) {
+    SessionBackend.disconnect(Setting.GetIdFromObject(this.state.data[i]))
+      .then((res) => {
+        if (res.status === "ok") {
+          Setting.showMessage("success", i18next.t("general:Successfully stopped"));
+          this.setState({
+            data: Setting.deleteRow(this.state.data, i),
+            pagination: {total: this.state.pagination.total - 1},
+          });
+        } else {
+          Setting.showMessage("error", `${i18next.t("general:Failed to stop")}: ${res.msg}`);
         }
       })
       .catch(error => {
@@ -131,15 +152,13 @@ class SessionListPage extends BaseListPage {
                   style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                   text={i18next.t("general:Stop")}
                   title={i18next.t("general:Sure to disconnect?")}
-                  onConfirm={() => {
-                    SessionBackend.disconnect(`${record.owner}/${record.name}`);
-                  }}
+                  onConfirm={() => this.stopSession(index)}
                 />
               </div>
             ) : (
               <PopconfirmModal
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
-                title={i18next.t("general:Sure to delet") + `: ${record.name} ?`}
+                title={i18next.t("general:Sure to delete?")}
                 onConfirm={() => this.deleteSession(index)}
               />
             );
