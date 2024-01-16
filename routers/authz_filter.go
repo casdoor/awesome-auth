@@ -31,18 +31,13 @@ type Object struct {
 }
 
 func getUsername(ctx *context.Context) (username string) {
-	defer func() {
-		if r := recover(); r != nil {
-			username, _ = getUsernameByClientIdSecret(ctx)
-		}
-	}()
-
 	user := GetSessionUser(ctx)
 	if user != nil {
-		return util.GetIdFromOwnerAndName(user.Owner, user.Name)
+		username = util.GetIdFromOwnerAndName(user.Owner, user.Name)
 	} else {
-		return ""
+		username, _ = getUsernameByClientIdSecret(ctx)
 	}
+	return
 }
 
 func getSubject(ctx *context.Context) (string, string) {
