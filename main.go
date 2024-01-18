@@ -21,6 +21,7 @@ import (
 	"github.com/casbin/casvisor/authz"
 	"github.com/casbin/casvisor/object"
 	"github.com/casbin/casvisor/routers"
+	"github.com/casbin/casvisor/task"
 )
 
 func main() {
@@ -50,6 +51,8 @@ func main() {
 		beego.BConfig.WebConfig.Session.SessionProviderConfig = beego.AppConfig.String("redisEndpoint")
 	}
 	beego.BConfig.WebConfig.Session.SessionGCMaxLifetime = 3600 * 24 * 365
+
+	task.NewTicker().SetupTicker()
 
 	beego.Run()
 }

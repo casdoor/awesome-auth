@@ -72,6 +72,10 @@ type Session struct {
 	CommandCount int64 `json:"commandCount"`
 }
 
+func (s *Session) GetId() string {
+	return util.GetIdFromOwnerAndName(s.Owner, s.Name)
+}
+
 func GetSessionCount(owner, status, field, value string) (int64, error) {
 	session := GetSession(owner, -1, -1, field, value, "", "")
 	return session.Count(&Session{Status: status})
@@ -95,6 +99,15 @@ func GetPaginationSessions(owner, status string, offset, limit int, field, value
 		return sessions, err
 	}
 
+	return sessions, nil
+}
+
+func GetSessionsByStatus(statuses []string) ([]*Session, error) {
+	sessions := []*Session{}
+	err := adapter.engine.In("status", statuses).Find(&sessions)
+	if err != nil {
+		return sessions, err
+	}
 	return sessions, nil
 }
 
@@ -151,6 +164,11 @@ func DeleteSession(session *Session) (bool, error) {
 	}
 
 	return affected != 0, nil
+}
+
+func DeleteSessionById(id string) (bool, error) {
+	owner, name := util.GetOwnerAndNameFromId(id)
+	return DeleteSession(&Session{Owner: owner, Name: name})
 }
 
 func AddSession(session *Session) (bool, error) {
