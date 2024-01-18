@@ -70,7 +70,10 @@ class SessionListPage extends BaseListPage {
           Setting.showMessage("success", i18next.t("general:Successfully stopped"));
           this.setState({
             data: Setting.deleteRow(this.state.data, i),
-            pagination: {total: this.state.pagination.total - 1},
+            pagination: {
+              ...this.state.pagination,
+              total: this.state.pagination.total - 1,
+            },
           });
         } else {
           Setting.showMessage("error", `${i18next.t("general:Failed to stop")}: ${res.msg}`);

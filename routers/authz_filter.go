@@ -67,8 +67,18 @@ func getObject(ctx *context.Context) (string, string) {
 
 		return "", ""
 	} else {
+		id := ctx.Input.Query("id")
+		if id != "" {
+			return util.GetOwnerAndNameFromIdNoCheck(id)
+		}
+
 		body := ctx.Input.RequestBody
 		if len(body) == 0 {
+			id := ctx.Request.Form.Get("id")
+			if id != "" {
+				return util.GetOwnerAndNameFromIdNoCheck(id)
+			}
+
 			return ctx.Request.Form.Get("owner"), ctx.Request.Form.Get("name")
 		}
 
