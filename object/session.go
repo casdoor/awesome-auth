@@ -123,15 +123,22 @@ func GetConnSession(id string) (*Session, error) {
 
 func UpdateSession(id string, session *Session, columns ...string) (bool, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	if s, err := getSession(owner, name); err != nil {
+	if oldSession, err := getSession(owner, name); err != nil {
 		return false, err
-	} else if s == nil {
+	} else if oldSession == nil {
 		return false, nil
 	}
 
-	_, err := adapter.engine.ID(core.PK{owner, name}).Cols(columns...).Update(session)
-	if err != nil {
-		return false, err
+	if len(columns) == 0 {
+		_, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(session)
+		if err != nil {
+			return false, err
+		}
+	} else {
+		_, err := adapter.engine.ID(core.PK{owner, name}).Cols(columns...).Update(session)
+		if err != nil {
+			return false, err
+		}
 	}
 
 	return true, nil
@@ -231,18 +238,18 @@ func CloseDBSession(id string, code int, msg string) error {
 	s.PrivateKey = "-"
 	s.Passphrase = "-"
 
-	_, err = UpdateSession(id, s, "status", "code", "message", "disconnected_time", "password", "private_key", "passphrase")
+	_, err = UpdateSession(id, s)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func WriteCloseMessage(sess *guacamole.Session, mode string, code int, msg string) {
+func WriteCloseMessage(session *guacamole.Session, mode string, code int, msg string) {
 	err := guacamole.NewInstruction("error", "", strconv.Itoa(code))
-	_ = sess.WriteString(err.String())
+	_ = session.WriteString(err.String())
 	disconnect := guacamole.NewInstruction("disconnect")
-	_ = sess.WriteString(disconnect.String())
+	_ = session.WriteString(disconnect.String())
 }
 
 var mutex sync.Mutex

@@ -113,20 +113,20 @@ func (c *ApiController) GetAssetTunnel() {
 		return
 	}
 
-	s, err := object.GetConnSession(sessionId)
+	session, err := object.GetConnSession(sessionId)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
-	asset, err := object.GetAsset(s.AssetId)
+	asset, err := object.GetAsset(session.AssetId)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
 	configuration := guacamole.NewConfiguration()
-	configuration.Protocol = s.Protocol
+	configuration.Protocol = session.Protocol
 	propertyMap := configuration.LoadConfig()
 
 	setConfig(propertyMap, configuration)
@@ -135,12 +135,12 @@ func (c *ApiController) GetAssetTunnel() {
 	configuration.SetParameter("height", height)
 	configuration.SetParameter("dpi", dpi)
 
-	configuration.SetParameter("hostname", s.IP)
-	configuration.SetParameter("port", strconv.Itoa(s.Port))
-	configuration.SetParameter("username", s.Username)
-	configuration.SetParameter("password", s.Password)
+	configuration.SetParameter("hostname", session.IP)
+	configuration.SetParameter("port", strconv.Itoa(session.Port))
+	configuration.SetParameter("username", session.Username)
+	configuration.SetParameter("password", session.Password)
 
-	if s.Protocol == "rdp" && asset.EnableRemoteApp {
+	if session.Protocol == "rdp" && asset.EnableRemoteApp {
 		configuration.SetParameter("remote-app", "||"+remoteAppName)
 		configuration.SetParameter("remote-app-dir", remoteAppDir)
 		configuration.SetParameter("remote-app-args", remoteAppArgs)
@@ -162,19 +162,19 @@ func (c *ApiController) GetAssetTunnel() {
 
 	guacSession.Observer = guacamole.NewObserver(sessionId)
 	guacamole.GlobalSessionManager.Add(guacSession)
-	session := object.Session{
-		ConnectionId: tunnel.ConnectionID,
-		Width:        intWidth,
-		Height:       intHeight,
-		Status:       object.Connecting,
-		Recording:    configuration.GetParameter(guacamole.RecordingPath),
-	}
+
+	session.ConnectionId = tunnel.ConnectionID
+	session.Width = intWidth
+	session.Height = intHeight
+	session.Status = object.Connecting
+	session.Recording = configuration.GetParameter(guacamole.RecordingPath)
+
 	if session.Recording == "" {
 		// No audit is required when no screen is recorded
 		session.Reviewed = true
 	}
 
-	_, err = object.UpdateSession(sessionId, &session, []string{"status", "connectionId", "width", "height", "recording", "review"}...)
+	_, err = object.UpdateSession(sessionId, session)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
@@ -188,7 +188,6 @@ func (c *ApiController) GetAssetTunnel() {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
 			_ = tunnel.Close()
-
 			err := object.CloseSession(sessionId, Normal, "Normal user exit")
 			if err != nil {
 				c.ResponseError(err.Error())

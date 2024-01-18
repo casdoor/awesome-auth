@@ -198,25 +198,8 @@ func (t *Tunnel) Read() (p []byte, err error) {
 }
 
 func (t *Tunnel) Close() error {
-	if !t.IsOpen {
-		return nil
-	}
-
-	instruction := NewInstruction("disconnect")
-	if err := t.WriteInstructionAndFlush(instruction); err != nil {
-		return err
-	}
-
-	_, err := t.expect("ok")
-	if err != nil {
-		return err
-	}
-
-	err = t.conn.Close()
-	if err == nil {
-		t.IsOpen = false
-	}
-	return err
+	t.IsOpen = false
+	return t.conn.Close()
 }
 
 func Disconnect(ws *websocket.Conn, code int, msg string) {
