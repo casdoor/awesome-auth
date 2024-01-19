@@ -19,6 +19,7 @@ import (
 	"strconv"
 
 	"github.com/beego/beego"
+	"github.com/beego/beego/logs"
 	"github.com/casbin/casvisor/object"
 	"github.com/casbin/casvisor/util"
 	"github.com/casbin/casvisor/util/guacamole"
@@ -26,15 +27,15 @@ import (
 )
 
 const (
-	TunnelClosed             int = -1
-	Normal                   int = 0
-	NotFoundSession          int = 800
-	NewTunnelError           int = 801
-	ForcedDisconnect         int = 802
-	AccessGatewayUnAvailable int = 803
-	AccessGatewayCreateError int = 804
-	AssetNotActive           int = 805
-	NewSshClientError        int = 806
+	TunnelClosed       int = -1
+	Normal             int = 0
+	SessionNotFound    int = 800
+	NewTunnelError     int = 801
+	ForcedDisconnect   int = 802
+	AssetNotActive     int = 803
+	ParametersError    int = 804
+	AssetNotFound      int = 805
+	SessionUpdateError int = 806
 )
 
 var UpGrader = websocket.Upgrader{
@@ -81,6 +82,7 @@ func (c *ApiController) AddAssetTunnel() {
 }
 
 func (c *ApiController) GetAssetTunnel() {
+	c.EnableRender = false
 	ctx := c.Ctx
 	ws, err := UpGrader.Upgrade(ctx.ResponseWriter, ctx.Request, nil)
 	if err != nil {
@@ -95,12 +97,12 @@ func (c *ApiController) GetAssetTunnel() {
 
 	intWidth, err := strconv.Atoi(width)
 	if err != nil {
-		c.ResponseError(err.Error())
+		guacamole.Disconnect(ws, ParametersError, err.Error())
 		return
 	}
 	intHeight, err := strconv.Atoi(height)
 	if err != nil {
-		c.ResponseError(err.Error())
+		guacamole.Disconnect(ws, ParametersError, err.Error())
 		return
 	}
 
@@ -108,20 +110,15 @@ func (c *ApiController) GetAssetTunnel() {
 	remoteAppDir := c.Input().Get("remoteAppDir")
 	remoteAppArgs := c.Input().Get("remoteAppArgs")
 
-	if err != nil {
-		c.ResponseError(err.Error())
-		return
-	}
-
 	session, err := object.GetConnSession(sessionId)
 	if err != nil {
-		c.ResponseError(err.Error())
+		guacamole.Disconnect(ws, SessionNotFound, err.Error())
 		return
 	}
 
 	asset, err := object.GetAsset(session.AssetId)
 	if err != nil {
-		c.ResponseError(err.Error())
+		guacamole.Disconnect(ws, AssetNotFound, err.Error())
 		return
 	}
 
@@ -150,7 +147,7 @@ func (c *ApiController) GetAssetTunnel() {
 	tunnel, err := guacamole.NewTunnel(addr, configuration)
 	if err != nil {
 		guacamole.Disconnect(ws, NewTunnelError, err.Error())
-		panic(err)
+		return
 	}
 
 	guacSession := &guacamole.Session{
@@ -176,7 +173,7 @@ func (c *ApiController) GetAssetTunnel() {
 
 	_, err = object.UpdateSession(sessionId, session)
 	if err != nil {
-		c.ResponseError(err.Error())
+		guacamole.Disconnect(ws, SessionUpdateError, err.Error())
 		return
 	}
 
@@ -190,8 +187,7 @@ func (c *ApiController) GetAssetTunnel() {
 			_ = tunnel.Close()
 			err := object.CloseSession(sessionId, Normal, "Normal user exit")
 			if err != nil {
-				c.ResponseError(err.Error())
-				return
+				logs.Info(err.Error())
 			}
 			return
 		}
@@ -200,8 +196,7 @@ func (c *ApiController) GetAssetTunnel() {
 		if err != nil {
 			err := object.CloseSession(sessionId, Normal, "Normal user exit")
 			if err != nil {
-				c.ResponseError(err.Error())
-				return
+				logs.Info(err.Error())
 			}
 			return
 		}
@@ -252,7 +247,7 @@ func (c *ApiController) TunnelMonitor() {
 
 	forObsSession := guacamole.GlobalSessionManager.Get(sessionId)
 	if forObsSession == nil {
-		guacamole.Disconnect(ws, NotFoundSession, "Failed to obtain session")
+		guacamole.Disconnect(ws, SessionNotFound, "Failed to obtain session")
 		return
 	}
 	guacSession.Id = util.GenerateId()
@@ -290,7 +285,7 @@ func setConfig(propertyMap map[string]string, configuration *guacamole.Configura
 		configuration.SetParameter("security", "any")
 		configuration.SetParameter("ignore-cert", "true")
 		configuration.SetParameter("create-drive-path", "true")
-		//configuration.SetParameter("resize-method", "reconnect")
+		// configuration.SetParameter("resize-method", "reconnect")
 		configuration.SetParameter("resize-method", "display-update")
 		configuration.SetParameter(guacamole.EnableWallpaper, propertyMap[guacamole.EnableWallpaper])
 		configuration.SetParameter(guacamole.EnableTheming, propertyMap[guacamole.EnableTheming])
@@ -306,13 +301,13 @@ func setConfig(propertyMap map[string]string, configuration *guacamole.Configura
 		configuration.SetParameter(guacamole.PreConnectionBlob, propertyMap[guacamole.PreConnectionBlob])
 	case "ssh":
 		configuration.SetParameter(guacamole.FontSize, propertyMap[guacamole.FontSize])
-		//configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
+		// configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
 		configuration.SetParameter(guacamole.ColorScheme, propertyMap[guacamole.ColorScheme])
 		configuration.SetParameter(guacamole.Backspace, propertyMap[guacamole.Backspace])
 		configuration.SetParameter(guacamole.TerminalType, propertyMap[guacamole.TerminalType])
 	case "telnet":
 		configuration.SetParameter(guacamole.FontSize, propertyMap[guacamole.FontSize])
-		//configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
+		// configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
 		configuration.SetParameter(guacamole.ColorScheme, propertyMap[guacamole.ColorScheme])
 		configuration.SetParameter(guacamole.Backspace, propertyMap[guacamole.Backspace])
 		configuration.SetParameter(guacamole.TerminalType, propertyMap[guacamole.TerminalType])

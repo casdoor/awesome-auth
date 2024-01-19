@@ -421,6 +421,15 @@ const GuacdPage = () => {
     case 802:
       showMessage("Admin forcefully closed this session");
       break;
+    case 804:
+      showMessage("Check that the parameters (width,height) are in the correct format: " + status.message);
+      break;
+    case 805:
+      showMessage("Failed to find the asset: " + status.message);
+      break;
+    case 806:
+      showMessage("Failed to update session status: " + status.message);
+      break;
     default:
       if (status.message) {
         showMessage(Base64.decode(status.message));
