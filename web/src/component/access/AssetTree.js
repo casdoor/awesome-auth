@@ -19,14 +19,16 @@ import * as Setting from "../../Setting";
 import Search from "antd/es/input/Search";
 
 const AssetTree = ({onSelect, account}) => {
-  const [expandedKeys, setExpandedKeys] = useState(["Windows", "Linux"]);
+  const [expandedKeys, setExpandedKeys] = useState([]);
   const [treeData, setTreeData] = useState([]);
+  const [load, setLoad] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
   useEffect(() => {
     AssetBackend.getAssets(account.owner, "", "", "name", account.name)
       .then((res) => {
+        setLoad(false);
         if (res.status === "ok") {
           setTreeData(transformData(res.data));
         } else {
@@ -90,6 +92,7 @@ const AssetTree = ({onSelect, account}) => {
     });
 
     const treeNodes = [];
+    const keys = [];
 
     Object.entries(categorizedAssets).forEach(([category, assets]) => {
       if (assets.length > 0) {
@@ -99,9 +102,10 @@ const AssetTree = ({onSelect, account}) => {
           children: assets,
           selectable: false,
         });
+        keys.push(category.toLowerCase());
       }
     });
-
+    setExpandedKeys(keys);
     return treeNodes;
   };
 
@@ -139,7 +143,7 @@ const AssetTree = ({onSelect, account}) => {
     return treeData.map(filterTreeNode).filter((filteredNode) => filteredNode);
   }, [searchValue, treeData]);
 
-  if (treeData.length === 0) {
+  if (load) {
     return <div>Loading...</div>;
   }
 
@@ -157,6 +161,7 @@ const AssetTree = ({onSelect, account}) => {
         treeData={filteredTreeData}
         onExpand={onExpand}
         expandedKeys={expandedKeys}
+        defaultExpandAll={true}
         autoExpandParent={autoExpandParent}
       />
     </div>
