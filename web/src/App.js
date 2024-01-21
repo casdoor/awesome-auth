@@ -35,16 +35,15 @@ import GuacdPage from "./component/access/GuacdPage";
 import ShortcutsPage from "./basic/ShortcutsPage";
 
 const {Header, Footer, Content} = Layout;
-const hiddenPages = ["/access"];
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       classes: props,
-      selectedMenuKey: 0,
+      selectedMenuKey: location.pathname.split("/")[1],
       account: undefined,
-      uri: null,
+      uri: location.pathname,
       themeData: Conf.ThemeDefault,
       menuVisible: false,
     };
@@ -54,35 +53,7 @@ class App extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    this.updateMenuKey();
     this.getAccount();
-  }
-
-  componentDidUpdate() {
-    // eslint-disable-next-line no-restricted-globals
-    const uri = location.pathname;
-    if (this.state.uri !== uri) {
-      this.updateMenuKey();
-    }
-  }
-
-  updateMenuKey() {
-    // eslint-disable-next-line no-restricted-globals
-    const uri = location.pathname;
-    this.setState({
-      uri: uri,
-    });
-    if (uri === "/") {
-      this.setState({selectedMenuKey: "/"});
-    } else if (uri.includes("/assets")) {
-      this.setState({selectedMenuKey: "/assets"});
-    } else if (uri.includes("/sessions")) {
-      this.setState({selectedMenuKey: "/sessions"});
-    } else if (uri.includes("/records")) {
-      this.setState({selectedMenuKey: "/records"});
-    } else {
-      this.setState({selectedMenuKey: "null"});
-    }
   }
 
   onUpdateAccount(account) {
@@ -123,24 +94,11 @@ class App extends Component {
 
           Setting.showMessage("success", "Successfully signed out, redirected to homepage");
           Setting.goToLink("/");
-          // this.props.history.push("/");
         } else {
           Setting.showMessage("error", `Signout failed: ${res.msg}`);
         }
       });
   }
-
-  onClose = () => {
-    this.setState({
-      menuVisible: false,
-    });
-  };
-
-  showMenu = () => {
-    this.setState({
-      menuVisible: true,
-    });
-  };
 
   renderAvatar() {
     if (this.state.account.avatar === "") {
@@ -229,10 +187,11 @@ class App extends Component {
       return [];
     }
 
-    res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, "/"));
-    res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>, "/assets"));
-    res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>, "/sessions"));
-    res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>, "/records"));
+    res.push(Setting.getItem(<Link to="/">{i18next.t("general:Home")}</Link>, ""));
+    res.push(Setting.getItem(<Link to="/assets">{i18next.t("general:Assets")}</Link>, "assets"));
+    res.push(Setting.getItem(<Link to="/sessions">{i18next.t("general:Sessions")}</Link>, "sessions"));
+    res.push(Setting.getItem(<Link to="/records">{i18next.t("general:Records")}</Link>, "records"));
+    res.push(Setting.getItem(<Link to="/workbench" target="_blank">{i18next.t("general:Workbench")}</Link>, "workbench"));
 
     return res;
   }
@@ -273,66 +232,104 @@ class App extends Component {
   }
 
   isWithoutCard() {
-    return Setting.isMobile() || window.location.pathname === "/chat";
+    return Setting.isMobile() || this.isHiddenHeaderAndFooter() || window.location.pathname === "/chat";
+  }
+
+  isHiddenHeaderAndFooter(uri) {
+    if (uri === undefined) {
+      uri = this.state.uri;
+    }
+    const hiddenPaths = ["/workbench", "/access"];
+    if (hiddenPaths.includes(uri)) {
+      return true;
+    }
   }
 
   renderContent() {
-    const onClick = ({key}) => {
-      // eslint-disable-next-line react/prop-types
-      this.props.history.push(key);
-    };
-    const menuStyleRight = Setting.isAdminUser(this.state.account) && !Setting.isMobile() ? "calc(180px + 260px)" : "260px";
-    const currentPath = window.location.pathname;
-    const isHiddenPage = hiddenPages.includes(currentPath);
-
     return (
       <Layout id="parent-area">
-        {!isHiddenPage && (
-          <Header style={{padding: "0", marginBottom: "3px", backgroundColor: "white"}}>
-            {Setting.isMobile() ? null : (
-              <Link to={"/"}>
-                <div className="logo" />
-              </Link>
-            )}
-            {Setting.isMobile() ? (
-              <React.Fragment>
-                <Drawer title={i18next.t("general:Close")} placement="left" visible={this.state.menuVisible} onClose={this.onClose}>
-                  <Menu
-                    items={this.getMenuItems()}
-                    mode={"inline"}
-                    selectedKeys={[this.state.selectedMenuKey]}
-                    style={{lineHeight: "64px"}}
-                    onClick={this.onClose}
-                  >
-                  </Menu>
-                </Drawer>
-                <Button icon={<BarsOutlined />} onClick={this.showMenu} type="text">
-                  {i18next.t("general:Menu")}
-                </Button>
-              </React.Fragment>
-            ) : (
-              <Menu
-                onClick={onClick}
-                items={this.getMenuItems()}
-                mode={"horizontal"}
-                selectedKeys={[this.state.selectedMenuKey]}
-                style={{position: "absolute", left: "145px", right: menuStyleRight}}
-              />
-            )}
-            {this.renderAccountMenu()}
-          </Header>
-        )}
-
+        {this.renderHeader()}
         <Content style={{display: "flex", flexDirection: "column"}}>
-          {this.isWithoutCard() || isHiddenPage ? this.renderRouter() : <Card className="content-warp-card">{this.renderRouter()}</Card>}
+          {this.isWithoutCard() ?
+            this.renderRouter() :
+            <Card className="content-warp-card">
+              {this.renderRouter()}
+            </Card>
+          }
         </Content>
-
-        {!isHiddenPage && this.renderFooter()}
+        {this.renderFooter()}
       </Layout>
     );
   }
 
+  renderHeader() {
+    if (this.isHiddenHeaderAndFooter()) {
+      return null;
+    }
+
+    const showMenu = () => {
+      this.setState({
+        menuVisible: true,
+      });
+    };
+
+    const onClick = ({key}) => {
+      if (Setting.isMobile()) {
+        this.setState({
+          menuVisible: false,
+        });
+      }
+
+      this.setState({
+        uri: location.pathname,
+        selectedMenuKey: key,
+      });
+    };
+
+    const menuStyleRight = Setting.isAdminUser(this.state.account) && !Setting.isMobile() ? "calc(180px + 260px)" : "260px";
+
+    return (
+      <Header style={{padding: "0", marginBottom: "3px", backgroundColor: "white"}}>
+        {Setting.isMobile() ? null : (
+          <Link to={"/"}>
+            <div className="logo" />
+          </Link>
+        )}
+        {Setting.isMobile() ? (
+          <React.Fragment>
+            <Drawer title={i18next.t("general:Close")} placement="left" visible={this.state.menuVisible} onClose={this.onClose}>
+              <Menu
+                items={this.getMenuItems()}
+                mode={"inline"}
+                selectedKeys={[this.state.selectedMenuKey]}
+                style={{lineHeight: "64px"}}
+                onClick={onClick}
+              >
+              </Menu>
+            </Drawer>
+            <Button icon={<BarsOutlined />} onClick={showMenu} type="text">
+              {i18next.t("general:Menu")}
+            </Button>
+          </React.Fragment>
+        ) : (
+          <Menu
+            onClick={onClick}
+            items={this.getMenuItems()}
+            mode={"horizontal"}
+            selectedKeys={[this.state.selectedMenuKey]}
+            style={{position: "absolute", left: "145px", right: menuStyleRight}}
+          />
+        )}
+        {this.renderAccountMenu()}
+      </Header>
+    );
+  }
+
   renderFooter() {
+    if (this.isHiddenHeaderAndFooter()) {
+      return null;
+    }
+
     // How to keep your footer where it belongs ?
     // https://www.freecodecamp.org/news/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c/
 
