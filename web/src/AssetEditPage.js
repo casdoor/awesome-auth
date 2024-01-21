@@ -120,13 +120,6 @@ class AssetEditPage extends React.Component {
     return value;
   }
 
-  // parseAssetField(key, value) {
-  //   if ([""].includes(key)) {
-  //     value = Setting.myParseInt(value);
-  //   }
-  //   return value;
-  // }
-
   updateAssetField(key, value) {
     value = this.parseAssetField(key, value);
 
@@ -253,6 +246,31 @@ class AssetEditPage extends React.Component {
             <Input value={this.state.asset.password} onChange={e => {
               this.updateAssetField("password", e.target.value);
             }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("asset:Os Type"), i18next.t("asset:Os Type - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Select virtual={false} style={{width: "100%"}} value={this.state.asset.os} onChange={value => {
+              this.updateAssetField("os", value);
+            }}
+            options={[
+              {value: "windows", label: "Windows"},
+              {value: "linux", label: "Linux"},
+            ].map(item => Setting.getOption(item.label, item.value))} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general: Tag"), i18next.t("general: Tag - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.asset.tags} onChange={e => {
+              this.updateAssetField("tag", e.target.value);
+            }
+            } />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}} >

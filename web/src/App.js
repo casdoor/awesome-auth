@@ -33,6 +33,7 @@ import RecordListPage from "./RecordListPage";
 import RecordEditPage from "./RecordEditPage";
 import GuacdPage from "./component/access/GuacdPage";
 import ShortcutsPage from "./basic/ShortcutsPage";
+import AssetWorkbench from "./AssetWorkbench";
 
 const {Header, Footer, Content} = Layout;
 
@@ -227,6 +228,7 @@ class App extends Component {
         <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)} />
         <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
         <Route exact path="/access" render={(props) => this.renderSigninIfNotSignedIn(<GuacdPage account={this.state.account} {...props} />)} />
+        <Route exact path="/workbench" render={(props) => this.renderSigninIfNotSignedIn(<AssetWorkbench account={this.state.account} {...props} />)} />
       </Switch>
     );
   }

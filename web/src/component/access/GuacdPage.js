@@ -35,28 +35,39 @@ const STATE_CONNECTED = 3;
 const STATE_DISCONNECTING = 4;
 const STATE_DISCONNECTED = 5;
 
-const GuacdPage = () => {
+const GuacdPage = (props) => {
+  const {asset, addClient, key, closePane} = props;
+
+  if (asset?.remoteApps?.length > 0) {
+    const remoteApp = asset.remoteApps[0];
+    asset.remoteApp = remoteApp.remoteAppName;
+    asset.remoteAppDir = remoteApp.remoteAppDir;
+    asset.remoteAppArgs = remoteApp.remoteAppArgs;
+  }
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
-  const owner = searchParams.get("owner");
-  const assetName = searchParams.get("name");
-  const protocol = searchParams.get("protocol");
-  let width = searchParams.get("width");
-  let height = searchParams.get("height");
+  const {owner, name, protocol, remoteAppName, remoteAppDir, remoteAppArgs} = asset
+    ? asset
+    : Object.fromEntries(searchParams.entries());
 
-  const remoteAppName = searchParams.get("remoteApp");
-  const remoteAppDir = searchParams.get("remoteAppDir");
-  const remoteAppArgs = searchParams.get("remoteAppArgs");
+  const getBoxSize = () => {
+    if (props.width && props.height) {
+      return {width: props.width, height: props.height};
+    }
 
-  if (width && height) {
-    fixedSize = true;
-  } else {
-    width = window.innerWidth;
-    height = window.innerHeight;
-  }
+    const width = searchParams.get("width") ;
+    const height = searchParams.get("height") ;
+    if (width && height) {
+      fixedSize = true;
+      return {width, height};
+    }
 
-  const [box, setBox] = useState({width, height});
+    return {width: window.innerWidth, height: window.innerHeight};
+  };
+
+  const [box, setBox] = useState(getBoxSize());
   const [guacd, setGuacd] = useState({});
   const [session, setSession] = useState({});
   const [clipboardText, setClipboardText] = useState("");
@@ -67,16 +78,26 @@ const GuacdPage = () => {
     return `${owner}/${name}`;
   };
 
+  const handleAddClient = (client, sink) => {
+    if (addClient) {
+      addClient(client);
+    }
+
+    setGuacd({client, sink});
+  };
+
   useEffect(() => {
-    document.title = assetName;
+    if (!asset) {
+      document.title = name;
+    }
     addAssetTunnel();
-  }, [owner, assetName]);
+  }, [owner, name]);
 
   const addAssetTunnel = async() => {
-    SessionBackend.addAssetTunnel(getId(owner, assetName)).then((res) => {
+    SessionBackend.addAssetTunnel(getId(owner, name)).then((res) => {
       if (res.status === "ok") {
         setSession(res.data);
-        renderDisplay(getId(owner, res.data.name), protocol, width, height);
+        renderDisplay(getId(owner, res.data.name), protocol, box.width, box.height);
       } else {
         Setting.showMessage("error", "Failed to connect: " + res.msg);
       }
@@ -176,15 +197,12 @@ const GuacdPage = () => {
       client.sendMouseState(state);
     };
 
-    setGuacd({
-      client,
-      sink,
-    });
+    handleAddClient(client, sink);
   };
 
   useEffect(() => {
     const resize = debounce(() => {
-      onWindowResize();
+      onWindowResize(box.width, box.height);
     });
     window.addEventListener("resize", resize);
     window.addEventListener("beforeunload", handleUnload);
@@ -197,12 +215,10 @@ const GuacdPage = () => {
     };
   }, [guacd]);
 
-  const onWindowResize = () => {
+  const onWindowResize = (width, height) => {
     if (guacd.client && !fixedSize) {
       const display = guacd.client.getDisplay();
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      setBox({width, height});
+      setBox(getBoxSize());
       const scale = Math.min(
         height / display.getHeight(),
         width / display.getHeight()
@@ -337,7 +353,7 @@ const GuacdPage = () => {
   const showMessage = (msg) => {
     message.destroy();
     Modal.confirm({
-      title: `Failed to connect to: ${assetName}`,
+      title: `Failed to connect to: ${name}`,
       icon: <CloseCircleOutlined />,
       content: msg,
       centered: true,
@@ -345,10 +361,18 @@ const GuacdPage = () => {
       cancelText: "Close this page",
       cancelButtonProps: {"danger": true},
       onOk() {
-        window.location.reload();
+        if (asset) {
+          addAssetTunnel();
+        } else {
+          window.location.reload();
+        }
       },
       onCancel() {
-        window.close();
+        if (asset) {
+          closePane(key);
+        } else {
+          window.close();
+        }
       },
     });
   };

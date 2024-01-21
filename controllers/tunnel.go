@@ -64,6 +64,9 @@ func (c *ApiController) AddAssetTunnel() {
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
+	} else if s == nil {
+		c.ResponseError("Session not found")
+		return
 	}
 
 	session := object.Session{
@@ -106,7 +109,7 @@ func (c *ApiController) GetAssetTunnel() {
 		return
 	}
 
-	remoteAppName := c.Input().Get("remoteApp")
+	remoteApp := c.Input().Get("remoteApp")
 	remoteAppDir := c.Input().Get("remoteAppDir")
 	remoteAppArgs := c.Input().Get("remoteAppArgs")
 
@@ -138,7 +141,7 @@ func (c *ApiController) GetAssetTunnel() {
 	configuration.SetParameter("password", session.Password)
 
 	if session.Protocol == "rdp" && asset.EnableRemoteApp {
-		configuration.SetParameter("remote-app", "||"+remoteAppName)
+		configuration.SetParameter("remote-app", "||"+remoteApp)
 		configuration.SetParameter("remote-app-dir", remoteAppDir)
 		configuration.SetParameter("remote-app-args", remoteAppArgs)
 	}

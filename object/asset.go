@@ -52,6 +52,8 @@ type Asset struct {
 	Username    string `xorm:"varchar(100)" json:"username"`
 	Password    string `xorm:"varchar(100)" json:"password"`
 	Language    string `xorm:"varchar(100)" json:"language"`
+	Tag         string `xorm:"varchar(100)" json:"tag"`
+	Os          string `xorm:"varchar(100)" json:"os"`
 	AutoQuery   bool   `json:"autoQuery"`
 	IsPermanent bool   `json:"isPermanent"`
 
@@ -145,4 +147,15 @@ func DeleteAsset(asset *Asset) (bool, error) {
 
 func (asset *Asset) getId() string {
 	return fmt.Sprintf("%s/%s", asset.Owner, asset.Name)
+}
+
+func GetAssetsByName(owner, name string, isAdmin bool) ([]*Asset, error) {
+	if isAdmin {
+		return GetAssets(owner)
+	}
+
+	assets := []*Asset{}
+	// TODO get asset by call enforcer API
+
+	return assets, nil
 }

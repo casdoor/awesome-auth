@@ -45,7 +45,13 @@ func (c *ApiController) GetAssets() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		assets, err := object.GetAssets(owner)
+		var assets []*object.Asset
+		var err error
+		if field == "name" {
+			assets, err = object.GetAssetsByName(owner, value, c.IsAdmin())
+		} else {
+			assets, err = object.GetAssets(owner)
+		}
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
