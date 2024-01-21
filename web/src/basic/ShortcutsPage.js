@@ -22,7 +22,7 @@ const ShortcutsPage = () => {
     {link: "/assets", image: "/organizations", name: i18next.t("general:Assets"), description: i18next.t("general:Machines can be connected via RDP, VNC or SSH")},
     {link: "/sessions", image: "/users", name: i18next.t("general:Sessions"), description: i18next.t("general:Active or history connection sessions")},
     {link: "/records", image: "/providers", name: i18next.t("general:Records"), description: i18next.t("general:Audit logs")},
-    {link: "/databases", image: "/applications", name: i18next.t("general:Databases"), description: i18next.t("general:Databases can be accessed via SQL")},
+    {link: "/workbench", image: "/applications", name: i18next.t("general:Workbench"), description: i18next.t("general:Remote desktop management all in one screen")},
   ];
 
   const getItems = () => {

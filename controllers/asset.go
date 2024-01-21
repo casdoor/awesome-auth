@@ -48,9 +48,9 @@ func (c *ApiController) GetAssets() {
 		var assets []*object.Asset
 		var err error
 		if field == "name" {
-			assets, err = object.GetAssetsByName(owner, value, c.IsAdmin())
+			assets, err = object.GetMaskedAssets(object.GetAssetsByName(owner, value, c.IsAdmin()))
 		} else {
-			assets, err = object.GetAssets(owner)
+			assets, err = object.GetMaskedAssets(object.GetAssets(owner))
 		}
 		if err != nil {
 			c.ResponseError(err.Error())
@@ -67,7 +67,7 @@ func (c *ApiController) GetAssets() {
 		}
 
 		paginator := pagination.SetPaginator(c.Ctx, limit, count)
-		assets, err := object.GetPaginationAssets(owner, paginator.Offset(), limit, field, value, sortField, sortOrder)
+		assets, err := object.GetMaskedAssets(object.GetPaginationAssets(owner, paginator.Offset(), limit, field, value, sortField, sortOrder))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return
@@ -87,7 +87,7 @@ func (c *ApiController) GetAssets() {
 func (c *ApiController) GetAsset() {
 	id := c.Input().Get("id")
 
-	asset, err := object.GetAsset(id)
+	asset, err := object.GetMaskedAsset(object.GetAsset(id))
 	if err != nil {
 		c.ResponseError(err.Error())
 		return

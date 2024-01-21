@@ -111,12 +111,48 @@ func GetAsset(id string) (*Asset, error) {
 	return getAsset(owner, name)
 }
 
+func GetMaskedAsset(asset *Asset, errs ...error) (*Asset, error) {
+	if len(errs) > 0 && errs[0] != nil {
+		return nil, errs[0]
+	}
+
+	if asset == nil {
+		return nil, nil
+	}
+
+	if asset.Password != "" {
+		asset.Password = "***"
+	}
+	return asset, nil
+}
+
+func GetMaskedAssets(assets []*Asset, errs ...error) ([]*Asset, error) {
+	if len(errs) > 0 && errs[0] != nil {
+		return nil, errs[0]
+	}
+
+	var err error
+	for _, asset := range assets {
+		asset, err = GetMaskedAsset(asset)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return assets, nil
+}
+
 func UpdateAsset(id string, asset *Asset) (bool, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	if p, err := getAsset(owner, name); err != nil {
+	p, err := getAsset(owner, name)
+	if err != nil {
 		return false, err
 	} else if p == nil {
 		return false, nil
+	}
+
+	if asset.Password == "***" {
+		asset.Password = p.Password
 	}
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(asset)
