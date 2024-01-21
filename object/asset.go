@@ -78,7 +78,7 @@ func GetAssets(owner string) ([]*Asset, error) {
 }
 
 func GetPaginationAssets(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Asset, error) {
-	var assets []*Asset
+	assets := []*Asset{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)
 	err := session.Find(&assets)
 	if err != nil {

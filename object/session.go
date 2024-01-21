@@ -92,7 +92,7 @@ func GetSessions(owner string) ([]*Session, error) {
 }
 
 func GetPaginationSessions(owner, status string, offset, limit int, field, value, sortField, sortOrder string) ([]*Session, error) {
-	var sessions []*Session
+	sessions := []*Session{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)
 	err := session.Find(&sessions, &Session{Status: status})
 	if err != nil {
