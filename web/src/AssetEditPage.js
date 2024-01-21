@@ -250,15 +250,15 @@ class AssetEditPage extends React.Component {
         </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("asset:Os Type"), i18next.t("asset:Os Type - Tooltip"))} :
+            {Setting.getLabel(i18next.t("asset:OS"), i18next.t("asset:OS - Tooltip"))} :
           </Col>
           <Col span={22} >
             <Select virtual={false} style={{width: "100%"}} value={this.state.asset.os} onChange={value => {
               this.updateAssetField("os", value);
             }}
             options={[
-              {value: "windows", label: "Windows"},
-              {value: "linux", label: "Linux"},
+              {value: "Windows", label: "Windows"},
+              {value: "Linux", label: "Linux"},
             ].map(item => Setting.getOption(item.label, item.value))} />
           </Col>
         </Row>

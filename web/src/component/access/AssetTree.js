@@ -19,7 +19,7 @@ import * as Setting from "../../Setting";
 import Search from "antd/es/input/Search";
 
 const AssetTree = ({onSelect, account}) => {
-  const [expandedKeys, setExpandedKeys] = useState(["windows", "linux"]);
+  const [expandedKeys, setExpandedKeys] = useState(["Windows", "Linux"]);
   const [treeData, setTreeData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [autoExpandParent, setAutoExpandParent] = useState(true);
