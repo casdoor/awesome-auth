@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {Affix, Button, Dropdown, Menu, Modal, message} from "antd";
 import {CloseCircleOutlined, CopyOutlined, ExpandOutlined, WindowsOutlined} from "@ant-design/icons";
@@ -73,6 +73,7 @@ const GuacdPage = (props) => {
   const [clipboardText, setClipboardText] = useState("");
   const [fullScreened, setFullScreened] = useState(false);
   const [clipboardVisible, setClipboardVisible] = useState(false);
+  const displayElement = useRef(null);
 
   const getId = (owner, name) => {
     return `${owner}/${name}`;
@@ -121,12 +122,8 @@ const GuacdPage = (props) => {
     client.onerror = onError;
     tunnel.onerror = onError;
 
-    // Get display div from document
-    const displayEle = document.getElementById("display");
-
-    // Add client to display div
     const element = client.getDisplay().getElement();
-    displayEle.appendChild(element);
+    displayElement.current.appendChild(element);
 
     let dpi = 96;
     if (protocol === "telnet") {
@@ -157,7 +154,7 @@ const GuacdPage = (props) => {
     };
 
     const sink = new Guacamole.InputSink();
-    displayEle.appendChild(sink.getElement());
+    displayElement.current.appendChild(sink.getElement());
     sink.focus();
 
     const keyboard = new Guacamole.Keyboard(sink.getElement());
@@ -494,7 +491,7 @@ const GuacdPage = (props) => {
         margin: "0 auto",
         backgroundColor: "#1b1b1b",
       }}>
-        <div id="display" />
+        <div ref={displayElement} />
       </div>
       <Draggable>
         <Affix style={{position: "absolute", top: 50, right: 50}}>
