@@ -33,6 +33,8 @@
   </a>
 </p>
 
+![image](https://github.com/casbin/casvisor/assets/3787410/c71e9a09-38be-4f76-99a8-595aa859ee58)
+
 ## Online demo
 
 - Read-only site: https://door.casvisor.com (any modification operation will fail)
