@@ -15,59 +15,40 @@
 import React from "react";
 import AssetTree from "./component/access/AssetTree";
 import RemoteDesktop from "./component/access/RemoteDesktop";
-import * as AssetBackend from "./backend/AssetBackend";
-import * as Setting from "./Setting";
 
 class AssetWorkbench extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedAsset: null,
-      width: 0,
-      height: 0,
-      ref: React.createRef(),
+      assetTreeWidth: 240,
     };
-  }
-
-  componentDidMount() {
-    this.setState({
-      width: this.state.ref.current.offsetWidth,
-      height: this.state.ref.current.offsetHeight,
-    });
   }
 
   handleAssetSelect = (assetId) => {
     const arr = assetId.split("/");
-    AssetBackend.getAsset(arr[0], arr[1]).then((res) => {
-      if (res.status === "ok") {
-        this.setState({
-          selectedAsset: res.data,
-        });
-      } else {
-        Setting.showMessage("error", `Failed to get asset: ${res.msg}`);
-      }
+    const asset = {owner: arr[0], name: arr[1]};
+    this.setState({
+      selectedAsset: asset,
     });
   };
 
   render() {
+    const {assetTreeWidth} = this.state;
+
     return (
       <div style={{
         display: "flex",
         height: "100vh",
         background: "#f5f5f5",
       }}>
-        <div style={{flex: "0 0 15%",
-          background: "#fff",
-          overflow: "auto"}}>
+        <div style={{width: assetTreeWidth, background: "#fff"}}>
           <AssetTree onSelect={this.handleAssetSelect} account={this.props.account} />
         </div>
-        <div style={{
-          flex: "1"}}
-        ref={this.state.ref}>
+        <div style={{width: "100%", overflow: "hidden"}} >
           <RemoteDesktop
+            assetTreeWidth={assetTreeWidth}
             asset={this.state.selectedAsset}
-            width={this.state.width}
-            height={this.state.height}
           />
         </div>
       </div>

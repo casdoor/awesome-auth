@@ -243,10 +243,7 @@ class AssetListPage extends BaseListPage {
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                 type="primary"
                 onClick={() => {
-                  let link = `access?owner=${asset.owner}&name=${asset.name}&protocol=${asset.protocol}`;
-                  if (asset.enableRemoteApp) {
-                    link += `&remoteApp=${asset.remoteApps[0].remoteAppName}&remoteAppDir=${asset.remoteApps[0].remoteAppDir}&remoteAppArgs=${asset.remoteApps[0].remoteAppArgs}`;
-                  }
+                  const link = `access/${asset.owner}/${asset.name}`;
                   Setting.openLink(link);
                 }}
               >

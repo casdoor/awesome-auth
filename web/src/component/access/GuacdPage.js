@@ -13,20 +13,16 @@
 // limitations under the License.
 
 import React, {useEffect, useRef, useState} from "react";
-import {useLocation} from "react-router-dom";
 import {Affix, Button, Dropdown, Menu, Modal, message} from "antd";
 import {CloseCircleOutlined, CopyOutlined, ExpandOutlined, WindowsOutlined} from "@ant-design/icons";
 import Guacamole from "guacamole-common-js";
-import {debounce, exitFull, getToken, requestFullScreen} from "./Util";
+import {debounce, exitFull, requestFullScreen} from "./Util";
 import * as Setting from "../../Setting";
 import qs from "qs";
 import {Base64} from "js-base64";
 import Draggable from "react-draggable";
 import GuacdClipboard from "./GuacdClipboard";
 import * as SessionBackend from "../../backend/SessionBackend";
-import "./Guacd.css";
-
-let fixedSize = false;
 
 const STATE_IDLE = 0;
 const STATE_CONNECTING = 1;
@@ -36,48 +32,28 @@ const STATE_DISCONNECTING = 4;
 const STATE_DISCONNECTED = 5;
 
 const GuacdPage = (props) => {
-  const {asset, addClient, key, closePane} = props;
+  const {assetId, activeKey, addClient, closePane, assetTreeWidth} = props;
 
-  if (asset?.remoteApps?.length > 0) {
-    const remoteApp = asset.remoteApps[0];
-    asset.remoteApp = remoteApp.remoteAppName;
-    asset.remoteAppDir = remoteApp.remoteAppDir;
-    asset.remoteAppArgs = remoteApp.remoteAppArgs;
-  }
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
-  const {owner, name, protocol, remoteAppName, remoteAppDir, remoteAppArgs} = asset
-    ? asset
-    : Object.fromEntries(searchParams.entries());
-
-  const getBoxSize = () => {
-    if (props.width && props.height) {
-      return {width: props.width, height: props.height};
+  const getBox = () => {
+    if (assetTreeWidth) {
+      return {
+        width: window.innerWidth - assetTreeWidth,
+        height: window.innerHeight - 40,
+      };
     }
-
-    const width = searchParams.get("width") ;
-    const height = searchParams.get("height") ;
-    if (width && height) {
-      fixedSize = true;
-      return {width, height};
-    }
-
-    return {width: window.innerWidth, height: window.innerHeight};
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
   };
 
-  const [box, setBox] = useState(getBoxSize());
+  const [box, setBox] = useState(getBox());
   const [guacd, setGuacd] = useState({});
   const [session, setSession] = useState({});
   const [clipboardText, setClipboardText] = useState("");
   const [fullScreened, setFullScreened] = useState(false);
   const [clipboardVisible, setClipboardVisible] = useState(false);
   const displayElement = useRef(null);
-
-  const getId = (owner, name) => {
-    return `${owner}/${name}`;
-  };
 
   const handleAddClient = (client, sink) => {
     if (addClient) {
@@ -88,17 +64,18 @@ const GuacdPage = (props) => {
   };
 
   useEffect(() => {
-    if (!asset) {
-      document.title = name;
+    if (!activeKey) {
+      document.title = assetId.split("/")[1];
     }
     addAssetTunnel();
-  }, [owner, name]);
+  }, [assetId]);
 
-  const addAssetTunnel = async() => {
-    SessionBackend.addAssetTunnel(getId(owner, name)).then((res) => {
+  const addAssetTunnel = () => {
+    SessionBackend.addAssetTunnel(assetId).then((res) => {
       if (res.status === "ok") {
-        setSession(res.data);
-        renderDisplay(getId(owner, res.data.name), protocol, box.width, box.height);
+        const session = res.data;
+        setSession(session);
+        renderDisplay(`${session.owner}/${session.name}`, session.protocol, box.width, box.height);
       } else {
         Setting.showMessage("error", "Failed to connect: " + res.msg);
       }
@@ -130,27 +107,19 @@ const GuacdPage = (props) => {
       dpi = dpi * 2;
     }
 
-    const token = getToken();
-
     const params = {
       "protocol": protocol,
       "width": width,
       "height": height,
-      "dpi": dpi, "X-Auth-Token": token,
+      "dpi": dpi,
     };
 
-    if (protocol === "rdp") {
-      params.remoteApp = remoteAppName;
-      params.remoteAppDir = remoteAppDir;
-      params.remoteAppArgs = remoteAppArgs;
-    }
-
     const paramStr = qs.stringify(params);
-
     client.connect(paramStr);
+
     const display = client.getDisplay();
     display.onresize = function(width, height) {
-      display.scale(Math.min(window.innerHeight / display.getHeight(), window.innerWidth / display.getHeight()));
+      display.scale(Math.min(box.height / display.getHeight(), box.width / display.getWidth()));
     };
 
     const sink = new Guacamole.InputSink();
@@ -158,7 +127,6 @@ const GuacdPage = (props) => {
     sink.focus();
 
     const keyboard = new Guacamole.Keyboard(sink.getElement());
-
     keyboard.onkeydown = (keysym) => {
       client.sendKeyEvent(1, keysym);
       if (keysym === 65288) {
@@ -174,7 +142,6 @@ const GuacdPage = (props) => {
     });
 
     const mouse = new Guacamole.Mouse(element);
-
     mouse.onmousedown = mouse.onmouseup = function(mouseState) {
       sinkFocus();
       client.sendMouseState(mouseState);
@@ -189,7 +156,6 @@ const GuacdPage = (props) => {
     };
 
     const touch = new Guacamole.Mouse.Touchpad(element); // or Guacamole.Touchscreen
-
     touch.onmousedown = touch.onmousemove = touch.onmouseup = function(state) {
       client.sendMouseState(state);
     };
@@ -199,7 +165,7 @@ const GuacdPage = (props) => {
 
   useEffect(() => {
     const resize = debounce(() => {
-      onWindowResize(box.width, box.height);
+      onWindowResize();
     });
     window.addEventListener("resize", resize);
     window.addEventListener("beforeunload", handleUnload);
@@ -212,10 +178,11 @@ const GuacdPage = (props) => {
     };
   }, [guacd]);
 
-  const onWindowResize = (width, height) => {
-    if (guacd.client && !fixedSize) {
+  const onWindowResize = () => {
+    if (guacd.client) {
       const display = guacd.client.getDisplay();
-      setBox(getBoxSize());
+      const {width, height} = getBox();
+      setBox({width, height});
       const scale = Math.min(
         height / display.getHeight(),
         width / display.getHeight()
@@ -328,6 +295,9 @@ const GuacdPage = (props) => {
       break;
     case STATE_DISCONNECTED:
       message.error({content: "Connection closed", duration: 3, key: key});
+      if (activeKey) {
+        closePane(activeKey);
+      }
       break;
     default:
       break;
@@ -344,7 +314,7 @@ const GuacdPage = (props) => {
     for (let j = 0; j < keys.length; j++) {
       guacd.client.sendKeyEvent(0, keys[j]);
     }
-    message.success("Combination Keys successfully sent");
+    Setting.showMessage("success", "Combination Keys successfully sent");
   };
 
   const showMessage = (msg) => {
@@ -358,15 +328,11 @@ const GuacdPage = (props) => {
       cancelText: "Close this page",
       cancelButtonProps: {"danger": true},
       onOk() {
-        if (asset) {
-          addAssetTunnel();
-        } else {
-          window.location.reload();
-        }
+        addAssetTunnel();
       },
       onCancel() {
-        if (asset) {
-          closePane(key);
+        if (activeKey) {
+          closePane(activeKey);
         } else {
           window.close();
         }
@@ -511,7 +477,7 @@ const GuacdPage = (props) => {
         </Draggable>
       }
       {
-        protocol === "vnc" &&
+        session.protocol === "vnc" &&
         <Draggable>
           <Affix style={{position: "absolute", top: 100, right: 100}}>
             <Dropdown overlay={hotKeyMenu} trigger={["click"]} placement="bottomLeft">
@@ -521,7 +487,7 @@ const GuacdPage = (props) => {
         </Draggable>
       }
       {
-        protocol === "rdp" &&
+        session.protocol === "rdp" &&
         <Draggable>
           <Affix style={{position: "absolute", top: 100, right: 100}}>
             <Dropdown overlay={hotKeyMenu} trigger={["click"]} placement="bottomLeft">

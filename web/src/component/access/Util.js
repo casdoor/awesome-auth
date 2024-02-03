@@ -26,10 +26,6 @@ export const debounce = function(fn, delay = 500) {
   };
 };
 
-export const getToken = function() {
-  return localStorage.getItem("X-Auth-Token");
-};
-
 export function requestFullScreen(element) {
   const requestMethod = element.requestFullScreen || // W3C
     element.webkitRequestFullScreen || // FireFox

@@ -72,6 +72,7 @@ func (c *ApiController) AddAssetTunnel() {
 	session := object.Session{
 		Owner:      s.Owner,
 		Name:       s.Name,
+		Protocol:   s.Protocol,
 		Upload:     s.Upload,
 		Download:   s.Download,
 		Delete:     s.Delete,
@@ -109,41 +110,33 @@ func (c *ApiController) GetAssetTunnel() {
 		return
 	}
 
-	remoteApp := c.Input().Get("remoteApp")
-	remoteAppDir := c.Input().Get("remoteAppDir")
-	remoteAppArgs := c.Input().Get("remoteAppArgs")
-
 	session, err := object.GetConnSession(sessionId)
 	if err != nil {
 		guacamole.Disconnect(ws, SessionNotFound, err.Error())
 		return
 	}
 
-	asset, err := object.GetAsset(session.AssetId)
-	if err != nil {
-		guacamole.Disconnect(ws, AssetNotFound, err.Error())
-		return
-	}
-
 	configuration := guacamole.NewConfiguration()
-	configuration.Protocol = session.Protocol
 	propertyMap := configuration.LoadConfig()
 
-	setConfig(propertyMap, configuration)
-
+	setConfig(propertyMap, session, configuration)
 	configuration.SetParameter("width", width)
 	configuration.SetParameter("height", height)
 	configuration.SetParameter("dpi", dpi)
 
-	configuration.SetParameter("hostname", session.IP)
-	configuration.SetParameter("port", strconv.Itoa(session.Port))
-	configuration.SetParameter("username", session.Username)
-	configuration.SetParameter("password", session.Password)
+	if session.Protocol == "rdp" {
+		asset, err := object.GetAsset(session.AssetId)
+		if err != nil || asset == nil {
+			guacamole.Disconnect(ws, AssetNotFound, err.Error())
+			return
+		}
 
-	if session.Protocol == "rdp" && asset.EnableRemoteApp {
-		configuration.SetParameter("remote-app", "||"+remoteApp)
-		configuration.SetParameter("remote-app-dir", remoteAppDir)
-		configuration.SetParameter("remote-app-args", remoteAppArgs)
+		if asset.EnableRemoteApp {
+			remoteApp := asset.RemoteApps[0]
+			configuration.SetParameter("remote-app", "||"+remoteApp.RemoteAppName)
+			configuration.SetParameter("remote-app-dir", remoteApp.RemoteAppDir)
+			configuration.SetParameter("remote-app-args", remoteApp.RemoteAppArgs)
+		}
 	}
 
 	addr := beego.AppConfig.String("guacamoleEndpoint")
@@ -155,7 +148,7 @@ func (c *ApiController) GetAssetTunnel() {
 
 	guacSession := &guacamole.Session{
 		Id:          sessionId,
-		Protocol:    asset.Protocol,
+		Protocol:    session.Protocol,
 		WebSocket:   ws,
 		GuacdTunnel: tunnel,
 	}
@@ -282,13 +275,19 @@ func (c *ApiController) TunnelMonitor() {
 	}
 }
 
-func setConfig(propertyMap map[string]string, configuration *guacamole.Configuration) {
+func setConfig(propertyMap map[string]string, session *object.Session, configuration *guacamole.Configuration) {
+	configuration.Protocol = session.Protocol
+
+	configuration.SetParameter("hostname", session.IP)
+	configuration.SetParameter("port", strconv.Itoa(session.Port))
+	configuration.SetParameter("username", session.Username)
+	configuration.SetParameter("password", session.Password)
+
 	switch configuration.Protocol {
 	case "rdp":
 		configuration.SetParameter("security", "any")
 		configuration.SetParameter("ignore-cert", "true")
 		configuration.SetParameter("create-drive-path", "true")
-		// configuration.SetParameter("resize-method", "reconnect")
 		configuration.SetParameter("resize-method", "display-update")
 		configuration.SetParameter(guacamole.EnableWallpaper, propertyMap[guacamole.EnableWallpaper])
 		configuration.SetParameter(guacamole.EnableTheming, propertyMap[guacamole.EnableTheming])

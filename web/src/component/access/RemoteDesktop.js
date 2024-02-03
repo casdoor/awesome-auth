@@ -53,10 +53,9 @@ const RemoteDesktop = (props) => {
     const newPane = {
       label: asset.name,
       children: <GuacdPage
-        asset={asset}
-        key={activeKey}
-        width={props.width}
-        height={props.height}
+        assetId={`${asset.owner}/${asset.name}`}
+        assetTreeWidth={props.assetTreeWidth}
+        activeKey={activeKey}
         closePane={removePane}
         addClient={(client) => {
           setClients(clients => new Map(clients.set(activeKey, client)));
@@ -109,6 +108,7 @@ const RemoteDesktop = (props) => {
       type="editable-card"
       onEdit={handleTabEdit}
       hideAdd
+      tabBarStyle={{margin: 0, height: 40}}
     />
   );
 };

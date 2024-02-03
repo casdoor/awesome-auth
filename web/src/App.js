@@ -31,9 +31,9 @@ import AssetEditPage from "./AssetEditPage";
 import SessionListPage from "./SessionListPage";
 import RecordListPage from "./RecordListPage";
 import RecordEditPage from "./RecordEditPage";
-import GuacdPage from "./component/access/GuacdPage";
 import ShortcutsPage from "./basic/ShortcutsPage";
 import AssetWorkbench from "./AssetWorkbench";
+import AccessPage from "./component/access/AccessPage";
 
 const {Header, Footer, Content} = Layout;
 
@@ -237,7 +237,7 @@ class App extends Component {
         <Route exact path="/sessions" render={(props) => this.renderSigninIfNotSignedIn(<SessionListPage account={this.state.account} {...props} />)} />
         <Route exact path="/records" render={(props) => this.renderSigninIfNotSignedIn(<RecordListPage account={this.state.account} {...props} />)} />
         <Route exact path="/records/:organizationName/:recordName" render={(props) => this.renderSigninIfNotSignedIn(<RecordEditPage account={this.state.account} {...props} />)} />
-        <Route exact path="/access" render={(props) => this.renderSigninIfNotSignedIn(<GuacdPage account={this.state.account} {...props} />)} />
+        <Route exact path="/access/:owner/:name" render={(props) => this.renderSigninIfNotSignedIn(<AccessPage account={this.state.account} {...props} />)} />
         <Route exact path="/workbench" render={(props) => this.renderSigninIfNotSignedIn(<AssetWorkbench account={this.state.account} {...props} />)} />
       </Switch>
     );
@@ -252,8 +252,10 @@ class App extends Component {
       uri = this.state.uri;
     }
     const hiddenPaths = ["/workbench", "/access"];
-    if (hiddenPaths.includes(uri)) {
-      return true;
+    for (const path of hiddenPaths) {
+      if (uri.startsWith(path)) {
+        return true;
+      }
     }
   }
 
