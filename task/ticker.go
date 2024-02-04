@@ -46,12 +46,12 @@ func (t *Ticker) deleteUnUsedSession() {
 
 	now := time.Now()
 	for _, session := range sessions {
-		if session.ConnectedTime != "" {
-			connectedTime, err := time.ParseInLocation(time.RFC3339, session.ConnectedTime, time.Local)
+		if session.StartTime != "" {
+			startTime, err := time.ParseInLocation(time.RFC3339, session.StartTime, time.Local)
 			if err != nil {
 				continue
 			}
-			if now.Sub(connectedTime).Hours() > 1 {
+			if now.Sub(startTime).Hours() > 1 {
 				_, err := object.DeleteSessionById(session.GetId())
 				if err != nil {
 					logs.Info("delete session failed: ", err)

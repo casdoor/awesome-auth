@@ -221,7 +221,7 @@ const GuacdPage = (props) => {
   };
 
   const handleClipboardReceived = (stream, mimetype) => {
-    if (session["copy"] === "0") {
+    if (!session.operations.includes("copy")) {
       return;
     }
 
@@ -249,7 +249,7 @@ const GuacdPage = (props) => {
     if (!guacd.client) {
       return;
     }
-    if (session["paste"] === "0") {
+    if (!session.operations.includes("paste")) {
       message.warn("Can not paste");
       return;
     }

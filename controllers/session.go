@@ -161,11 +161,12 @@ func (c *ApiController) AddSession() {
 func (c *ApiController) StartSession() {
 	sessionId := c.Input().Get("id")
 
-	s := object.Session{}
-	s.Status = object.Connected
-	s.ConnectedTime = util.GetCurrentTime()
+	s := &object.Session{
+		Status:    object.Connected,
+		StartTime: util.GetCurrentTime(),
+	}
 
-	_, err := object.UpdateSession(sessionId, &s, []string{"status", "connected_time"}...)
+	_, err := object.UpdateSession(sessionId, s, []string{"status", "start_time"}...)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
@@ -176,10 +177,6 @@ func (c *ApiController) StartSession() {
 
 func (c *ApiController) StopSession() {
 	sessionId := c.Input().Get("id")
-
-	s := object.Session{}
-	s.Status = object.Disconnected
-	s.DisconnectedTime = util.GetCurrentTime()
 
 	err := object.CloseSession(sessionId, ForcedDisconnect, "The administrator forcibly closes the session")
 	if err != nil {

@@ -137,19 +137,16 @@ func GenerateId() string {
 
 // SnakeString transform XxYy to xx_yy
 func SnakeString(s string) string {
-	data := make([]byte, 0, len(s)*2)
-	j := false
-	num := len(s)
-	for i := 0; i < num; i++ {
-		d := s[i]
-		if i > 0 && d >= 'A' && d <= 'Z' && j {
-			data = append(data, '_')
+	newstr := make([]byte, 0, len(s)+1)
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if isUpper := 'A' <= c && c <= 'Z'; isUpper {
+			if i > 0 {
+				newstr = append(newstr, '_')
+			}
+			c += 'a' - 'A'
 		}
-		if d != '_' {
-			j = true
-		}
-		data = append(data, d)
+		newstr = append(newstr, c)
 	}
-	result := strings.ToLower(string(data[:]))
-	return strings.ReplaceAll(result, " ", "")
+	return strings.ReplaceAll(string(newstr), " ", "")
 }

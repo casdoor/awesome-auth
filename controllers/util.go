@@ -14,6 +14,12 @@
 
 package controllers
 
+import (
+	"strings"
+
+	"github.com/casbin/casvisor/util"
+)
+
 type Response struct {
 	Status string      `json:"status"`
 	Msg    string      `json:"msg"`
@@ -64,4 +70,14 @@ func (c *ApiController) RequireAdmin() (string, bool) {
 	}
 
 	return user.Owner, true
+}
+
+func (c *ApiController) getClientIp() string {
+	res := strings.Replace(util.GetIPFromRequest(c.Ctx.Request), ": ", "", -1)
+	return res
+}
+
+func (c *ApiController) getUserAgent() string {
+	res := c.Ctx.Request.UserAgent()
+	return res
 }

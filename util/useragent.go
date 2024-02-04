@@ -16,12 +16,28 @@ package util
 
 import (
 	"fmt"
+	"os"
 
-	"github.com/beego/beego/context"
-	"github.com/beego/beego/logs"
+	"github.com/ua-parser/uap-go/uaparser"
 )
 
-func LogInfo(ctx *context.Context, f string, v ...interface{}) {
-	ipString := fmt.Sprintf("(%s) ", GetIPFromRequest(ctx.Request))
-	logs.Info(ipString+f, v...)
+var Parser *uaparser.Parser
+
+func InitParser() {
+	var err error
+	Parser, err = uaparser.New("../data/regexes.yaml")
+	if _, ok := err.(*os.PathError); ok {
+		Parser, err = uaparser.New("data/regexes.yaml")
+	}
+	if _, ok := err.(*os.PathError); ok {
+		Parser, err = uaparser.New("../../data/regexes.yaml")
+	}
+	if err != nil {
+		panic(err)
+	}
+}
+
+func GetDescFromUserAgent(userAgent string) string {
+	client := Parser.Parse(userAgent)
+	return fmt.Sprintf("%s | %s | %s", client.UserAgent.ToString(), client.Os.ToString(), client.Device.ToString())
 }

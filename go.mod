@@ -30,5 +30,6 @@ require (
 	github.com/qiangmzsx/string-adapter/v2 v2.2.0
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/stretchr/testify v1.8.3 // indirect
+	github.com/ua-parser/uap-go v0.0.0-20240113215029-33f8e6d47f38
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

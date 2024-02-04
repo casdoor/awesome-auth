@@ -17,10 +17,10 @@ import * as Setting from "./Setting";
 import {Radio, Table} from "antd";
 import i18next from "i18next";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
-import {Link} from "react-router-dom";
 import BaseListPage from "./BaseListPage";
 import moment from "moment";
 import React from "react";
+import {Link} from "react-router-dom";
 
 export const Connected = "connected";
 const Disconnected = "disconnected";
@@ -87,14 +87,16 @@ class SessionListPage extends BaseListPage {
   renderTable(sessions) {
     const columns = [
       {
-        title: i18next.t("general:Name"),
-        dataIndex: "name",
-        key: "name",
-        width: "350px",
+        title: i18next.t("general:Asset"),
+        dataIndex: "asset",
+        key: "asset",
+        width: "200px",
         sorter: (a, b) => a.name.localeCompare(b.name),
         render: (text, record, index) => {
           return (
-            <Link to={`/sessions/${record.name}`}>{text}</Link>
+            <Link to={`/assets/${text}`}>
+              {text}
+            </Link>
           );
         },
       },
@@ -111,33 +113,91 @@ class SessionListPage extends BaseListPage {
         ],
       },
       {
-        title: i18next.t("general:Client IP"),
-        dataIndex: "ip",
-        key: "ip",
+        title: i18next.t("general:User"),
+        dataIndex: "creator",
+        key: "creator",
         width: "150px",
+        sorter: (a, b) => a.creator.localeCompare(b.creator),
+        ...this.getColumnSearchProps("creator"),
+        render: (text, record, index) => {
+          return (
+            <a target="_blank" rel="noreferrer" href={Setting.getUserProfileUrl(text, this.props.account)}>
+              {text}
+            </a>
+          );
+        },
+      },
+      {
+        title: i18next.t("general:Client IP"),
+        dataIndex: "clientIp",
+        key: "clientIp",
+        width: "150px",
+        sorter: (a, b) => a.clientIp.localeCompare(b.clientIp),
+        render: (text, record, index) => {
+          if (text === "") {
+            return null;
+          }
+
+          return (
+            <a target="_blank" rel="noreferrer" href={`https://db-ip.com/${text}`}>
+              {
+                record.clientIpDesc === "" ? text : (
+                  <div>
+                    {text}
+                    <br />
+                    {record.clientIpDesc}
+                  </div>
+                )
+              }
+            </a>
+          );
+        },
+      },
+      {
+        title: i18next.t("general:User agent"),
+        dataIndex: "userAgent",
+        key: "userAgent",
+        width: "150px",
+        ...this.getColumnSearchProps("userAgent"),
+        sorter: (a, b) => a.userAgent.localeCompare(b.userAgent),
+        render: (text, record, index) => {
+          if (!record.userAgentDesc) {
+            return text;
+          } else {
+            return record.userAgentDesc.split("|").map(text => {
+              if (text.includes("Other") || text.includes("Generic Smartphone")) {
+                return null;
+              }
+
+              return (
+                <div key={text}>{text}</div>
+              );
+            });
+          }
+        },
       },
       {
         title: i18next.t("general:Connection start time"),
-        dataIndex: "connectedTime",
-        key: "connectedTime",
+        dataIndex: "startTime",
+        key: "startTime",
         width: "220px",
-        sorter: (a, b) => a.connectedTime.localeCompare(b.connectedTime),
+        sorter: (a, b) => a.startTime.localeCompare(b.startTime),
         render: (text, asset, index) => {
           return Setting.getFormattedDate(text);
         },
       },
       {
         title: i18next.t("general:Connection duration"),
-        dataIndex: "connectedTimeDur",
-        key: "connectedTimeDur",
+        dataIndex: "startTimeDur",
+        key: "startTimeDur",
         // width: "200px",
         render: (text, record) => {
-          if (!record["connectedTime"]) {
+          if (!record["startTime"]) {
             return "-";
           }
-          const connectedTime = moment(record["connectedTime"]);
+          const startTime = moment(record["startTime"]);
           const currentTime = moment();
-          const duration = moment.duration(currentTime.diff(connectedTime));
+          const duration = moment.duration(currentTime.diff(startTime));
           return `${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
         },
       },

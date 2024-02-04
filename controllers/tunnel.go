@@ -59,29 +59,26 @@ func (c *ApiController) AddAssetTunnel() {
 	mode := c.Input().Get("mode")
 
 	user := c.GetSessionUser()
+	if user == nil {
+		c.ResponseError("please sign in first")
+		return
+	}
 
-	s, err := object.CreateSession(c.Ctx.Input.IP(), assetId, mode, user)
+	session := &object.Session{
+		Creator:       user.Name,
+		ClientIp:      c.getClientIp(),
+		UserAgent:     c.getUserAgent(),
+		ClientIpDesc:  util.GetDescFromIP(c.getClientIp()),
+		UserAgentDesc: util.GetDescFromUserAgent(c.getUserAgent()),
+	}
+
+	var err error
+	session, err = object.CreateSession(session, assetId, mode)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
-	} else if s == nil {
-		c.ResponseError("Session not found")
-		return
 	}
 
-	session := object.Session{
-		Owner:      s.Owner,
-		Name:       s.Name,
-		Protocol:   s.Protocol,
-		Upload:     s.Upload,
-		Download:   s.Download,
-		Delete:     s.Delete,
-		Rename:     s.Rename,
-		Edit:       s.Edit,
-		FileSystem: s.FileSystem,
-		Copy:       s.Copy,
-		Paste:      s.Paste,
-	}
 	c.ResponseOk(session)
 }
 
@@ -116,21 +113,21 @@ func (c *ApiController) GetAssetTunnel() {
 		return
 	}
 
+	asset, err := object.GetAsset(session.Asset)
+	if err != nil || asset == nil {
+		guacamole.Disconnect(ws, AssetNotFound, err.Error())
+		return
+	}
+
 	configuration := guacamole.NewConfiguration()
 	propertyMap := configuration.LoadConfig()
 
-	setConfig(propertyMap, session, configuration)
+	setConfig(propertyMap, asset, configuration)
 	configuration.SetParameter("width", width)
 	configuration.SetParameter("height", height)
 	configuration.SetParameter("dpi", dpi)
 
 	if session.Protocol == "rdp" {
-		asset, err := object.GetAsset(session.AssetId)
-		if err != nil || asset == nil {
-			guacamole.Disconnect(ws, AssetNotFound, err.Error())
-			return
-		}
-
 		if asset.EnableRemoteApp {
 			remoteApp := asset.RemoteApps[0]
 			configuration.SetParameter("remote-app", "||"+remoteApp.RemoteAppName)
@@ -275,13 +272,13 @@ func (c *ApiController) TunnelMonitor() {
 	}
 }
 
-func setConfig(propertyMap map[string]string, session *object.Session, configuration *guacamole.Configuration) {
-	configuration.Protocol = session.Protocol
+func setConfig(propertyMap map[string]string, asset *object.Asset, configuration *guacamole.Configuration) {
+	configuration.Protocol = asset.Protocol
 
-	configuration.SetParameter("hostname", session.IP)
-	configuration.SetParameter("port", strconv.Itoa(session.Port))
-	configuration.SetParameter("username", session.Username)
-	configuration.SetParameter("password", session.Password)
+	configuration.SetParameter("hostname", asset.Ip)
+	configuration.SetParameter("port", strconv.Itoa(asset.Port))
+	configuration.SetParameter("username", asset.Username)
+	configuration.SetParameter("password", asset.Password)
 
 	switch configuration.Protocol {
 	case "rdp":

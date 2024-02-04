@@ -22,11 +22,14 @@ import (
 	"github.com/casbin/casvisor/object"
 	"github.com/casbin/casvisor/routers"
 	"github.com/casbin/casvisor/task"
+	"github.com/casbin/casvisor/util"
 )
 
 func main() {
 	object.InitAdapter()
 	authz.InitAuthz()
+	util.InitIpDb()
+	util.InitParser()
 
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowOrigins:     []string{"*"},
