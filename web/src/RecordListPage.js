@@ -231,6 +231,7 @@ class RecordListPage extends BaseListPage {
     ];
 
     const paginationProps = {
+      pageSize: this.state.pagination.pageSize,
       total: this.state.pagination.total,
       showQuickJumper: true,
       showSizeChanger: true,

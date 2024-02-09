@@ -219,16 +219,16 @@ class AssetListPage extends BaseListPage {
           return `${record.enableRemoteApp ? 1 : 0}  / ${record.remoteApps === null ? 0 : record.remoteApps.length}`;
         },
       },
-      {
-        title: i18next.t("general:Services"),
-        dataIndex: "services",
-        key: "services",
-        width: "90px",
-        // todo: fix filter
-        render: (text, record, index) => {
-          return `${record.services.filter(service => service.status === "Running").length} / ${record.services.length}`;
-        },
-      },
+      // {
+      //   title: i18next.t("general:Services"),
+      //   dataIndex: "services",
+      //   key: "services",
+      //   width: "90px",
+      //   // todo: fix filter
+      //   render: (text, record, index) => {
+      //     return `${record.services.filter(service => service.status === "Running").length} / ${record.services.length}`;
+      //   },
+      // },
       {
         title: i18next.t("general:Action"),
         dataIndex: "action",
@@ -268,8 +268,11 @@ class AssetListPage extends BaseListPage {
     ];
 
     const paginationProps = {
+      pageSize: this.state.pagination.pageSize,
+      total: this.state.pagination.total,
       showQuickJumper: true,
       showSizeChanger: true,
+      showTotal: () => i18next.t("general:{total} in total").replace("{total}", this.state.pagination.total),
     };
 
     return (

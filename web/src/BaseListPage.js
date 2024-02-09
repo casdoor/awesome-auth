@@ -26,7 +26,7 @@ class BaseListPage extends React.Component {
       data: [],
       pagination: {
         current: 1,
-        pageSize: 10,
+        pageSize: 20,
       },
       loading: false,
       searchText: "",
