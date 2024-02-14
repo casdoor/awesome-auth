@@ -17,10 +17,11 @@ package routers
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/beego/beego/context"
 	"github.com/casbin/casvisor/authz"
 	"github.com/casbin/casvisor/util"
-	"net/http"
 )
 
 type Object struct {
