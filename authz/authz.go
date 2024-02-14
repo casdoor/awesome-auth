@@ -32,7 +32,7 @@ func InitAuthz() {
 
 	tableNamePrefix := conf.GetConfigString("tableNamePrefix")
 	driverName := conf.GetConfigString("driverName")
-	dataSourceName := conf.GetConfigString("dataSourceName")
+	dataSourceName := conf.GetConfigDataSourceName()
 	if conf.GetConfigString("driverName") == "mysql" {
 		dataSourceName = dataSourceName + conf.GetConfigString("dbName")
 	}
