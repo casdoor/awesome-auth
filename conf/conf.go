@@ -16,6 +16,8 @@ package conf
 
 import (
 	"os"
+	"runtime"
+	"strings"
 
 	"github.com/beego/beego"
 )
@@ -44,4 +46,20 @@ func GetConfigBool(key string) bool {
 	} else {
 		return false
 	}
+}
+
+func GetConfigDataSourceName() string {
+	dataSourceName := GetConfigString("dataSourceName")
+
+	runningInDocker := os.Getenv("RUNNING_IN_DOCKER")
+	if runningInDocker == "true" {
+		// https://stackoverflow.com/questions/48546124/what-is-linux-equivalent-of-host-docker-internal
+		if runtime.GOOS == "linux" {
+			dataSourceName = strings.ReplaceAll(dataSourceName, "localhost", "172.17.0.1")
+		} else {
+			dataSourceName = strings.ReplaceAll(dataSourceName, "localhost", "host.docker.internal")
+		}
+	}
+
+	return dataSourceName
 }

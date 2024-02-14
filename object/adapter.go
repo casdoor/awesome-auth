@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/casbin/casvisor/conf"
+
 	"github.com/casbin/casvisor/util"
 
 	"github.com/beego/beego"
@@ -37,7 +39,7 @@ func InitConfig() {
 }
 
 func InitAdapter() {
-	adapter = NewAdapter(beego.AppConfig.String("driverName"), beego.AppConfig.String("dataSourceName"))
+	adapter = NewAdapter(conf.GetConfigString("driverName"), conf.GetConfigDataSourceName())
 }
 
 // Adapter represents the MySQL adapter for policy storage.

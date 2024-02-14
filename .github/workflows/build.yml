@@ -11,7 +11,7 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_DATABASE: casdoor
+          MYSQL_DATABASE: casvisor
           MYSQL_ROOT_PASSWORD: 123456
         ports:
           - 3306:3306
@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
         with:
-          go-version: '^1.16.5'
+          go-version: '^1.20.0'
           cache-dependency-path: ./go.mod
       - name: Tests
         run: |
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
         with:
-          go-version: '^1.16.5'
+          go-version: '^1.20.0'
           cache-dependency-path: ./go.mod
       - run: go version
       - name: Build
@@ -131,3 +131,13 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: casbin/casvisor:${{steps.get-current-tag.outputs.tag }},casbin/casvisor:latest
+
+      - name: Push All In One Version to Docker Hub
+        uses: docker/build-push-action@v3
+        if: github.repository == 'casbin/casvisor' && github.event_name == 'push' && steps.should_push.outputs.push=='true'
+        with:
+          context: .
+          target: ALLINONE
+          platforms: linux/amd64
+          push: true
+          tags: casbin/casvisor-all-in-one:${{steps.get-current-tag.outputs.tag }},casbin/casibase-all-in-one:latest
