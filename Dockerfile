@@ -1,3 +1,4 @@
+FROM guacamole/guacd:1.5.4 as guacd
 FROM node:18.19.0 AS FRONT
 WORKDIR /web
 COPY ./web .
@@ -51,6 +52,24 @@ RUN apt update
 RUN apt install -y ca-certificates && update-ca-certificates
 
 WORKDIR /
+ARG PREFIX_DIR=/opt/guacamole
+ENV LD_LIBRARY_PATH=${PREFIX_DIR}/lib
+ARG RUNTIME_DEPENDENCIES="            \
+        fonts-dejavu                  \
+        fonts-liberation              \
+        ghostscript                   \
+        netcat-openbsd                \
+        xfonts-terminus"
+
+COPY --from=guacd ${PREFIX_DIR} ${PREFIX_DIR}
+
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends $RUNTIME_DEPENDENCIES \
+    && apt-get install -y --no-install-recommends $(cat "${PREFIX_DIR}"/DEPENDENCIES) \
+    && apt-get clean all \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=BACK /go/src/casvisor/server ./server
 COPY --from=BACK /go/src/casvisor/data ./data
 COPY --from=BACK /go/src/casvisor/docker-entrypoint.sh /docker-entrypoint.sh
