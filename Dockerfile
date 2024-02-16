@@ -1,3 +1,5 @@
+ARG ALPINE_BASE_IMAGE=3.18
+
 FROM guacamole/guacd:1.5.4 as guacd
 FROM node:18.19.0 AS FRONT
 WORKDIR /web
@@ -12,7 +14,7 @@ RUN chmod +x ./build.sh
 RUN ./build.sh
 
 
-FROM alpine:latest AS STANDARD
+FROM alpine:${ALPINE_BASE_IMAGE} AS STANDARD
 LABEL MAINTAINER="https://casvisor.org/"
 ARG USER=casvisor
 
@@ -37,38 +39,33 @@ COPY --from=FRONT --chown=$USER:$USER /web/build ./web/build
 ENTRYPOINT ["/server"]
 
 
-FROM debian:latest AS db
-RUN apt update \
-    && apt install -y \
-        mariadb-server \
-        mariadb-client \
-    && rm -rf /var/lib/apt/lists/*
-
-
-FROM db AS ALLINONE
+FROM alpine:${ALPINE_BASE_IMAGE} AS ALLINONE
 LABEL MAINTAINER="https://casvisor.org/"
-
-RUN apt update
-RUN apt install -y ca-certificates && update-ca-certificates
 
 WORKDIR /
 ARG PREFIX_DIR=/opt/guacamole
+
 ENV LD_LIBRARY_PATH=${PREFIX_DIR}/lib
-ARG RUNTIME_DEPENDENCIES="            \
-        fonts-dejavu                  \
-        fonts-liberation              \
-        ghostscript                   \
-        netcat-openbsd                \
-        xfonts-terminus"
 
 COPY --from=guacd ${PREFIX_DIR} ${PREFIX_DIR}
 
-RUN set -ex \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends $RUNTIME_DEPENDENCIES \
-    && apt-get install -y --no-install-recommends $(cat "${PREFIX_DIR}"/DEPENDENCIES) \
-    && apt-get clean all \
-    && rm -rf /var/lib/apt/lists/*
+# Bring runtime environment up to date and install runtime dependencies
+RUN apk add --no-cache                \
+        openrc                        \
+        mariadb                       \
+        mariadb-client                \
+        ca-certificates               \
+        font-noto-cjk                 \
+        ghostscript                   \
+        netcat-openbsd                \
+        shadow                        \
+        terminus-font                 \
+        ttf-dejavu                    \
+        ttf-liberation                \
+        util-linux-login && \
+    xargs apk add --no-cache < ${PREFIX_DIR}/DEPENDENCIES && \
+    apk cache clean && \
+    rm -rf /var/cache/apk/*
 
 COPY --from=BACK /go/src/casvisor/server ./server
 COPY --from=BACK /go/src/casvisor/data ./data
