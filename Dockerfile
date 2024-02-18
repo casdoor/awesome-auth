@@ -1,6 +1,4 @@
-ARG ALPINE_BASE_IMAGE=3.18
-
-FROM guacamole/guacd:1.5.4 as guacd
+FROM casbin/guacd:1.5.4 as guacd
 FROM node:18.19.0 AS FRONT
 WORKDIR /web
 COPY ./web .
@@ -14,7 +12,7 @@ RUN chmod +x ./build.sh
 RUN ./build.sh
 
 
-FROM alpine:${ALPINE_BASE_IMAGE} AS STANDARD
+FROM alpine:latest AS STANDARD
 LABEL MAINTAINER="https://casvisor.org/"
 ARG USER=casvisor
 
@@ -39,33 +37,19 @@ COPY --from=FRONT --chown=$USER:$USER /web/build ./web/build
 ENTRYPOINT ["/server"]
 
 
-FROM alpine:${ALPINE_BASE_IMAGE} AS ALLINONE
+FROM guacd AS ALLINONE
 LABEL MAINTAINER="https://casvisor.org/"
 
 WORKDIR /
-ARG PREFIX_DIR=/opt/guacamole
 
-ENV LD_LIBRARY_PATH=${PREFIX_DIR}/lib
-
-COPY --from=guacd ${PREFIX_DIR} ${PREFIX_DIR}
-
-# Bring runtime environment up to date and install runtime dependencies
-RUN apk add --no-cache                \
-        openrc                        \
-        mariadb                       \
-        mariadb-client                \
-        ca-certificates               \
-        font-noto-cjk                 \
-        ghostscript                   \
-        netcat-openbsd                \
-        shadow                        \
-        terminus-font                 \
-        ttf-dejavu                    \
-        ttf-liberation                \
-        util-linux-login && \
-    xargs apk add --no-cache < ${PREFIX_DIR}/DEPENDENCIES && \
-    apk cache clean && \
-    rm -rf /var/cache/apk/*
+USER root
+RUN apt-get update \
+    && apt-get install -y      \
+        mariadb-server         \
+        mariadb-client         \
+        ca-certificates        \
+    && update-ca-certificates  \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=BACK /go/src/casvisor/server ./server
 COPY --from=BACK /go/src/casvisor/data ./data
@@ -73,5 +57,6 @@ COPY --from=BACK /go/src/casvisor/docker-entrypoint.sh /docker-entrypoint.sh
 COPY --from=BACK /go/src/casvisor/conf/app.conf ./conf/app.conf
 COPY --from=FRONT /web/build ./web/build
 
+EXPOSE 19000
 ENTRYPOINT ["/bin/bash"]
 CMD ["/docker-entrypoint.sh"]
