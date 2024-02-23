@@ -16,7 +16,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Affix, Button, Dropdown, Menu, Modal, message} from "antd";
 import {CloseCircleOutlined, CopyOutlined, ExpandOutlined, WindowsOutlined} from "@ant-design/icons";
 import Guacamole from "guacamole-common-js";
-import {debounce, exitFull, requestFullScreen} from "./Util";
+import {debounce, toggleFullscreen} from "./Util";
 import * as Setting from "../../Setting";
 import qs from "qs";
 import {Base64} from "js-base64";
@@ -32,28 +32,16 @@ const STATE_DISCONNECTING = 4;
 const STATE_DISCONNECTED = 5;
 
 const GuacdPage = (props) => {
-  const {assetId, activeKey, addClient, closePane, assetTreeWidth} = props;
+  const {assetId, activeKey, addClient, closePane} = props;
 
-  const getBox = () => {
-    if (assetTreeWidth) {
-      return {
-        width: window.innerWidth - assetTreeWidth,
-        height: window.innerHeight - 40,
-      };
-    }
-    return {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
-  };
-
-  const [box, setBox] = useState(getBox());
+  const [box, setBox] = useState({width: 0, height: 0});
   const [guacd, setGuacd] = useState({});
   const [session, setSession] = useState({});
   const [clipboardText, setClipboardText] = useState("");
-  const [fullScreened, setFullScreened] = useState(false);
+  const [isFullScreened, setIsFullScreened] = useState(false);
   const [clipboardVisible, setClipboardVisible] = useState(false);
-  const displayElement = useRef(null);
+  const ref = useRef(null);
+  const containerRef = useRef(null);
 
   const handleAddClient = (client, sink) => {
     if (addClient) {
@@ -64,11 +52,21 @@ const GuacdPage = (props) => {
   };
 
   useEffect(() => {
+    if (containerRef) {
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      setBox({width, height});
+    }
+  }, []);
+
+  useEffect(() => {
     if (!activeKey) {
       document.title = assetId.split("/")[1];
     }
-    addAssetTunnel();
-  }, [assetId]);
+    if (box && box.width && box.height && !guacd.client) {
+      addAssetTunnel();
+    }
+  }, [assetId, box]);
 
   const addAssetTunnel = () => {
     SessionBackend.addAssetTunnel(assetId).then((res) => {
@@ -99,9 +97,6 @@ const GuacdPage = (props) => {
     client.onerror = onError;
     tunnel.onerror = onError;
 
-    const element = client.getDisplay().getElement();
-    displayElement.current.appendChild(element);
-
     let dpi = 96;
     if (protocol === "telnet") {
       dpi = dpi * 2;
@@ -119,11 +114,22 @@ const GuacdPage = (props) => {
 
     const display = client.getDisplay();
     display.onresize = function(width, height) {
-      display.scale(Math.min(box.height / display.getHeight(), box.width / display.getWidth()));
+      if (containerRef?.current) {
+        const newWidth = containerRef.current.clientWidth;
+        const newHeight = containerRef.current.clientHeight;
+        display.scale(Math.min(newWidth / display.getHeight(), newHeight / display.getHeight()));
+      }
     };
 
+    const element = client.getDisplay().getElement();
+    const container = ref.current;
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    container.appendChild(element);
+
     const sink = new Guacamole.InputSink();
-    displayElement.current.appendChild(sink.getElement());
+    container.appendChild(sink.getElement());
     sink.focus();
 
     const keyboard = new Guacamole.Keyboard(sink.getElement());
@@ -181,7 +187,8 @@ const GuacdPage = (props) => {
   const onWindowResize = () => {
     if (guacd.client) {
       const display = guacd.client.getDisplay();
-      const {width, height} = getBox();
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
       setBox({width, height});
       const scale = Math.min(
         height / display.getHeight(),
@@ -295,9 +302,7 @@ const GuacdPage = (props) => {
       break;
     case STATE_DISCONNECTED:
       message.error({content: "Connection closed", duration: 3, key: key});
-      if (activeKey) {
-        closePane(activeKey);
-      }
+      setGuacd({client: null, sink: null});
       break;
     default:
       break;
@@ -427,13 +432,11 @@ const GuacdPage = (props) => {
   };
 
   const fullScreen = () => {
-    if (fullScreened) {
-      exitFull();
-      setFullScreened(false);
-    } else {
-      requestFullScreen(document.documentElement);
-      setFullScreened(true);
+    if (props.toggleFullscreen) {
+      props.toggleFullscreen();
     }
+    setIsFullScreened(!isFullScreened);
+    toggleFullscreen();
     focus();
   };
 
@@ -451,13 +454,13 @@ const GuacdPage = (props) => {
 
   return (
     <div>
-      <div className="container" style={{
-        width: box.width,
-        height: box.height,
-        margin: "0 auto",
+      <div className="container" ref={containerRef} style={{
+        display: "flex",
+        width: "100%",
+        height: activeKey ? "calc(100vh - 40px)" : "100vh",
         backgroundColor: "#1b1b1b",
       }}>
-        <div ref={displayElement} />
+        <div ref={ref} />
       </div>
       <Draggable>
         <Affix style={{position: "absolute", top: 50, right: 50}}>

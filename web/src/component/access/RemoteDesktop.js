@@ -54,9 +54,9 @@ const RemoteDesktop = (props) => {
       label: asset.name,
       children: <GuacdPage
         assetId={`${asset.owner}/${asset.name}`}
-        assetTreeWidth={props.assetTreeWidth}
         activeKey={activeKey}
         closePane={removePane}
+        toggleFullscreen={props.toggleFullscreen}
         addClient={(client) => {
           setClients(clients => new Map(clients.set(activeKey, client)));
         }}

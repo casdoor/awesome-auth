@@ -196,6 +196,7 @@ func CreateSession(session *Session, assetId, mode string) (*Session, error) {
 	respSession := &Session{
 		Owner:      session.Owner,
 		Name:       session.Name,
+		Protocol:   asset.Protocol,
 		Operations: session.Operations,
 	}
 	return respSession, nil

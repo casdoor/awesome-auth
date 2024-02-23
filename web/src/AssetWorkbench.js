@@ -22,6 +22,7 @@ class AssetWorkbench extends React.Component {
     this.state = {
       selectedAsset: null,
       assetTreeWidth: 240,
+      isFullScreen: false,
     };
   }
 
@@ -33,22 +34,29 @@ class AssetWorkbench extends React.Component {
     });
   };
 
+  toggleFullScreen = () => {
+    this.setState({
+      isFullScreen: !this.state.isFullScreen,
+    });
+  };
+
   render() {
     const {assetTreeWidth} = this.state;
 
     return (
-      <div style={{
-        display: "flex",
-        height: "100vh",
-        background: "#f5f5f5",
-      }}>
+      <div
+        style={{
+          display: "flex",
+          height: "100vh",
+          background: "#f5f5f5",
+        }}>
         <div style={{width: assetTreeWidth, background: "#fff"}}>
           <AssetTree onSelect={this.handleAssetSelect} account={this.props.account} />
         </div>
         <div style={{width: "100%", overflow: "hidden"}} >
           <RemoteDesktop
-            assetTreeWidth={assetTreeWidth}
             asset={this.state.selectedAsset}
+            toggleFullscreen={this.toggleFullScreen}
           />
         </div>
       </div>
