@@ -356,7 +356,7 @@ class App extends Component {
             textAlign: "center",
           }
         }>
-          Powered by <a style={{fontWeight: "bold", color: "black"}} target="_blank" rel="noreferrer" href="https://github.com/casvisor/casvisor">Casvisor</a>
+          Powered by <a target="_blank" href="https://github.com/casvisor/casvisor" rel="noreferrer"><img style={{paddingBottom: "3px"}} height={"20px"} alt={"Casvisor"} src={`${Setting.StaticBaseUrl}/img/casvisor-logo_1200x256.png`} /></a>
         </Footer>
       </React.Fragment>
     );
