@@ -18,8 +18,8 @@ import (
 	"encoding/json"
 
 	"github.com/beego/beego/utils/pagination"
-	"github.com/casbin/casvisor/object"
-	"github.com/casbin/casvisor/util"
+	"github.com/casvisor/casvisor/object"
+	"github.com/casvisor/casvisor/util"
 )
 
 // GetRecords

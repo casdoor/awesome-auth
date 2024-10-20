@@ -20,9 +20,9 @@ import (
 
 	"github.com/beego/beego"
 	"github.com/beego/beego/logs"
-	"github.com/casbin/casvisor/object"
-	"github.com/casbin/casvisor/util"
-	"github.com/casbin/casvisor/util/guacamole"
+	"github.com/casvisor/casvisor/object"
+	"github.com/casvisor/casvisor/util"
+	"github.com/casvisor/casvisor/util/guacamole"
 	"github.com/gorilla/websocket"
 )
 

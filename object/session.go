@@ -18,8 +18,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/casbin/casvisor/util"
-	"github.com/casbin/casvisor/util/guacamole"
+	"github.com/casvisor/casvisor/util"
+	"github.com/casvisor/casvisor/util/guacamole"
 	"xorm.io/core"
 )
 

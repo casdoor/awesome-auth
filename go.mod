@@ -1,4 +1,4 @@
-module github.com/casbin/casvisor
+module github.com/casvisor/casvisor
 
 go 1.20
 

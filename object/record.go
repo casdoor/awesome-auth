@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/context"
-	"github.com/casbin/casvisor/util"
+	"github.com/casvisor/casvisor/util"
 )
 
 type Record struct {

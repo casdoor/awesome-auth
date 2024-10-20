@@ -17,7 +17,7 @@ package controllers
 import (
 	"strings"
 
-	"github.com/casbin/casvisor/util"
+	"github.com/casvisor/casvisor/util"
 )
 
 type Response struct {

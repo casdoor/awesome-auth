@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/beego/beego/logs"
-	"github.com/casbin/casvisor/object"
+	"github.com/casvisor/casvisor/object"
 )
 
 type Ticker struct{}

@@ -17,7 +17,7 @@ package controllers
 import (
 	"context"
 
-	"github.com/casbin/casvisor/util/guacamole"
+	"github.com/casvisor/casvisor/util/guacamole"
 	"github.com/gorilla/websocket"
 )
 

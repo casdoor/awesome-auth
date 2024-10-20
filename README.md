@@ -7,7 +7,7 @@
   <a href="https://hub.docker.com/r/casbin/casvisor">
     <img alt="docker pull casbin/casvisor" src="https://img.shields.io/docker/pulls/casbin/casvisor.svg">
   </a>
-  <a href="https://github.com/casbin/casvisor/releases/latest">
+  <a href="https://github.com/casvisor/casvisor/releases/latest">
     <img alt="GitHub Release" src="https://img.shields.io/github/v/release/casbin/casvisor.svg">
   </a>
   <a href="https://hub.docker.com/repository/docker/casbin/casvisor">
@@ -16,24 +16,24 @@
 </p>
 
 <p align="center">
-  <a href="https://goreportcard.com/report/github.com/casbin/casvisor">
-    <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/casbin/casvisor?style=flat-square">
+  <a href="https://goreportcard.com/report/github.com/casvisor/casvisor">
+    <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/casvisor/casvisor?style=flat-square">
   </a>
-  <a href="https://github.com/casbin/casvisor/blob/master/LICENSE">
+  <a href="https://github.com/casvisor/casvisor/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/casbin/casvisor?style=flat-square" alt="license">
   </a>
-  <a href="https://github.com/casbin/casvisor/issues">
+  <a href="https://github.com/casvisor/casvisor/issues">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues/casbin/casvisor?style=flat-square">
   </a>
   <a href="#">
     <img alt="GitHub stars" src="https://img.shields.io/github/stars/casbin/casvisor?style=flat-square">
   </a>
-  <a href="https://github.com/casbin/casvisor/network">
+  <a href="https://github.com/casvisor/casvisor/network">
     <img alt="GitHub forks" src="https://img.shields.io/github/forks/casbin/casvisor?style=flat-square">
   </a>
 </p>
 
-![image](https://github.com/casbin/casvisor/assets/3787410/c71e9a09-38be-4f76-99a8-595aa859ee58)
+![image](https://github.com/casvisor/casvisor/assets/3787410/c71e9a09-38be-4f76-99a8-595aa859ee58)
 
 ## Online demo
 
@@ -50,8 +50,8 @@ Casvisor contains 2 parts:
 
 | Name     | Description                      | Language               | Source code                                        |
 |----------|----------------------------------|------------------------|----------------------------------------------------|
-| Frontend | Web frontend UI for Casvisor     | Javascript + React     | https://github.com/casbin/casvisor/tree/master/web |
-| Backend  | RESTful API backend for Casvisor | Golang + Beego + MySQL | https://github.com/casbin/casvisor                 |
+| Frontend | Web frontend UI for Casvisor     | Javascript + React     | https://github.com/casvisor/casvisor/tree/master/web |
+| Backend  | RESTful API backend for Casvisor | Golang + Beego + MySQL | https://github.com/casvisor/casvisor                 |
 
 ## Installation
 
@@ -63,19 +63,19 @@ Casvisor uses Casdoor to manage members. So you need to create an organization a
 
 ```shell
 go get github.com/casdoor/casdoor
-go get github.com/casbin/casvisor
+go get github.com/casvisor/casvisor
 ```
 
 or
 
 ```shell
 git clone https://github.com/casdoor/casdoor
-git clone https://github.com/casbin/casvisor
+git clone https://github.com/casvisor/casvisor
 ```
 
 #### Setup database
 
-Casvisor will store its users, nodes and topics informations in a MySQL database named: `casvisor`, will create it if not existed. The DB connection string can be specified at: https://github.com/casbin/casvisor/blob/master/conf/app.conf
+Casvisor will store its users, nodes and topics informations in a MySQL database named: `casvisor`, will create it if not existed. The DB connection string can be specified at: https://github.com/casvisor/casvisor/blob/master/conf/app.conf
 
 ```ini
 dataSourceName = root:123@tcp(localhost:3306)/

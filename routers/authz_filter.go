@@ -20,8 +20,8 @@ import (
 	"net/http"
 
 	"github.com/beego/beego/context"
-	"github.com/casbin/casvisor/authz"
-	"github.com/casbin/casvisor/util"
+	"github.com/casvisor/casvisor/authz"
+	"github.com/casvisor/casvisor/util"
 )
 
 type Object struct {

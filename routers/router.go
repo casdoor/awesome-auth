@@ -16,7 +16,7 @@ package routers
 
 import (
 	"github.com/beego/beego"
-	"github.com/casbin/casvisor/controllers"
+	"github.com/casvisor/casvisor/controllers"
 )
 
 func init() {

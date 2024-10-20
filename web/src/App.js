@@ -356,7 +356,7 @@ class App extends Component {
             textAlign: "center",
           }
         }>
-          Powered by <a style={{fontWeight: "bold", color: "black"}} target="_blank" rel="noreferrer" href="https://github.com/casbin/casvisor">Casvisor</a>
+          Powered by <a style={{fontWeight: "bold", color: "black"}} target="_blank" rel="noreferrer" href="https://github.com/casvisor/casvisor">Casvisor</a>
         </Footer>
       </React.Fragment>
     );

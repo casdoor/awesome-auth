@@ -19,8 +19,8 @@ import (
 	"runtime"
 
 	"github.com/beego/beego"
-	"github.com/casbin/casvisor/conf"
-	"github.com/casbin/casvisor/util"
+	"github.com/casvisor/casvisor/conf"
+	"github.com/casvisor/casvisor/util"
 	_ "github.com/go-sql-driver/mysql"
 	"xorm.io/xorm"
 )

@@ -18,11 +18,11 @@ import (
 	"github.com/beego/beego"
 	"github.com/beego/beego/plugins/cors"
 	_ "github.com/beego/beego/session/redis"
-	"github.com/casbin/casvisor/authz"
-	"github.com/casbin/casvisor/object"
-	"github.com/casbin/casvisor/routers"
-	"github.com/casbin/casvisor/task"
-	"github.com/casbin/casvisor/util"
+	"github.com/casvisor/casvisor/authz"
+	"github.com/casvisor/casvisor/object"
+	"github.com/casvisor/casvisor/routers"
+	"github.com/casvisor/casvisor/task"
+	"github.com/casvisor/casvisor/util"
 )
 
 func main() {

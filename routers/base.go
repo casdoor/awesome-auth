@@ -19,8 +19,8 @@ import (
 	"net/http"
 
 	"github.com/beego/beego/context"
-	"github.com/casbin/casvisor/conf"
 	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
+	"github.com/casvisor/casvisor/conf"
 )
 
 type Response struct {
