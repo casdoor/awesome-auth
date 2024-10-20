@@ -264,10 +264,10 @@ class AssetEditPage extends React.Component {
         </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general: Tag"), i18next.t("general: Tag - Tooltip"))} :
+            {Setting.getLabel(i18next.t("general:Tag"), i18next.t("general:Tag - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.asset.tags} onChange={e => {
+            <Input value={this.state.asset.tag} onChange={e => {
               this.updateAssetField("tag", e.target.value);
             }
             } />
