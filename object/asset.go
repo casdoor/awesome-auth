@@ -33,6 +33,18 @@ type Service struct {
 	Message        string `json:"message"`
 }
 
+type Patch struct {
+	Name           string `json:"name"`
+	Category       string `json:"category"`
+	Title          string `json:"title"`
+	Url            string `json:"url"`
+	Size           string `json:"size"`
+	ExpectedStatus string `json:"expectedStatus"`
+	Status         string `json:"status"`
+	InstallTime    string `json:"installTime"`
+	Message        string `json:"message"`
+}
+
 type RemoteApp struct {
 	No            int    `json:"no"`
 	RemoteAppName string `xorm:"varchar(100)" json:"remoteAppName"`
@@ -74,6 +86,7 @@ type Asset struct {
 	EnableRemoteApp bool         `json:"enableRemoteApp"`
 	RemoteApps      []*RemoteApp `json:"remoteApps"`
 	Services        []*Service   `json:"services"`
+	Patches         []*Patch     `json:"patches"`
 }
 
 func GetAssetCount(owner, field, value string) (int64, error) {
