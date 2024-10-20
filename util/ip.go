@@ -15,20 +15,23 @@
 package util
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"net/http"
-	"os"
 	"strings"
 )
 
+//go:embed 17monipdb.dat
+var ipDbData embed.FS
+
 func InitIpDb() {
-	err := Init("data/17monipdb.dat")
-	if _, ok := err.(*os.PathError); ok {
-		err = Init("../data/17monipdb.dat")
-	}
+	data, err := fs.ReadFile(ipDbData, "17monipdb.dat")
 	if err != nil {
 		panic(err)
 	}
+
+	InitWithData(data)
 }
 
 func GetDescFromIP(ip string) string {
