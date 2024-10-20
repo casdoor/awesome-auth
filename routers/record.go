@@ -23,16 +23,11 @@ import (
 )
 
 func RecordMessage(ctx *context.Context) {
-	if ctx.Request.URL.Path == "/api/login" || ctx.Request.URL.Path == "/api/signup" {
-		return
-	}
-
-	if ctx.Request.URL.Path == "/api/refresh-asset-status" || ctx.Request.URL.Path == "/api/get-assets" {
+	if ctx.Request.URL.Path == "/api/login" || ctx.Request.URL.Path == "/api/signup" || ctx.Request.URL.Path == "/api/get-assets" {
 		return
 	}
 
 	userId := getUsername(ctx)
-
 	ctx.Input.SetParam("recordUserId", userId)
 }
 
