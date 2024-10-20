@@ -101,17 +101,12 @@ func (a *Adapter) close() {
 }
 
 func (a *Adapter) createTable() {
-	err := a.engine.Sync2(new(Dataset))
+	err := a.engine.Sync2(new(Asset))
 	if err != nil {
 		panic(err)
 	}
 
 	err = a.engine.Sync2(new(Record))
-	if err != nil {
-		panic(err)
-	}
-
-	err = a.engine.Sync2(new(Asset))
 	if err != nil {
 		panic(err)
 	}
