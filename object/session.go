@@ -181,7 +181,7 @@ func CreateSession(session *Session, assetId, mode string) (*Session, error) {
 	session.Owner = asset.Owner
 	session.Name = util.GenerateId()
 	session.CreatedTime = util.GetCurrentTime()
-	session.Protocol = asset.Protocol
+	session.Protocol = asset.RemoteProtocol
 	session.Asset = assetId
 	session.Status = NoConnect
 	session.Mode = mode
@@ -196,7 +196,7 @@ func CreateSession(session *Session, assetId, mode string) (*Session, error) {
 	respSession := &Session{
 		Owner:      session.Owner,
 		Name:       session.Name,
-		Protocol:   asset.Protocol,
+		Protocol:   asset.RemoteProtocol,
 		Operations: session.Operations,
 	}
 	return respSession, nil

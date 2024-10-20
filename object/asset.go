@@ -134,8 +134,8 @@ func GetMaskedAsset(asset *Asset, errs ...error) (*Asset, error) {
 		return nil, nil
 	}
 
-	if asset.Password != "" {
-		asset.Password = "***"
+	if asset.RemotePassword != "" {
+		asset.RemotePassword = "***"
 	}
 	return asset, nil
 }
@@ -165,8 +165,8 @@ func UpdateAsset(id string, asset *Asset) (bool, error) {
 		return false, nil
 	}
 
-	if asset.Password == "***" {
-		asset.Password = p.Password
+	if asset.RemotePassword == "***" {
+		asset.RemotePassword = p.RemotePassword
 	}
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(asset)
