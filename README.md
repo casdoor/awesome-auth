@@ -10,7 +10,7 @@
   <a href="https://github.com/casvisor/casvisor/releases/latest">
     <img alt="GitHub Release" src="https://img.shields.io/github/v/release/casbin/casvisor.svg">
   </a>
-  <a href="https://hub.docker.com/repository/docker/casbin/casvisor">
+  <a href="https://hub.docker.com/r/casbin/casvisor">
     <img alt="Docker Image Version (latest semver)" src="https://img.shields.io/badge/Docker%20Hub-latest-brightgreen">
   </a>
 </p>
