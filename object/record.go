@@ -24,6 +24,12 @@ import (
 	"github.com/casvisor/casvisor/util"
 )
 
+var logPostOnly bool
+
+func init() {
+	logPostOnly = conf.GetConfigBool("logPostOnly")
+}
+
 type Record struct {
 	Id int `xorm:"int notnull pk autoincr" json:"id"`
 
@@ -163,6 +169,12 @@ func NewRecord(ctx *context.Context) (*Record, error) {
 }
 
 func AddRecord(record *Record) bool {
+	if logPostOnly {
+		if record.Method == "GET" {
+			return false
+		}
+	}
+
 	record.Owner = record.Organization
 
 	affected, err := adapter.engine.Insert(record)
