@@ -30,7 +30,7 @@ const GuacdClipboard = ({visible, clipboardText, handleOk, handleCancel}) => {
       <Modal
         title="Clipboard"
         maskClosable={false}
-        visible={visible}
+        open={visible}
         onOk={() => {
           form.validateFields()
             .then(values => {
