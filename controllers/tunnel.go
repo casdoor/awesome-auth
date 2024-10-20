@@ -127,15 +127,6 @@ func (c *ApiController) GetAssetTunnel() {
 	configuration.SetParameter("height", height)
 	configuration.SetParameter("dpi", dpi)
 
-	if session.Protocol == "RDP" {
-		if asset.EnableRemoteApp {
-			remoteApp := asset.RemoteApps[0]
-			configuration.SetParameter("remote-app", "||"+remoteApp.RemoteAppName)
-			configuration.SetParameter("remote-app-dir", remoteApp.RemoteAppDir)
-			configuration.SetParameter("remote-app-args", remoteApp.RemoteAppArgs)
-		}
-	}
-
 	addr := beego.AppConfig.String("guacamoleEndpoint")
 	tunnel, err := guacamole.NewTunnel(addr, configuration)
 	if err != nil {
@@ -273,14 +264,23 @@ func (c *ApiController) TunnelMonitor() {
 }
 
 func setConfig(propertyMap map[string]string, asset *object.Asset, configuration *guacamole.Configuration) {
-	configuration.Protocol = asset.Protocol
+	switch asset.RemoteProtocol {
+	case "SSH":
+		configuration.Protocol = "ssh"
+	case "RDP":
+		configuration.Protocol = "rdp"
+	case "Telnet":
+		configuration.Protocol = "telnet"
+	case "VNC":
+		configuration.Protocol = "vnc"
+	}
 
-	configuration.SetParameter("hostname", asset.Ip)
-	configuration.SetParameter("port", strconv.Itoa(asset.Port))
-	configuration.SetParameter("username", asset.Username)
-	configuration.SetParameter("password", asset.Password)
+	configuration.SetParameter("hostname", asset.MachineName)
+	configuration.SetParameter("port", strconv.Itoa(asset.RemotePort))
+	configuration.SetParameter("username", asset.RemoteUsername)
+	configuration.SetParameter("password", asset.RemotePassword)
 
-	switch configuration.Protocol {
+	switch asset.RemoteProtocol {
 	case "RDP":
 		configuration.SetParameter("security", "any")
 		configuration.SetParameter("ignore-cert", "true")
@@ -298,6 +298,13 @@ func setConfig(propertyMap map[string]string, asset *object.Asset, configuration
 		configuration.SetParameter(guacamole.ForceLossless, propertyMap[guacamole.ForceLossless])
 		configuration.SetParameter(guacamole.PreConnectionId, propertyMap[guacamole.PreConnectionId])
 		configuration.SetParameter(guacamole.PreConnectionBlob, propertyMap[guacamole.PreConnectionBlob])
+
+		if asset.EnableRemoteApp {
+			remoteApp := asset.RemoteApps[0]
+			configuration.SetParameter("remote-app", "||"+remoteApp.RemoteAppName)
+			configuration.SetParameter("remote-app-dir", remoteApp.RemoteAppDir)
+			configuration.SetParameter("remote-app-args", remoteApp.RemoteAppArgs)
+		}
 	case "SSH":
 		configuration.SetParameter(guacamole.FontSize, propertyMap[guacamole.FontSize])
 		// configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
