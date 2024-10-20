@@ -44,18 +44,32 @@ type Asset struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
+	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
+	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
-	Description string `xorm:"varchar(100)" json:"description"`
-	Protocol    string `xorm:"varchar(100)" json:"protocol"`
-	Ip          string `xorm:"varchar(100)" json:"ip"`
-	Port        int    `json:"port"`
-	Username    string `xorm:"varchar(100)" json:"username"`
-	Password    string `xorm:"varchar(100)" json:"password"`
-	Language    string `xorm:"varchar(100)" json:"language"`
-	Tag         string `xorm:"varchar(100)" json:"tag"`
+	Category string `xorm:"varchar(100)" json:"category"`
+	Type     string `xorm:"varchar(100)" json:"type"`
+	Tag      string `xorm:"varchar(100)" json:"tag"`
+
+	MachineName string `xorm:"varchar(100)" json:"machineName"`
 	Os          string `xorm:"varchar(100)" json:"os"`
-	AutoQuery   bool   `json:"autoQuery"`
-	IsPermanent bool   `json:"isPermanent"`
+
+	PublicIp  string `xorm:"varchar(100)" json:"publicIp"`
+	PrivateIp string `xorm:"varchar(100)" json:"privateIp"`
+
+	Size    string `xorm:"varchar(100)" json:"size"`
+	CpuSize string `xorm:"varchar(100)" json:"cpuSize"`
+	MemSize string `xorm:"varchar(100)" json:"memSize"`
+
+	RemoteProtocol string `xorm:"varchar(100)" json:"remoteProtocol"`
+	RemotePort     int    `json:"remotePort"`
+	RemoteUsername string `xorm:"varchar(100)" json:"remoteUsername"`
+	RemotePassword string `xorm:"varchar(100)" json:"remotePassword"`
+
+	AutoQuery   bool `json:"autoQuery"`
+	IsPermanent bool `json:"isPermanent"`
+
+	Language string `xorm:"varchar(100)" json:"language"`
 
 	EnableRemoteApp bool         `json:"enableRemoteApp"`
 	RemoteApps      []*RemoteApp `json:"remoteApps"`
