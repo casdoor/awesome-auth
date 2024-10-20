@@ -16,7 +16,6 @@ package controllers
 
 import (
 	"encoding/gob"
-	"strings"
 
 	"github.com/beego/beego"
 	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
@@ -36,35 +35,6 @@ func GetUserName(user *casdoorsdk.User) string {
 	}
 
 	return user.Name
-}
-
-func (c *ApiController) IsGlobalAdmin() bool {
-	isGlobalAdmin, _ := c.isGlobalAdmin()
-
-	return isGlobalAdmin
-}
-
-func (c *ApiController) IsAdmin() bool {
-	isGlobalAdmin, user := c.isGlobalAdmin()
-	if !isGlobalAdmin && user == nil {
-		return false
-	}
-
-	return isGlobalAdmin || user.IsAdmin
-}
-
-func (c *ApiController) isGlobalAdmin() (bool, *casdoorsdk.User) {
-	username := c.GetSessionUsername()
-	if strings.HasPrefix(username, "app/") {
-		// e.g., "app/app-casnode"
-		return true, nil
-	}
-	user := c.GetSessionUser()
-	if user == nil {
-		return false, nil
-	}
-
-	return user.Owner == "built-in", user
 }
 
 func wrapActionResponse(affected bool, e ...error) *Response {

@@ -31,11 +31,6 @@ import (
 // @Success 200 {object} object.Asset The Response object
 // @router /get-assets [get]
 func (c *ApiController) GetAssets() {
-	_, ok := c.RequireAdmin()
-	if !ok {
-		//
-		return
-	}
 	owner := c.Input().Get("owner")
 	limit := c.Input().Get("pageSize")
 	page := c.Input().Get("p")
@@ -45,13 +40,7 @@ func (c *ApiController) GetAssets() {
 	sortOrder := c.Input().Get("sortOrder")
 
 	if limit == "" || page == "" {
-		var assets []*object.Asset
-		var err error
-		if field == "name" {
-			assets, err = object.GetMaskedAssets(object.GetAssetsByName(owner, value, c.IsAdmin()))
-		} else {
-			assets, err = object.GetMaskedAssets(object.GetAssets(owner))
-		}
+		assets, err := object.GetMaskedAssets(object.GetAssets(owner))
 		if err != nil {
 			c.ResponseError(err.Error())
 			return

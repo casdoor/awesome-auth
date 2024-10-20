@@ -31,11 +31,6 @@ import (
 // @Success 200 {object} object.Session The Response object
 // @router /get-sessions [get]
 func (c *ApiController) GetSessions() {
-	_, ok := c.RequireAdmin()
-	if !ok {
-		//
-		return
-	}
 	owner := c.Input().Get("owner")
 	limit := c.Input().Get("pageSize")
 	page := c.Input().Get("p")

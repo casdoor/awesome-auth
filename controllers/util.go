@@ -62,16 +62,6 @@ func (c *ApiController) RequireSignedIn() bool {
 	return false
 }
 
-func (c *ApiController) RequireAdmin() (string, bool) {
-	user := c.GetSessionUser()
-	if user == nil || !user.IsAdmin {
-		c.ResponseError("this operation requires admin privilege")
-		return "", false
-	}
-
-	return user.Owner, true
-}
-
 func (c *ApiController) getClientIp() string {
 	res := strings.Replace(util.GetIPFromRequest(c.Ctx.Request), ": ", "", -1)
 	return res

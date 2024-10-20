@@ -198,14 +198,3 @@ func DeleteAsset(asset *Asset) (bool, error) {
 func (asset *Asset) getId() string {
 	return fmt.Sprintf("%s/%s", asset.Owner, asset.Name)
 }
-
-func GetAssetsByName(owner, name string, isAdmin bool) ([]*Asset, error) {
-	if isAdmin {
-		return GetAssets(owner)
-	}
-
-	assets := []*Asset{}
-	// TODO get asset by call enforcer API
-
-	return assets, nil
-}

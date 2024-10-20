@@ -31,11 +31,6 @@ import (
 // @Success 200 {object} object.Record The Response object
 // @router /get-records [get]
 func (c *ApiController) GetRecords() {
-	_, ok := c.RequireAdmin()
-	if !ok {
-		//
-		return
-	}
 	owner := c.Input().Get("owner")
 	limit := c.Input().Get("pageSize")
 	page := c.Input().Get("p")
