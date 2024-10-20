@@ -301,7 +301,7 @@ class App extends Component {
       });
     };
 
-    const menuStyleRight = Setting.isAdminUser(this.state.account) && !Setting.isMobile() ? "calc(180px + 260px)" : "260px";
+    const menuStyleRight = !Setting.isMobile() ? "calc(180px + 260px)" : "260px";
 
     return (
       <Header style={{padding: "0", marginBottom: "3px", backgroundColor: "white"}}>
