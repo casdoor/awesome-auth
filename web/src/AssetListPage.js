@@ -33,7 +33,7 @@ class AssetListPage extends BaseListPage {
       name: `machine_${this.state.data.length + 1}`,
       createdTime: moment().format(),
       description: `New Machine - ${this.state.data.length}`,
-      protocol: "rdp",
+      protocol: "RDP",
       ip: "127.0.0.1",
       port: 3389,
       username: "Administrator",

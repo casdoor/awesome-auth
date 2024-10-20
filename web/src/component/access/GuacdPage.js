@@ -98,7 +98,7 @@ const GuacdPage = (props) => {
     tunnel.onerror = onError;
 
     let dpi = 96;
-    if (protocol === "telnet") {
+    if (protocol === "Telnet") {
       dpi = dpi * 2;
     }
 
@@ -480,7 +480,7 @@ const GuacdPage = (props) => {
         </Draggable>
       }
       {
-        session.protocol === "vnc" &&
+        session.protocol === "VNC" &&
         <Draggable>
           <Affix style={{position: "absolute", top: 100, right: 100}}>
             <Dropdown overlay={hotKeyMenu} trigger={["click"]} placement="bottomLeft">
@@ -490,7 +490,7 @@ const GuacdPage = (props) => {
         </Draggable>
       }
       {
-        session.protocol === "rdp" &&
+        session.protocol === "RDP" &&
         <Draggable>
           <Affix style={{position: "absolute", top: 100, right: 100}}>
             <Dropdown overlay={hotKeyMenu} trigger={["click"]} placement="bottomLeft">

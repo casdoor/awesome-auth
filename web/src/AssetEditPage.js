@@ -131,13 +131,13 @@ class AssetEditPage extends React.Component {
   }
 
   getDefaultPort(protocol) {
-    if (protocol === "rdp") {
+    if (protocol === "RDP") {
       return 3389;
-    } else if (protocol === "vnc") {
+    } else if (protocol === "VNC") {
       return 5900;
-    } else if (protocol === "ssh") {
+    } else if (protocol === "SSH") {
       return 22;
-    } else if (protocol === "telnet") {
+    } else if (protocol === "Telnet") {
       return 23;
     } else {
       return 0;
@@ -195,10 +195,10 @@ class AssetEditPage extends React.Component {
             }}>
               {
                 [
-                  {id: "rdp", name: "RDP"},
-                  {id: "vnc", name: "VNC"},
-                  {id: "ssh", name: "SSH"},
-                  {id: "telnet", name: "Telnet"},
+                  {id: "RDP", name: "RDP"},
+                  {id: "VNC", name: "VNC"},
+                  {id: "SSH", name: "SSH"},
+                  {id: "Telnet", name: "Telnet"},
                 ].map((item, index) => <Option key={index} value={item.id}>{item.name}</Option>)
               }
             </Select>
@@ -303,7 +303,7 @@ class AssetEditPage extends React.Component {
             }} />
           </Col>
         </Row>
-        {this.state.asset.protocol === "rdp" && (
+        {this.state.asset.protocol === "RDP" && (
           <div>
             <Row style={{marginTop: "20px"}} >
               <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
@@ -333,7 +333,7 @@ class AssetEditPage extends React.Component {
             )}
           </div>
         )}
-        {this.state.asset.protocol === "ssh" && (
+        {this.state.asset.protocol === "SSH" && (
           <div>
           </div>
         )}

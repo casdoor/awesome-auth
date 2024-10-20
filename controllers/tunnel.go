@@ -127,7 +127,7 @@ func (c *ApiController) GetAssetTunnel() {
 	configuration.SetParameter("height", height)
 	configuration.SetParameter("dpi", dpi)
 
-	if session.Protocol == "rdp" {
+	if session.Protocol == "RDP" {
 		if asset.EnableRemoteApp {
 			remoteApp := asset.RemoteApps[0]
 			configuration.SetParameter("remote-app", "||"+remoteApp.RemoteAppName)
@@ -281,7 +281,7 @@ func setConfig(propertyMap map[string]string, asset *object.Asset, configuration
 	configuration.SetParameter("password", asset.Password)
 
 	switch configuration.Protocol {
-	case "rdp":
+	case "RDP":
 		configuration.SetParameter("security", "any")
 		configuration.SetParameter("ignore-cert", "true")
 		configuration.SetParameter("create-drive-path", "true")
@@ -298,13 +298,13 @@ func setConfig(propertyMap map[string]string, asset *object.Asset, configuration
 		configuration.SetParameter(guacamole.ForceLossless, propertyMap[guacamole.ForceLossless])
 		configuration.SetParameter(guacamole.PreConnectionId, propertyMap[guacamole.PreConnectionId])
 		configuration.SetParameter(guacamole.PreConnectionBlob, propertyMap[guacamole.PreConnectionBlob])
-	case "ssh":
+	case "SSH":
 		configuration.SetParameter(guacamole.FontSize, propertyMap[guacamole.FontSize])
 		// configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
 		configuration.SetParameter(guacamole.ColorScheme, propertyMap[guacamole.ColorScheme])
 		configuration.SetParameter(guacamole.Backspace, propertyMap[guacamole.Backspace])
 		configuration.SetParameter(guacamole.TerminalType, propertyMap[guacamole.TerminalType])
-	case "telnet":
+	case "Telnet":
 		configuration.SetParameter(guacamole.FontSize, propertyMap[guacamole.FontSize])
 		// configuration.SetParameter(guacamole.FontName, propertyMap[guacamole.FontName])
 		configuration.SetParameter(guacamole.ColorScheme, propertyMap[guacamole.ColorScheme])
