@@ -31,16 +31,6 @@ type Object struct {
 	AccessSecret string `json:"accessSecret"`
 }
 
-func getUsername(ctx *context.Context) (username string) {
-	user := GetSessionUser(ctx)
-	if user != nil {
-		username = util.GetIdFromOwnerAndName(user.Owner, user.Name)
-	} else {
-		username, _ = getUsernameByClientIdSecret(ctx)
-	}
-	return
-}
-
 func getSubject(ctx *context.Context) (string, string) {
 	username := getUsername(ctx)
 	if username == "" {

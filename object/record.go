@@ -15,9 +15,12 @@
 package object
 
 import (
+	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/beego/beego/context"
+	"github.com/casvisor/casvisor/conf"
 	"github.com/casvisor/casvisor/util"
 )
 
@@ -34,11 +37,18 @@ type Record struct {
 	Method       string `xorm:"varchar(100)" json:"method"`
 	RequestUri   string `xorm:"varchar(1000)" json:"requestUri"`
 	Action       string `xorm:"varchar(1000)" json:"action"`
+	Language     string `xorm:"varchar(100)" json:"language"`
 
-	Object string `xorm:"-" json:"object"`
+	Object   string `xorm:"-" json:"object"`
+	Response string `xorm:"mediumtext" json:"response"`
 	// ExtendedUser *User  `xorm:"-" json:"extendedUser"`
 
 	IsTriggered bool `json:"isTriggered"`
+}
+
+type Response struct {
+	Status string `json:"status"`
+	Msg    string `json:"msg"`
 }
 
 func GetRecordCount(owner, field, value string) (int64, error) {
@@ -106,7 +116,7 @@ func UpdateRecord(id string, record *Record) (bool, error) {
 	return affected != 0, nil
 }
 
-func NewRecord(ctx *context.Context) *Record {
+func NewRecord(ctx *context.Context) (*Record, error) {
 	ip := strings.Replace(util.GetIPFromRequest(ctx.Request), ": ", "", -1)
 	action := strings.Replace(ctx.Request.URL.Path, "/api/", "", -1)
 	requestUri := util.FilterQuery(ctx.Request.RequestURI, []string{"accessToken"})
@@ -119,6 +129,23 @@ func NewRecord(ctx *context.Context) *Record {
 		object = string(ctx.Input.RequestBody)
 	}
 
+	respBytes, err := json.Marshal(ctx.Input.Data()["json"])
+	if err != nil {
+		return nil, err
+	}
+
+	var resp Response
+	err = json.Unmarshal(respBytes, &resp)
+	if err != nil {
+		return nil, err
+	}
+
+	language := ctx.Request.Header.Get("Accept-Language")
+	if len(language) > 2 {
+		language = language[0:2]
+	}
+	languageCode := conf.GetLanguage(language)
+
 	record := Record{
 		Name:        util.GenerateId(),
 		CreatedTime: util.GetCurrentTime(),
@@ -127,10 +154,12 @@ func NewRecord(ctx *context.Context) *Record {
 		Method:      ctx.Request.Method,
 		RequestUri:  requestUri,
 		Action:      action,
+		Language:    languageCode,
 		Object:      object,
+		Response:    fmt.Sprintf("{status:\"%s\", msg:\"%s\"}", resp.Status, resp.Msg),
 		IsTriggered: false,
 	}
-	return &record
+	return &record, nil
 }
 
 func AddRecord(record *Record) bool {

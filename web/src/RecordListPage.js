@@ -186,6 +186,42 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("requestUri"),
       },
       {
+        title: i18next.t("user:Language"),
+        dataIndex: "language",
+        key: "language",
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("language"),
+      },
+      {
+        title: i18next.t("record:Response"),
+        dataIndex: "response",
+        key: "response",
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("response"),
+      },
+      {
+        title: i18next.t("record:Object"),
+        dataIndex: "object",
+        key: "object",
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("object"),
+      },
+      {
+        title: i18next.t("general:Action"),
+        dataIndex: "action",
+        key: "action",
+        width: "200px",
+        sorter: true,
+        ...this.getColumnSearchProps("action"),
+        fixed: (Setting.isMobile()) ? "false" : "right",
+        render: (text, record, index) => {
+          return text;
+        },
+      },
+      {
         title: i18next.t("record:Is triggered"),
         dataIndex: "isTriggered",
         key: "isTriggered",

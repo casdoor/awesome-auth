@@ -21,6 +21,7 @@ import (
 	"github.com/beego/beego/context"
 	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 	"github.com/casvisor/casvisor/conf"
+	"github.com/casvisor/casvisor/util"
 )
 
 type Response struct {
@@ -38,6 +39,16 @@ func GetSessionUser(ctx *context.Context) *casdoorsdk.User {
 
 	claims := s.(casdoorsdk.Claims)
 	return &claims.User
+}
+
+func getUsername(ctx *context.Context) (username string) {
+	user := GetSessionUser(ctx)
+	if user != nil {
+		username = util.GetIdFromOwnerAndName(user.Owner, user.Name)
+	} else {
+		username, _ = getUsernameByClientIdSecret(ctx)
+	}
+	return
 }
 
 func requestDeny(ctx *context.Context) {

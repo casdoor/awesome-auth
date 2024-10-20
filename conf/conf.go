@@ -63,3 +63,15 @@ func GetConfigDataSourceName() string {
 
 	return dataSourceName
 }
+
+func GetLanguage(language string) string {
+	if language == "" || language == "*" {
+		return "en"
+	}
+
+	if len(language) != 2 || language == "nu" {
+		return "en"
+	} else {
+		return language
+	}
+}
