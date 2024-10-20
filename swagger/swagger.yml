@@ -1,0 +1,872 @@
+swagger: "2.0"
+info: {}
+basePath: /api
+paths:
+  /add-asset:
+    post:
+      tags:
+      - Asset API
+      description: add a asset
+      operationId: ApiController.AddAsset
+      parameters:
+      - in: body
+        name: body
+        description: The details of the asset
+        required: true
+        schema:
+          $ref: '#/definitions/object.Asset'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /add-asset-tunnel:
+    get:
+      tags:
+      - Session API
+      description: add session
+      operationId: ApiController.AddAssetTunnel
+      parameters:
+      - in: query
+        name: assetId
+        description: The id of asset
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/Response'
+  /add-command:
+    post:
+      tags:
+      - Command API
+      description: add a command
+      operationId: ApiController.AddCommand
+      parameters:
+      - in: body
+        name: command
+        description: The command object
+        required: true
+        schema:
+          $ref: '#/definitions/object.Command'
+      responses:
+        "200":
+          description: '{string} The Response object'
+  /add-file:
+    post:
+      tags:
+      - File API
+      description: add file
+      operationId: ApiController.AddFile
+      parameters:
+      - in: query
+        name: key
+        description: The directory of the file
+        required: true
+        type: string
+      - in: query
+        name: sessionId
+        description: The id of the session
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /add-permission:
+    post:
+      tags:
+      - Permission API
+      description: add permission
+      operationId: ApiController.AddPermission
+      parameters:
+      - in: body
+        name: body
+        description: The details of the permission
+        required: true
+        schema:
+          $ref: '#/definitions/casdoorsdk.Permission'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /add-record:
+    post:
+      tags:
+      - Record API
+      description: add a record
+      operationId: ApiController.AddRecord
+      parameters:
+      - in: body
+        name: body
+        description: The details of the record
+        required: true
+        schema:
+          $ref: '#/definitions/object.Record'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /add-session:
+    post:
+      tags:
+      - Session API
+      description: add session
+      operationId: ApiController.AddSession
+      parameters:
+      - in: body
+        name: body
+        description: The session object
+        required: true
+        schema:
+          $ref: '#/definitions/object.Session'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/Response'
+  /delete-asset:
+    post:
+      tags:
+      - Asset API
+      description: delete a asset
+      operationId: ApiController.DeleteAsset
+      parameters:
+      - in: body
+        name: body
+        description: The details of the asset
+        required: true
+        schema:
+          $ref: '#/definitions/object.Asset'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /delete-command:
+    post:
+      tags:
+      - Command API
+      description: delete the command
+      operationId: ApiController.DeleteCommand
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the command
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string} The Response object'
+  /delete-file:
+    post:
+      tags:
+      - File API
+      description: delete file
+      operationId: ApiController.DeleteFile
+      parameters:
+      - in: query
+        name: sessionId
+        description: The id of the session
+        required: true
+        type: string
+      - in: query
+        name: key
+        description: The direction of the file
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /delete-permission:
+    post:
+      tags:
+      - Permission API
+      description: delete permission
+      operationId: ApiController.DeletePermission
+      parameters:
+      - in: body
+        name: body
+        description: The details of the permission
+        required: true
+        schema:
+          $ref: '#/definitions/casdoorsdk.Permission'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /delete-record:
+    post:
+      tags:
+      - Record API
+      description: delete a record
+      operationId: ApiController.DeleteRecord
+      parameters:
+      - in: body
+        name: body
+        description: The details of the record
+        required: true
+        schema:
+          $ref: '#/definitions/object.Record'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /delete-session:
+    post:
+      tags:
+      - Session API
+      description: delete session
+      operationId: ApiController.DeleteSession
+      parameters:
+      - in: query
+        name: id
+        description: The id of session
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/Response'
+  /exec-command:
+    get:
+      tags:
+      - Command API
+      description: execute the command
+      operationId: ApiController.ExecCommand
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the command
+        required: true
+        type: string
+      - in: query
+        name: assetId
+        description: The id of the asset
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{stream} string "An event stream of the command output in multiple ssh terminal"'
+  /get-asset:
+    get:
+      tags:
+      - Asset API
+      description: get asset
+      operationId: ApiController.GetAsset
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the asset
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Asset'
+  /get-assets:
+    get:
+      tags:
+      - Asset API
+      description: get all assets
+      operationId: ApiController.GetAssets
+      parameters:
+      - in: query
+        name: pageSize
+        description: The size of each page
+        required: true
+        type: string
+      - in: query
+        name: p
+        description: The number of the page
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Asset'
+  /get-command:
+    get:
+      tags:
+      - Command API
+      description: get the command
+      operationId: ApiController.GetCommand
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the command
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Command'
+  /get-commands:
+    get:
+      tags:
+      - Command API
+      description: get all commands
+      operationId: ApiController.GetCommands
+      parameters:
+      - in: query
+        name: pageSize
+        description: The size of each page
+        required: true
+        type: string
+      - in: query
+        name: p
+        description: The number of the page
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Command'
+  /get-file:
+    get:
+      tags:
+      - File API
+      description: download file
+      operationId: ApiController.DownloadFile
+      parameters:
+      - in: query
+        name: sessionId
+        description: The id of the session
+        required: true
+        type: string
+      - in: query
+        name: key
+        description: The direction of the file
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /get-files:
+    get:
+      tags:
+      - File API
+      description: list files
+      operationId: ApiController.GetFiles
+      parameters:
+      - in: query
+        name: sessionId
+        description: The id of the session
+        required: true
+        type: string
+      - in: query
+        name: key
+        description: The direction of the file
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /get-permission:
+    get:
+      tags:
+      - Permission API
+      description: get permission
+      operationId: ApiController.GetPermission
+      parameters:
+      - in: query
+        name: id
+        description: The id(owner/name) of permission
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/casdoorsdk.Permission'
+  /get-permissions:
+    get:
+      tags:
+      - Permission API
+      description: get permissions
+      operationId: ApiController.GetPermissions
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/casdoorsdk.Permission'
+  /get-record:
+    get:
+      tags:
+      - Record API
+      description: get record
+      operationId: ApiController.GetRecord
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the record
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Record'
+  /get-records:
+    get:
+      tags:
+      - Record API
+      description: get all records
+      operationId: ApiController.GetRecords
+      parameters:
+      - in: query
+        name: pageSize
+        description: The size of each page
+        required: true
+        type: string
+      - in: query
+        name: p
+        description: The number of the page
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Record'
+  /get-session:
+    get:
+      tags:
+      - Session API
+      description: get session
+      operationId: ApiController.GetConnSession
+      parameters:
+      - in: query
+        name: id
+        description: The id of session
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/object.Session'
+  /get-sessions:
+    get:
+      tags:
+      - Session API
+      description: get all sessions
+      operationId: ApiController.GetSessions
+      parameters:
+      - in: query
+        name: pageSize
+        description: The size of each page
+        required: true
+        type: string
+      - in: query
+        name: p
+        description: The number of the page
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/object.Session'
+  /update-asset:
+    post:
+      tags:
+      - Asset API
+      description: update asset
+      operationId: ApiController.UpdateAsset
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the asset
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: The details of the asset
+        required: true
+        schema:
+          $ref: '#/definitions/object.Asset'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /update-command:
+    post:
+      tags:
+      - Command API
+      description: update the command
+      operationId: ApiController.UpdateCommand
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the command
+        required: true
+        type: string
+      - in: body
+        name: command
+        description: The command object
+        required: true
+        schema:
+          $ref: '#/definitions/object.Command'
+      responses:
+        "200":
+          description: '{string} The Response object'
+  /update-file:
+    post:
+      tags:
+      - File API
+      description: update file
+      operationId: ApiController.UpdateFile
+      parameters:
+      - in: query
+        name: sessionId
+        description: The id of the session
+        required: true
+        type: string
+      - in: query
+        name: filename
+        description: The name of the file
+        required: true
+        type: string
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /update-permission:
+    post:
+      tags:
+      - Permission API
+      description: update permission
+      operationId: ApiController.UpdatePermission
+      parameters:
+      - in: body
+        name: body
+        description: The details of the permission
+        required: true
+        schema:
+          $ref: '#/definitions/casdoorsdk.Permission'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /update-record:
+    post:
+      tags:
+      - Record API
+      description: update record
+      operationId: ApiController.UpdateRecord
+      parameters:
+      - in: query
+        name: id
+        description: The id ( owner/name ) of the record
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: The details of the record
+        required: true
+        schema:
+          $ref: '#/definitions/object.Record'
+      responses:
+        "200":
+          description: The Response object
+          schema:
+            $ref: '#/definitions/controllers.Response'
+  /update-session:
+    post:
+      tags:
+      - Session API
+      description: update session
+      operationId: ApiController.UpdateSession
+      parameters:
+      - in: query
+        name: id
+        description: The id of session
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: The session object
+        required: true
+        schema:
+          $ref: '#/definitions/object.Session'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/Response'
+definitions:
+  Response:
+    title: Response
+    type: object
+  casdoorsdk.Permission:
+    title: Permission
+    type: object
+  controllers.Response:
+    title: Response
+    type: object
+    properties:
+      data:
+        additionalProperties:
+          description: support string, struct or []struct
+          type: string
+      data2:
+        additionalProperties:
+          description: support string, struct or []struct
+          type: string
+      msg:
+        type: string
+      status:
+        type: string
+  object:
+    title: object
+    type: object
+  object.Asset:
+    title: Asset
+    type: object
+    properties:
+      authType:
+        type: string
+      autoQuery:
+        type: boolean
+      category:
+        type: string
+      cpuCurrent:
+        type: number
+        format: float
+      cpuTotal:
+        type: integer
+        format: int64
+      createdTime:
+        type: string
+      databaseFile:
+        type: string
+      databaseUrl:
+        type: string
+      defaultDatabase:
+        type: string
+      diskCurrent:
+        type: integer
+        format: int64
+      diskTotal:
+        type: integer
+        format: int64
+      displayName:
+        type: string
+      enableRemoteApp:
+        type: boolean
+      enableSsh:
+        type: boolean
+      endpoint:
+        type: string
+      gatewayPort:
+        type: integer
+        format: int64
+      id:
+        type: string
+      isActive:
+        type: boolean
+      isPermanent:
+        type: boolean
+      isReadOnly:
+        type: boolean
+      language:
+        type: string
+      memCurrent:
+        type: integer
+        format: int64
+      memTotal:
+        type: integer
+        format: int64
+      name:
+        type: string
+      os:
+        type: string
+      owner:
+        type: string
+      password:
+        type: string
+      port:
+        type: integer
+        format: int64
+      remoteApps:
+        type: array
+        items:
+          $ref: '#/definitions/object.RemoteApp'
+      services:
+        type: array
+        items:
+          $ref: '#/definitions/object.Service'
+      socketPath:
+        type: string
+      tag:
+        type: string
+      type:
+        type: string
+      useDatabaseUrl:
+        type: boolean
+      username:
+        type: string
+  object.Command:
+    title: Command
+    type: object
+    properties:
+      assets:
+        type: array
+        items:
+          type: string
+      command:
+        type: string
+      createdTime:
+        type: string
+      displayName:
+        type: string
+      name:
+        type: string
+      owner:
+        type: string
+  object.Record:
+    title: Record
+    type: object
+    properties:
+      action:
+        type: string
+      clientIp:
+        type: string
+      createdTime:
+        type: string
+      id:
+        type: integer
+        format: int64
+      isTriggered:
+        type: boolean
+      method:
+        type: string
+      name:
+        type: string
+      object:
+        type: string
+      organization:
+        type: string
+      owner:
+        type: string
+      requestUri:
+        type: string
+      user:
+        type: string
+  object.RemoteApp:
+    title: RemoteApp
+    type: object
+    properties:
+      "no":
+        type: integer
+        format: int64
+      remoteAppArgs:
+        type: string
+      remoteAppDir:
+        type: string
+      remoteAppName:
+        type: string
+  object.Service:
+    title: Service
+    type: object
+    properties:
+      expectedStatus:
+        type: string
+      message:
+        type: string
+      name:
+        type: string
+      "no":
+        type: integer
+        format: int64
+      path:
+        type: string
+      port:
+        type: integer
+        format: int64
+      processId:
+        type: integer
+        format: int64
+      status:
+        type: string
+      subStatus:
+        type: string
+  object.Session:
+    title: Session
+    type: object
+    properties:
+      asset:
+        type: string
+      clientIp:
+        type: string
+      clientIpDesc:
+        type: string
+      code:
+        type: integer
+        format: int64
+      commandCount:
+        type: integer
+        format: int64
+      connectionId:
+        type: string
+      createdTime:
+        type: string
+      creator:
+        type: string
+      endTime:
+        type: string
+      height:
+        type: integer
+        format: int64
+      message:
+        type: string
+      mode:
+        type: string
+      name:
+        type: string
+      operations:
+        type: array
+        items:
+          type: string
+      owner:
+        type: string
+      protocol:
+        type: string
+      recording:
+        type: string
+      reviewed:
+        type: boolean
+      startTime:
+        type: string
+      status:
+        type: string
+      userAgent:
+        type: string
+      userAgentDesc:
+        type: string
+      width:
+        type: integer
+        format: int64

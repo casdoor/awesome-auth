@@ -122,7 +122,7 @@ func (c *ApiController) DeleteSession() {
 // @Tag Session API
 // @Description update session
 // @Param   id     query    string  true        "The id of session"
-// @Param   body    body   object.Session
+// @Param   body    body   object.Session true "The session object"
 // @Success 200 {object} Response
 // @router /update-session [post]
 func (c *ApiController) UpdateSession() {
@@ -143,7 +143,7 @@ func (c *ApiController) UpdateSession() {
 // @Title AddSession
 // @Tag Session API
 // @Description add session
-// @Param   body    body   object.Session
+// @Param   body    body   object.Session true "The session object"
 // @Success 200 {object} Response
 // @router /add-session [post]
 func (c *ApiController) AddSession() {
