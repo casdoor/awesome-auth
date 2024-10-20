@@ -21,6 +21,7 @@ import * as Setting from "./Setting";
 import * as AssetBackend from "./backend/AssetBackend";
 import i18next from "i18next";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
+import ConnectModal from "./common/modal/ConnectModal";
 
 class AssetListPage extends BaseListPage {
   constructor(props) {
@@ -238,17 +239,12 @@ class AssetListPage extends BaseListPage {
         render: (text, asset, index) => {
           return (
             <div>
-              <Button
-                disabled={!Setting.isAdminUser(this.props.account) && (asset.owner !== this.props.account.owner)}
-                style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
-                type="primary"
-                onClick={() => {
-                  const link = `access/${asset.owner}/${asset.name}`;
-                  Setting.openLink(link);
-                }}
-              >
-                {i18next.t("general:Connect")}
-              </Button>
+              <ConnectModal
+                disabled={!Setting.isAdminUser(this.props.account) && asset.owner !== this.props.account.owner}
+                owner = {asset.owner}
+                name = {asset.name}
+                category = {asset.category}
+              />
               <Button
                 disabled={!Setting.isAdminUser(this.props.account) && (asset.owner !== this.props.account.owner)}
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}

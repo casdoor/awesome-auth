@@ -96,6 +96,9 @@ func (c *ApiController) GetAssetTunnel() {
 	dpi := c.Input().Get("dpi")
 	sessionId := c.Input().Get("sessionId")
 
+	username := c.Input().Get("username")
+	password := c.Input().Get("password")
+
 	intWidth, err := strconv.Atoi(width)
 	if err != nil {
 		guacamole.Disconnect(ws, ParametersError, err.Error())
@@ -117,6 +120,15 @@ func (c *ApiController) GetAssetTunnel() {
 	if err != nil || asset == nil {
 		guacamole.Disconnect(ws, AssetNotFound, err.Error())
 		return
+	}
+
+	if asset.RemoteUsername == "" {
+		asset.RemoteUsername = username
+		asset.RemotePassword = password
+	} else {
+		if asset.RemotePassword == "" {
+			asset.RemotePassword = password
+		}
 	}
 
 	configuration := guacamole.NewConfiguration()

@@ -14,11 +14,14 @@
 
 import React from "react";
 import GuacdPage from "./GuacdPage";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 
 const AccessPage = () => {
   const {owner, name} = useParams();
-  return <GuacdPage assetId={`${owner}/${name}`} />;
+  const query = new URLSearchParams(useLocation().search);
+  const username = query.get("username") || "";
+  const password = query.get("password") || "";
+  return <GuacdPage assetId={`${owner}/${name}`} username={`${username}`} password={`${password}`} />;
 };
 
 export default AccessPage;

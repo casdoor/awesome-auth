@@ -32,7 +32,7 @@ const STATE_DISCONNECTING = 4;
 const STATE_DISCONNECTED = 5;
 
 const GuacdPage = (props) => {
-  const {assetId, activeKey, addClient, closePane} = props;
+  const {assetId, activeKey, addClient, closePane, username, password} = props;
 
   const [box, setBox] = useState({width: 0, height: 0});
   const [guacd, setGuacd] = useState({});
@@ -82,7 +82,7 @@ const GuacdPage = (props) => {
 
   const renderDisplay = (sessionId, protocol, width, height) => {
     const wsEndpoint = Setting.ServerUrl.replace("http://", "ws://");
-    const wsUrl = `${wsEndpoint}/api/get-asset-tunnel?sessionId=${sessionId}&`;
+    const wsUrl = (username === "" || password === "") ? `${wsEndpoint}/api/get-asset-tunnel?sessionId=${sessionId}&` : `${wsEndpoint}/api/get-asset-tunnel?sessionId=${sessionId}&username=${username}&password=${password}&`;
     const tunnel = new Guacamole.WebSocketTunnel(wsUrl);
     const client = new Guacamole.Client(tunnel);
 
