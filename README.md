@@ -1,5 +1,5 @@
 <h1 align="center" style="border-bottom: none;">📦⚡️ Casvisor</h1>
-<h3 align="center">An open-source logging and auditing system developed by Go and React.</h3>
+<h3 align="center">An open-source cloud operating system management platform developed by Go and React.</h3>
 <p align="center">
   <a href="#badge">
     <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
@@ -48,14 +48,14 @@ https://casvisor.org
 
 Casvisor contains 2 parts:
 
-| Name     | Description                      | Language               | Source code                                        |
-|----------|----------------------------------|------------------------|----------------------------------------------------|
+| Name     | Description                      | Language               | Source code                                          |
+|----------|----------------------------------|------------------------|------------------------------------------------------|
 | Frontend | Web frontend UI for Casvisor     | Javascript + React     | https://github.com/casvisor/casvisor/tree/master/web |
 | Backend  | RESTful API backend for Casvisor | Golang + Beego + MySQL | https://github.com/casvisor/casvisor                 |
 
 ## Installation
 
-Casvisor uses Casdoor to manage members. So you need to create an organization and an application for Casvisor in a Casdoor instance.
+Casvisor uses Casdoor as the authentication system. So you need to create an organization and an application for Casvisor in a Casdoor instance.
 
 ### Necessary configuration
 
@@ -75,7 +75,7 @@ git clone https://github.com/casvisor/casvisor
 
 #### Setup database
 
-Casvisor will store its users, nodes and topics informations in a MySQL database named: `casvisor`, will create it if not existed. The DB connection string can be specified at: https://github.com/casvisor/casvisor/blob/master/conf/app.conf
+Casvisor will store its users, nodes and topics information in a MySQL database named: `casvisor`, will create it if not existed. The DB connection string can be specified at: https://github.com/casvisor/casvisor/blob/master/conf/app.conf
 
 ```ini
 dataSourceName = root:123@tcp(localhost:3306)/
@@ -98,13 +98,13 @@ After creating an organization and an application for Casvisor in a Casdoor, you
 
   Casvisor uses Casdoor to manage members. If you want to log in with oauth, you should see [casdoor oauth configuration](https://casdoor.org/docs/provider/oauth/overview).
 
-#### OSS, Mail, and SMS services
+#### OSS, Email, and SMS
 
   Casvisor uses Casdoor to upload files to cloud storage, send Emails and send SMSs. See Casdoor for more details.
 
-#### RDP service
+#### RDP
 
-Run guacd for rdp connection.
+Run guacd for RDP connection.
 
 ```shell
 docker run --name some-guacd -d -p 4822:4822 guacamole/guacd
