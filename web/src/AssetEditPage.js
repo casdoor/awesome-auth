@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// http://localhost:18001/assets/dccb0b3e-aa59-443f-996b-c69a98b21ea9
-
 import React from "react";
 import {Button, Card, Col, Input, Row, Select, Switch} from "antd";
 import * as AssetBackend from "./backend/AssetBackend";

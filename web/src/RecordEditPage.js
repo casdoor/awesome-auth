@@ -28,14 +28,12 @@ class RecordEditPage extends React.Component {
       recordOwner: props.match.params.organizationName,
       recordName: props.match.params.recordName,
       record: null,
-      organizations: [],
       mode: props.location.mode !== undefined ? props.location.mode : "edit",
     };
   }
 
   UNSAFE_componentWillMount() {
     this.getRecord();
-    // this.getOrganizations();
   }
 
   getRecord() {
