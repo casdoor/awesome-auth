@@ -24,6 +24,7 @@ import (
 type Machine struct {
 	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
 	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
+	Provider    string `xorm:"varchar(100)" json:"provider"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	ExpireTime  string `xorm:"varchar(100)" json:"expireTime"`

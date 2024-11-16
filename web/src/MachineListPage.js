@@ -31,6 +31,7 @@ class MachineListPage extends BaseListPage {
     return {
       owner: this.props.account.owner,
       name: `machine_${Setting.getRandomName()}`,
+      provider: "provider_1",
       createdTime: moment().format(),
       updatedTime: moment().format(),
       expireTime: "",
@@ -101,6 +102,13 @@ class MachineListPage extends BaseListPage {
             </a>
           );
         },
+      },
+      {
+        title: i18next.t("general:Provider"),
+        dataIndex: "provider",
+        key: "provider",
+        width: "120px",
+        sorter: (a, b) => a.provider.localeCompare(b.provider),
       },
       {
         title: i18next.t("general:Name"),
