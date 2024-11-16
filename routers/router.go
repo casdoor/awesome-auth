@@ -53,6 +53,12 @@ func initAPI() {
 	beego.Router("/api/add-provider", &controllers.ApiController{}, "POST:AddProvider")
 	beego.Router("/api/delete-provider", &controllers.ApiController{}, "POST:DeleteProvider")
 
+	beego.Router("/api/get-machines", &controllers.ApiController{}, "GET:GetMachines")
+	beego.Router("/api/get-machine", &controllers.ApiController{}, "GET:GetMachine")
+	beego.Router("/api/update-machine", &controllers.ApiController{}, "POST:UpdateMachine")
+	beego.Router("/api/add-machine", &controllers.ApiController{}, "POST:AddMachine")
+	beego.Router("/api/delete-machine", &controllers.ApiController{}, "POST:DeleteMachine")
+
 	beego.Router("/api/get-sessions", &controllers.ApiController{}, "GET:GetSessions")
 	beego.Router("/api/get-session", &controllers.ApiController{}, "GET:GetConnSession")
 	beego.Router("/api/update-session", &controllers.ApiController{}, "POST:UpdateSession")

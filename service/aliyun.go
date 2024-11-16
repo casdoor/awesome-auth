@@ -22,18 +22,18 @@ import (
 
 type Machine struct {
 	Name        string `xorm:"varchar(100)" json:"name"`
-	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	ExpireTime  string `xorm:"varchar(100)" json:"expireTime"`
-	Region      string `xorm:"varchar(100) notnull pk" json:"region"`
-	Zone        string `xorm:"varchar(100) notnull pk" json:"zone"`
-	Type        string `xorm:"varchar(100) notnull pk" json:"type"`
-	Size        string `xorm:"varchar(100) notnull pk" json:"size"`
-	State       string `xorm:"varchar(100) notnull pk" json:"state"`
-	Tag         string `xorm:"varchar(100)" json:"tag"`
+	DisplayName string `xorm:"varchar(100)" json:"displayName"`
 
+	Region   string `xorm:"varchar(100)" json:"region"`
+	Zone     string `xorm:"varchar(100)" json:"zone"`
 	Category string `xorm:"varchar(100)" json:"category"`
+	Type     string `xorm:"varchar(100)" json:"type"`
+	Size     string `xorm:"varchar(100)" json:"size"`
+	Tag      string `xorm:"varchar(100)" json:"tag"`
+	State    string `xorm:"varchar(100)" json:"state"`
 
 	Image     string `xorm:"varchar(100)" json:"image"`
 	Os        string `xorm:"varchar(100)" json:"os"`
