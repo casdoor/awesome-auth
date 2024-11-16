@@ -123,13 +123,13 @@ class MachineListPage extends BaseListPage {
           );
         },
       },
-      {
-        title: i18next.t("general:Display name"),
-        dataIndex: "displayName",
-        key: "displayName",
-        width: "120px",
-        sorter: (a, b) => a.displayName.localeCompare(b.displayName),
-      },
+      // {
+      //   title: i18next.t("general:Display name"),
+      //   dataIndex: "displayName",
+      //   key: "displayName",
+      //   width: "120px",
+      //   sorter: (a, b) => a.displayName.localeCompare(b.displayName),
+      // },
       {
         title: i18next.t("general:Created time"),
         dataIndex: "createdTime",
@@ -166,13 +166,13 @@ class MachineListPage extends BaseListPage {
         width: "120px",
         sorter: (a, b) => a.zone.localeCompare(b.zone),
       },
-      {
-        title: i18next.t("general:Category"),
-        dataIndex: "category",
-        key: "category",
-        width: "120px",
-        sorter: (a, b) => a.category.localeCompare(b.category),
-      },
+      // {
+      //   title: i18next.t("general:Category"),
+      //   dataIndex: "category",
+      //   key: "category",
+      //   width: "120px",
+      //   sorter: (a, b) => a.category.localeCompare(b.category),
+      // },
       {
         title: i18next.t("general:Type"),
         dataIndex: "type",

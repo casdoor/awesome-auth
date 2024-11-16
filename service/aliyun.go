@@ -22,6 +22,7 @@ import (
 
 type Machine struct {
 	Name        string `xorm:"varchar(100)" json:"name"`
+	Id          string `xorm:"varchar(100)" json:"id"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	ExpireTime  string `xorm:"varchar(100)" json:"expireTime"`
@@ -60,7 +61,7 @@ func NewMachineAliyunClient(accessKeyId string, accessKeySecret string, region s
 	return &MachineAliyunClient{Client: client}, nil
 }
 
-func (client MachineAliyunClient) getMachines() ([]*Machine, error) {
+func (client MachineAliyunClient) GetMachines() ([]*Machine, error) {
 	request := ecs.CreateDescribeInstancesRequest()
 	request.PageSize = "100"
 
@@ -73,24 +74,42 @@ func (client MachineAliyunClient) getMachines() ([]*Machine, error) {
 	for _, instance := range response.Instances.Instance {
 		machine := &Machine{
 			Name:        instance.InstanceName,
-			DisplayName: instance.InstanceId,
-			CreatedTime: instance.CreationTime,
-			ExpireTime:  instance.ExpiredTime,
+			Id:          instance.InstanceId,
+			CreatedTime: getLocalTimestamp(instance.CreationTime),
+			UpdatedTime: getLocalTimestamp(instance.LastInvokedTime),
+			ExpireTime:  getLocalTimestamp(instance.ExpiredTime),
+			DisplayName: instance.InstanceName,
 			Region:      instance.RegionId,
 			Zone:        instance.ZoneId,
-			Type:        instance.InstanceType,
-			Size:        fmt.Sprintf("%d", instance.Cpu) + "C" + fmt.Sprintf("%d", instance.Memory) + "G",
+			Category:    instance.InstanceTypeFamily,
+			Type:        instance.InstanceChargeType,
+			Size:        instance.InstanceType,
 			State:       instance.Status,
-			Category:    instance.InstanceType + "." + instance.InstanceTypeFamily,
 			Image:       instance.ImageId,
 			Os:          instance.OSName,
-			PublicIp:    instance.PublicIpAddress.IpAddress[0],
-			PrivateIp:   instance.VpcAttributes.PrivateIpAddress.IpAddress[0],
 			CpuSize:     fmt.Sprintf("%d", instance.Cpu),
 			MemSize:     fmt.Sprintf("%d", instance.Memory),
 		}
+
+		for _, tag := range instance.Tags.Tag {
+			machine.Tag += fmt.Sprintf("%s=%s,", tag.Key, tag.Value)
+		}
+		if instance.EipAddress.IpAddress != "" {
+			machine.PublicIp = instance.EipAddress.IpAddress
+		} else if len(instance.PublicIpAddress.IpAddress) > 0 {
+			machine.PublicIp = instance.PublicIpAddress.IpAddress[0]
+		}
+
+		if len(instance.VpcAttributes.PrivateIpAddress.IpAddress) > 0 {
+			machine.PrivateIp = instance.VpcAttributes.PrivateIpAddress.IpAddress[0]
+		}
+
 		machines = append(machines, machine)
 	}
 
 	return machines, nil
+}
+
+func (client MachineAliyunClient) GetMachine(name string) (*Machine, error) {
+	return nil, nil
 }

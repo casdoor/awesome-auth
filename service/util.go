@@ -14,19 +14,19 @@
 
 package service
 
-import "fmt"
+import "time"
 
-type MachineClientInterface interface {
-	GetMachines() ([]*Machine, error)
-	GetMachine(name string) (*Machine, error)
-}
-
-func NewMachineClient(providerType string, accessKeyId string, accessKeySecret string, region string) (*MachineAliyunClient, error) {
-	switch providerType {
-	case "Aliyun":
-		client, err := NewMachineAliyunClient(accessKeyId, accessKeySecret, region)
-		return client, err
+func getLocalTimestamp(input string) string {
+	if input == "" {
+		return ""
 	}
 
-	return nil, fmt.Errorf("unsupported provider type: %s", providerType)
+	const inputFormat = "2006-01-02T15:04Z"
+	utcTime, err := time.Parse(inputFormat, input)
+	if err != nil {
+		panic(err)
+	}
+
+	res := utcTime.Local().Format(time.RFC3339)
+	return res
 }
