@@ -48,6 +48,32 @@ type Machine struct {
 	MemSize   string `xorm:"varchar(100)" json:"memSize"`
 }
 
+func getMachineFromService(owner string, provider string, clientMachine *service.Machine) *Machine {
+	return &Machine{
+		Owner:       owner,
+		Name:        clientMachine.Name,
+		Id:          clientMachine.Id,
+		Provider:    provider,
+		CreatedTime: clientMachine.CreatedTime,
+		UpdatedTime: clientMachine.UpdatedTime,
+		ExpireTime:  clientMachine.ExpireTime,
+		DisplayName: clientMachine.DisplayName,
+		Region:      clientMachine.Region,
+		Zone:        clientMachine.Zone,
+		Category:    clientMachine.Category,
+		Type:        clientMachine.Type,
+		Size:        clientMachine.Size,
+		Tag:         clientMachine.Tag,
+		State:       clientMachine.State,
+		Image:       clientMachine.Image,
+		Os:          clientMachine.Os,
+		PublicIp:    clientMachine.PublicIp,
+		PrivateIp:   clientMachine.PrivateIp,
+		CpuSize:     clientMachine.CpuSize,
+		MemSize:     clientMachine.MemSize,
+	}
+}
+
 func GetMachineCount(owner, field, value string) (int64, error) {
 	session := GetSession(owner, -1, -1, field, value, "", "")
 	return session.Count(&Machine{})
@@ -61,6 +87,10 @@ func GetMachines(owner string) ([]*Machine, error) {
 	}
 
 	for _, provider := range providers {
+		if provider.ClientId == "" || provider.ClientSecret == "" {
+			continue
+		}
+
 		client, err2 := service.NewMachineClient(provider.Type, provider.ClientId, provider.ClientSecret, provider.Region)
 		if err2 != nil {
 			return machines, err2
@@ -71,35 +101,10 @@ func GetMachines(owner string) ([]*Machine, error) {
 			return machines, err2
 		}
 
-		providerMachines := []*Machine{}
 		for _, clientMachine := range clientMachines {
-			machine := Machine{
-				Owner:       owner,
-				Name:        clientMachine.Name,
-				Id:          clientMachine.Id,
-				Provider:    provider.Name,
-				CreatedTime: clientMachine.CreatedTime,
-				UpdatedTime: clientMachine.UpdatedTime,
-				ExpireTime:  clientMachine.ExpireTime,
-				DisplayName: clientMachine.DisplayName,
-				Region:      clientMachine.Region,
-				Zone:        clientMachine.Zone,
-				Category:    clientMachine.Category,
-				Type:        clientMachine.Type,
-				Size:        clientMachine.Size,
-				Tag:         clientMachine.Tag,
-				State:       clientMachine.State,
-				Image:       clientMachine.Image,
-				Os:          clientMachine.Os,
-				PublicIp:    clientMachine.PublicIp,
-				PrivateIp:   clientMachine.PrivateIp,
-				CpuSize:     clientMachine.CpuSize,
-				MemSize:     clientMachine.MemSize,
-			}
-			providerMachines = append(providerMachines, &machine)
+			machine := getMachineFromService(owner, provider.Name, clientMachine)
+			machines = append(machines, machine)
 		}
-
-		machines = append(machines, providerMachines...)
 	}
 
 	return machines, nil
@@ -119,21 +124,30 @@ func GetPaginationMachines(owner string, offset, limit int, field, value, sortFi
 }
 
 func getMachine(owner string, name string) (*Machine, error) {
-	if owner == "" || name == "" {
-		return nil, nil
-	}
-
-	machine := Machine{Owner: owner, Name: name}
-	existed, err := adapter.engine.Get(&machine)
+	providers, err := GetProviders(owner)
 	if err != nil {
-		return &machine, err
+		return nil, err
 	}
 
-	if existed {
-		return &machine, nil
-	} else {
-		return nil, nil
+	for _, provider := range providers {
+		client, err2 := service.NewMachineClient(provider.Type, provider.ClientId, provider.ClientSecret, provider.Region)
+		if err2 != nil {
+			return nil, err2
+		}
+
+		clientMachine, err2 := client.GetMachine(name)
+		if err2 != nil {
+			return nil, err2
+		}
+		if clientMachine == nil {
+			continue
+		}
+
+		machine := getMachineFromService(owner, provider.Name, clientMachine)
+		return machine, nil
 	}
+
+	return nil, nil
 }
 
 func GetMachine(id string) (*Machine, error) {

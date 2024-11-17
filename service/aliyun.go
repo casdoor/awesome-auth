@@ -21,8 +21,10 @@ import (
 )
 
 type Machine struct {
-	Name        string `xorm:"varchar(100)" json:"name"`
+	Owner       string `xorm:"varchar(100) notnull pk" json:"owner"`
+	Name        string `xorm:"varchar(100) notnull pk" json:"name"`
 	Id          string `xorm:"varchar(100)" json:"id"`
+	Provider    string `xorm:"varchar(100)" json:"provider"`
 	CreatedTime string `xorm:"varchar(100)" json:"createdTime"`
 	UpdatedTime string `xorm:"varchar(100)" json:"updatedTime"`
 	ExpireTime  string `xorm:"varchar(100)" json:"expireTime"`
@@ -61,6 +63,43 @@ func NewMachineAliyunClient(accessKeyId string, accessKeySecret string, region s
 	return &MachineAliyunClient{Client: client}, nil
 }
 
+func getMachineFromInstance(instance ecs.Instance) *Machine {
+	machine := &Machine{
+		Name:        instance.InstanceName,
+		Id:          instance.InstanceId,
+		CreatedTime: getLocalTimestamp(instance.CreationTime),
+		UpdatedTime: getLocalTimestamp(instance.LastInvokedTime),
+		ExpireTime:  getLocalTimestamp(instance.ExpiredTime),
+		DisplayName: instance.InstanceName,
+		Region:      instance.RegionId,
+		Zone:        instance.ZoneId,
+		Category:    instance.InstanceTypeFamily,
+		Type:        instance.InstanceChargeType,
+		Size:        instance.InstanceType,
+		State:       instance.Status,
+		Image:       instance.ImageId,
+		Os:          instance.OSName,
+		CpuSize:     fmt.Sprintf("%d", instance.Cpu),
+		MemSize:     fmt.Sprintf("%d", instance.Memory),
+	}
+
+	for _, tag := range instance.Tags.Tag {
+		machine.Tag += fmt.Sprintf("%s=%s,", tag.Key, tag.Value)
+	}
+
+	if instance.EipAddress.IpAddress != "" {
+		machine.PublicIp = instance.EipAddress.IpAddress
+	} else if len(instance.PublicIpAddress.IpAddress) > 0 {
+		machine.PublicIp = instance.PublicIpAddress.IpAddress[0]
+	}
+
+	if len(instance.VpcAttributes.PrivateIpAddress.IpAddress) > 0 {
+		machine.PrivateIp = instance.VpcAttributes.PrivateIpAddress.IpAddress[0]
+	}
+
+	return machine
+}
+
 func (client MachineAliyunClient) GetMachines() ([]*Machine, error) {
 	request := ecs.CreateDescribeInstancesRequest()
 	request.PageSize = "100"
@@ -70,40 +109,9 @@ func (client MachineAliyunClient) GetMachines() ([]*Machine, error) {
 		return nil, err
 	}
 
-	var machines []*Machine
+	machines := []*Machine{}
 	for _, instance := range response.Instances.Instance {
-		machine := &Machine{
-			Name:        instance.InstanceName,
-			Id:          instance.InstanceId,
-			CreatedTime: getLocalTimestamp(instance.CreationTime),
-			UpdatedTime: getLocalTimestamp(instance.LastInvokedTime),
-			ExpireTime:  getLocalTimestamp(instance.ExpiredTime),
-			DisplayName: instance.InstanceName,
-			Region:      instance.RegionId,
-			Zone:        instance.ZoneId,
-			Category:    instance.InstanceTypeFamily,
-			Type:        instance.InstanceChargeType,
-			Size:        instance.InstanceType,
-			State:       instance.Status,
-			Image:       instance.ImageId,
-			Os:          instance.OSName,
-			CpuSize:     fmt.Sprintf("%d", instance.Cpu),
-			MemSize:     fmt.Sprintf("%d", instance.Memory),
-		}
-
-		for _, tag := range instance.Tags.Tag {
-			machine.Tag += fmt.Sprintf("%s=%s,", tag.Key, tag.Value)
-		}
-		if instance.EipAddress.IpAddress != "" {
-			machine.PublicIp = instance.EipAddress.IpAddress
-		} else if len(instance.PublicIpAddress.IpAddress) > 0 {
-			machine.PublicIp = instance.PublicIpAddress.IpAddress[0]
-		}
-
-		if len(instance.VpcAttributes.PrivateIpAddress.IpAddress) > 0 {
-			machine.PrivateIp = instance.VpcAttributes.PrivateIpAddress.IpAddress[0]
-		}
-
+		machine := getMachineFromInstance(instance)
 		machines = append(machines, machine)
 	}
 
@@ -111,5 +119,19 @@ func (client MachineAliyunClient) GetMachines() ([]*Machine, error) {
 }
 
 func (client MachineAliyunClient) GetMachine(name string) (*Machine, error) {
-	return nil, nil
+	request := ecs.CreateDescribeInstancesRequest()
+	request.InstanceName = name
+
+	response, err := client.Client.DescribeInstances(request)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(response.Instances.Instance) == 0 {
+		return nil, nil
+	}
+
+	instance := response.Instances.Instance[0]
+	machine := getMachineFromInstance(instance)
+	return machine, nil
 }
