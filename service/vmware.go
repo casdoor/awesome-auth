@@ -20,16 +20,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"sync"
 )
 
 type MachineVmwareClient struct {
-	Client          *http.Client
-	accessKeyId     string
-	accessKeySecret string
-	region          string
-	vmID            string
+	hostname     string
+	basicAuthKey string
 }
 
 type VirtualMachine struct {
@@ -47,45 +43,47 @@ type Cpu struct {
 	Processors int `json:"processors"`
 }
 
-func newMachineVmwareClient(accessKeyId string, accessKeySecret string, region string) (*MachineVmwareClient, error) {
+// hostname is the IP address of the target host and the configured port format is {IP}:{port}
+// basicAuthKey is the credential for VMware Workstation Pro REST service, in the form of {username}:{password}
+func newMachineVmwareClient(hostname string, basicAuthKey string) (*MachineVmwareClient, error) {
 	client := MachineVmwareClient{
-		&http.Client{},
-		accessKeyId,
-		accessKeySecret,
-		region,
-		"",
+		hostname,
+		basicAuthKey,
 	}
-	// accessKeyId is the IP address of the target host and the configured port format is {IP}:{port}
-	// accessKeySecret is the credential for VMware Workstation Pro REST service, in the form of {username}:{password}
 	return &client, nil
 }
 
 func (client MachineVmwareClient) GetMachines() ([]*Machine, error) {
-	machines := []*Machine{}
-	url := "http://" + client.accessKeyId + "/api/vms"
+	url := fmt.Sprintf("http://%s/api/vms", client.hostname)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	req.Header.Add("Accept", "application/vnd.vmware.vmw.rest-v1+json")
-	auth := client.accessKeySecret
+	auth := client.basicAuthKey
 	encodedAuth := base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Authorization", "Basic "+encodedAuth)
-	resp, err := client.Client.Do(req)
+
+	c := http.Client{}
+	resp, err := c.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
+
 	var vmList []VirtualMachinePath
 	err = json.Unmarshal(body, &vmList)
 	if err != nil {
 		return nil, err
 	}
 
+	machines := []*Machine{}
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 	errChan := make(chan error, len(vmList))
@@ -93,58 +91,61 @@ func (client MachineVmwareClient) GetMachines() ([]*Machine, error) {
 		wg.Add(1)
 		go func(vm VirtualMachinePath) {
 			defer wg.Done()
-			client.vmID = vm.ID
-			parts := strings.Split(vm.Path, "\\")
-			name := parts[len(parts)-1]
-			machine, err := client.GetMachine(name)
-			if err != nil {
-				errChan <- err
+			machine, err2 := client.GetMachine(vm.ID)
+			if err2 != nil {
+				errChan <- err2
 				return
 			}
-			machine.Region = client.region
+
 			mu.Lock()
 			machines = append(machines, machine)
 			mu.Unlock()
 		}(vm)
 	}
+
 	wg.Wait()
 	close(errChan)
 	for err := range errChan {
 		return nil, err
 	}
+
 	return machines, nil
 }
 
 func (client MachineVmwareClient) GetMachine(name string) (*Machine, error) {
-	url := "http://" + client.accessKeyId + "/api/vms/" + client.vmID
+	url := fmt.Sprintf("http://%s/api/vms/%s", client.hostname, name)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	req.Header.Add("Accept", "application/vnd.vmware.vmw.rest-v1+json")
-	auth := client.accessKeySecret
-	encodedAuth := base64.StdEncoding.EncodeToString([]byte(auth))
+	encodedAuth := base64.StdEncoding.EncodeToString([]byte(client.basicAuthKey))
 	req.Header.Add("Authorization", "Basic "+encodedAuth)
-	resp, err := client.Client.Do(req)
+
+	c := http.Client{}
+	resp, err := c.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
+
 	var vm VirtualMachine
 	err = json.Unmarshal(body, &vm)
 	if err != nil {
 		return nil, err
 	}
-	var machine *Machine
-	machine = &Machine{
+
+	machine := &Machine{
 		Name:    name,
 		Id:      vm.ID,
-		MemSize: fmt.Sprintf("%d", vm.Memory),
 		CpuSize: fmt.Sprintf("%d", vm.Cpu.Processors),
+		MemSize: fmt.Sprintf("%d", vm.Memory),
 	}
 	return machine, nil
 }
