@@ -21,10 +21,13 @@ type MachineClientInterface interface {
 	GetMachine(name string) (*Machine, error)
 }
 
-func NewMachineClient(providerType string, accessKeyId string, accessKeySecret string, region string) (*MachineAliyunClient, error) {
+func NewMachineClient(providerType string, accessKeyId string, accessKeySecret string, region string) (MachineClientInterface, error) {
 	switch providerType {
 	case "Aliyun":
-		client, err := NewMachineAliyunClient(accessKeyId, accessKeySecret, region)
+		client, err := newMachineAliyunClient(accessKeyId, accessKeySecret, region)
+		return client, err
+	case "Azure":
+		client, err := newMachineAzureClient(accessKeyId, accessKeySecret)
 		return client, err
 	}
 
