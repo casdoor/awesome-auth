@@ -50,17 +50,17 @@ type MachineAliyunClient struct {
 	Client *ecs.Client
 }
 
-func newMachineAliyunClient(accessKeyId string, accessKeySecret string, region string) (MachineAliyunClient, error) {
+func NewMachineAliyunClient(accessKeyId string, accessKeySecret string, region string) (*MachineAliyunClient, error) {
 	client, err := ecs.NewClientWithAccessKey(
 		region,
 		accessKeyId,
 		accessKeySecret,
 	)
 	if err != nil {
-		return MachineAliyunClient{}, err
+		return nil, err
 	}
 
-	return MachineAliyunClient{Client: client}, nil
+	return &MachineAliyunClient{Client: client}, nil
 }
 
 func getMachineFromInstance(instance ecs.Instance) *Machine {

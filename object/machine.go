@@ -92,11 +92,10 @@ func GetMachines(owner string) ([]*Machine, error) {
 		}
 
 		client, err2 := service.NewMachineClient(provider.Type, provider.ClientId, provider.ClientSecret, provider.Region)
-		if err2 != nil {
+		if err2 != nil || client == nil {
 			return machines, err2
 		}
-
-		clientMachines, err2 := client.GetMachines()
+		clientMachines, err2 := (*client).GetMachines()
 		if err2 != nil {
 			return machines, err2
 		}
@@ -131,18 +130,17 @@ func getMachine(owner string, name string) (*Machine, error) {
 
 	for _, provider := range providers {
 		client, err2 := service.NewMachineClient(provider.Type, provider.ClientId, provider.ClientSecret, provider.Region)
-		if err2 != nil {
+		if err2 != nil || client == nil {
 			return nil, err2
 		}
 
-		clientMachine, err2 := client.GetMachine(name)
+		clientMachine, err2 := (*client).GetMachine(name)
 		if err2 != nil {
 			return nil, err2
 		}
 		if clientMachine == nil {
 			continue
 		}
-
 		machine := getMachineFromService(owner, provider.Name, clientMachine)
 		return machine, nil
 	}
