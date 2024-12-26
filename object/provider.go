@@ -53,6 +53,21 @@ func GetProviders(owner string) ([]*Provider, error) {
 	return providers, nil
 }
 
+func getActiveProviders(owner string) ([]*Provider, error) {
+	providers, err := GetProviders(owner)
+	if err != nil {
+		return nil, err
+	}
+
+	res := []*Provider{}
+	for _, provider := range providers {
+		if provider.ClientId != "" && provider.ClientSecret != "" && provider.State == "Active" {
+			res = append(res, provider)
+		}
+	}
+	return res, nil
+}
+
 func GetPaginationProviders(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Provider, error) {
 	providers := []*Provider{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)

@@ -81,16 +81,12 @@ func GetMachineCount(owner, field, value string) (int64, error) {
 
 func GetMachines(owner string) ([]*Machine, error) {
 	machines := []*Machine{}
-	providers, err := GetProviders(owner)
+	providers, err := getActiveProviders(owner)
 	if err != nil {
 		return machines, err
 	}
 
 	for _, provider := range providers {
-		if provider.ClientId == "" || provider.ClientSecret == "" || provider.State != "Active" {
-			continue
-		}
-
 		client, err2 := service.NewMachineClient(provider.Type, provider.ClientId, provider.ClientSecret, provider.Region)
 		if err2 != nil {
 			return machines, err2
@@ -124,7 +120,7 @@ func GetPaginationMachines(owner string, offset, limit int, field, value, sortFi
 }
 
 func getMachine(owner string, name string) (*Machine, error) {
-	providers, err := GetProviders(owner)
+	providers, err := getActiveProviders(owner)
 	if err != nil {
 		return nil, err
 	}
