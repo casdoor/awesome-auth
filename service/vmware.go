@@ -47,7 +47,7 @@ type Cpu struct {
 	Processors int `json:"processors"`
 }
 
-func NewMachineVMwareClient(accessKeyId string, accessKeySecret string, region string) (*MachineVmwareClient, error) {
+func newMachineVmwareClient(accessKeyId string, accessKeySecret string, region string) (*MachineVmwareClient, error) {
 	client := MachineVmwareClient{
 		&http.Client{},
 		accessKeyId,
