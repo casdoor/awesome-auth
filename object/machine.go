@@ -87,7 +87,7 @@ func GetMachines(owner string) ([]*Machine, error) {
 	}
 
 	for _, provider := range providers {
-		if provider.ClientId == "" || provider.ClientSecret == "" {
+		if provider.ClientId == "" || provider.ClientSecret == "" || provider.State != "Active" {
 			continue
 		}
 
