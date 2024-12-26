@@ -53,16 +53,15 @@ func newMachineVmwareClient(hostname string, basicAuthKey string) (*MachineVmwar
 	return &client, nil
 }
 
-func (client MachineVmwareClient) GetMachines() ([]*Machine, error) {
-	url := fmt.Sprintf("http://%s/api/vms", client.hostname)
-	req, err := http.NewRequest("GET", url, nil)
+func (client MachineVmwareClient) sendRequest(method, path string) ([]byte, error) {
+	url := fmt.Sprintf("http://%s/api%s", client.hostname, path)
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	req.Header.Add("Accept", "application/vnd.vmware.vmw.rest-v1+json")
-	auth := client.basicAuthKey
-	encodedAuth := base64.StdEncoding.EncodeToString([]byte(auth))
+	encodedAuth := base64.StdEncoding.EncodeToString([]byte(client.basicAuthKey))
 	req.Header.Add("Authorization", "Basic "+encodedAuth)
 
 	c := http.Client{}
@@ -73,6 +72,29 @@ func (client MachineVmwareClient) GetMachines() ([]*Machine, error) {
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	type Message struct {
+		Code    int    `json:"Code"`
+		Message string `json:"Message"`
+	}
+	var message Message
+	err = json.Unmarshal(body, &message)
+	if err == nil {
+		if message.Code == 100 {
+			return nil, nil
+		} else if message.Code != 0 {
+			return nil, fmt.Errorf("VMware API error, code = %d, message = %s", message.Code, message.Message)
+		}
+	}
+
+	return body, nil
+}
+
+func (client MachineVmwareClient) GetMachines() ([]*Machine, error) {
+	body, err := client.sendRequest("GET", "/vms")
 	if err != nil {
 		return nil, err
 	}
@@ -113,26 +135,12 @@ func (client MachineVmwareClient) GetMachines() ([]*Machine, error) {
 }
 
 func (client MachineVmwareClient) GetMachine(name string) (*Machine, error) {
-	url := fmt.Sprintf("http://%s/api/vms/%s", client.hostname, name)
-	req, err := http.NewRequest("GET", url, nil)
+	body, err := client.sendRequest("GET", fmt.Sprintf("/vms/%s", name))
 	if err != nil {
 		return nil, err
 	}
-
-	req.Header.Add("Accept", "application/vnd.vmware.vmw.rest-v1+json")
-	encodedAuth := base64.StdEncoding.EncodeToString([]byte(client.basicAuthKey))
-	req.Header.Add("Authorization", "Basic "+encodedAuth)
-
-	c := http.Client{}
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
+	if body == nil {
+		return nil, nil
 	}
 
 	var vm VirtualMachine
