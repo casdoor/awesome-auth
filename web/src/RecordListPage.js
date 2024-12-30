@@ -222,6 +222,15 @@ class RecordListPage extends BaseListPage {
         },
       },
       {
+        title: i18next.t("record:Block"),
+        dataIndex: "block",
+        key: "block",
+        width: "90px",
+        sorter: true,
+        fixed: (Setting.isMobile()) ? "false" : "right",
+        ...this.getColumnSearchProps("block"),
+      },
+      {
         title: i18next.t("record:Is triggered"),
         dataIndex: "isTriggered",
         key: "isTriggered",

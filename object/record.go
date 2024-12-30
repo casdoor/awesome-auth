@@ -49,7 +49,8 @@ type Record struct {
 	Response string `xorm:"mediumtext" json:"response"`
 	// ExtendedUser *User  `xorm:"-" json:"extendedUser"`
 
-	IsTriggered bool `json:"isTriggered"`
+	Block       string `xorm:"varchar(100)" json:"block"`
+	IsTriggered bool   `json:"isTriggered"`
 }
 
 type Response struct {
