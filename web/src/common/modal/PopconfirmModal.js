@@ -27,7 +27,7 @@ export const PopconfirmModal = (props) => {
       okText={i18next.t("general:OK")}
       cancelText={i18next.t("general:Cancel")}
     >
-      <Button style={{...props.style}} size={size} disabled={props.disabled} type="primary" danger>{text}</Button>
+      <Button style={{...props.style}} size={size} disabled={props.disabled || props.fakeDisabled} type="primary" danger>{text}</Button>
     </Popconfirm>
   );
 };

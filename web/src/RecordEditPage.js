@@ -77,7 +77,7 @@ class RecordEditPage extends React.Component {
       <Card size="small" title={
         <div>
           {this.state.mode === "add" ? i18next.t("record:New Record") : i18next.t("record:View Record")}&nbsp;&nbsp;&nbsp;&nbsp;
-          {this.state.mode === "add" ? (
+          {this.state.mode !== "123" ? (
             <React.Fragment>
               <Button onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
               <Button style={{marginLeft: "20px"}} type="primary" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
@@ -285,7 +285,7 @@ class RecordEditPage extends React.Component {
           this.state.record !== null ? this.renderRecord() : null
         }
         <div style={{marginTop: "20px", marginLeft: "40px"}}>
-          {this.state.mode === "add" ? (
+          {this.state.mode !== "123" ? (
             <React.Fragment>
               <Button size="large" onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
               <Button style={{marginLeft: "20px"}} type="primary" size="large" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>

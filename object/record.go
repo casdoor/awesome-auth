@@ -176,6 +176,10 @@ func AddRecord(record *Record) bool {
 		}
 	}
 
+	if strings.HasSuffix(record.Action, "-record") {
+		return false
+	}
+
 	record.Owner = record.Organization
 
 	affected, err := adapter.engine.Insert(record)

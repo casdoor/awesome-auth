@@ -109,7 +109,7 @@ class RecordListPage extends BaseListPage {
         title: i18next.t("general:Name"),
         dataIndex: "name",
         key: "name",
-        width: "320px",
+        width: "300px",
         sorter: true,
         ...this.getColumnSearchProps("name"),
         render: (text, record, index) => {
@@ -137,7 +137,7 @@ class RecordListPage extends BaseListPage {
         title: i18next.t("general:Created time"),
         dataIndex: "createdTime",
         key: "createdTime",
-        width: "180px",
+        width: "150px",
         sorter: true,
         render: (text, record, index) => {
           return Setting.getFormattedDate(text);
@@ -210,10 +210,26 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("object"),
       },
       {
+        title: i18next.t("general:Is triggered"),
+        dataIndex: "isTriggered",
+        key: "isTriggered",
+        width: "140px",
+        sorter: true,
+        render: (text, record, index) => {
+          if (!["signup", "login", "logout", "update-user"].includes(record.action)) {
+            return null;
+          }
+
+          return (
+            <Switch disabled checkedChildren="ON" unCheckedChildren="OFF" checked={text} />
+          );
+        },
+      },
+      {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
-        width: "200px",
+        width: "150px",
         sorter: true,
         ...this.getColumnSearchProps("action"),
         fixed: (Setting.isMobile()) ? "false" : "right",
@@ -229,23 +245,6 @@ class RecordListPage extends BaseListPage {
         sorter: true,
         fixed: (Setting.isMobile()) ? "false" : "right",
         ...this.getColumnSearchProps("block"),
-      },
-      {
-        title: i18next.t("general:Is triggered"),
-        dataIndex: "isTriggered",
-        key: "isTriggered",
-        width: "140px",
-        sorter: true,
-        fixed: (Setting.isMobile()) ? "false" : "right",
-        render: (text, record, index) => {
-          if (!["signup", "login", "logout", "update-user"].includes(record.action)) {
-            return null;
-          }
-
-          return (
-            <Switch disabled checkedChildren="ON" unCheckedChildren="OFF" checked={text} />
-          );
-        },
       },
       {
         title: i18next.t("general:Action"),
@@ -265,7 +264,7 @@ class RecordListPage extends BaseListPage {
               </Button>
               <PopconfirmModal
                 // disabled={record.owner !== this.props.account.owner}
-                disabled={true}
+                fakeDisabled={true}
                 title={i18next.t("general:Sure to delete") + `: ${record.name} ?`}
                 onConfirm={() => this.deleteRecord(index)}
               >
