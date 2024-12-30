@@ -45,7 +45,7 @@ type Record struct {
 	Action       string `xorm:"varchar(1000)" json:"action"`
 	Language     string `xorm:"varchar(100)" json:"language"`
 
-	Object   string `xorm:"-" json:"object"`
+	Object   string `xorm:"mediumtext" json:"object"`
 	Response string `xorm:"mediumtext" json:"response"`
 	// ExtendedUser *User  `xorm:"-" json:"extendedUser"`
 
