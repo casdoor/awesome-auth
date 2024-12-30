@@ -101,10 +101,18 @@ class ProviderEditPage extends React.Component {
           <Col span={22} >
             <Select virtual={false} style={{width: "100%"}} value={this.state.provider.category} onChange={value => {
               this.updateProviderField("category", value);
+              if (value === "Public Cloud") {
+                this.updateProviderField("type", "Amazon Web Services");
+              } else if (value === "Private Cloud") {
+                this.updateProviderField("type", "KVM");
+              } else if (value === "Blockchain") {
+                this.updateProviderField("type", "Hyperledger Fabric");
+              }
             }}
             options={[
               {value: "Public Cloud", label: "Public Cloud"},
               {value: "Private Cloud", label: "Private Cloud"},
+              {value: "Blockchain", label: "Blockchain"},
             ].map(item => Setting.getOption(item.label, item.value))} />
           </Col>
         </Row>
@@ -116,16 +124,7 @@ class ProviderEditPage extends React.Component {
             <Select virtual={false} style={{width: "100%"}} value={this.state.provider.type} onChange={value => {
               this.updateProviderField("type", value);
             }}
-            options={[
-              {value: "Amazon Web Services", label: "Amazon Web Services"},
-              {value: "Azure", label: "Azure"},
-              {value: "Google Cloud", label: "Google Cloud"},
-              {value: "Aliyun", label: "Aliyun"},
-              {value: "KVM", label: "KVM"},
-              {value: "Xen", label: "Xen"},
-              {value: "VMware", label: "VMware"},
-              {value: "PVE", label: "PVE"},
-            ].map(item => Setting.getOption(item.label, item.value))} />
+            options={Setting.getProviderTypeOptions(this.state.provider.category).map(item => Setting.getOption(item.label, item.value))} />
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}} >
@@ -158,6 +157,32 @@ class ProviderEditPage extends React.Component {
             }} />
           </Col>
         </Row>
+        {
+          this.state.provider.category !== "Blockchain" ? null : (
+            <React.Fragment>
+              <Row style={{marginTop: "20px"}} >
+                <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+                  {Setting.getLabel(i18next.t("general:Network"), i18next.t("general:Network - Tooltip"))} :
+                </Col>
+                <Col span={22} >
+                  <Input value={this.state.provider.network} onChange={e => {
+                    this.updateProviderField("network", e.target.value);
+                  }} />
+                </Col>
+              </Row>
+              <Row style={{marginTop: "20px"}} >
+                <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+                  {Setting.getLabel(i18next.t("general:Chain"), i18next.t("general:Chain - Tooltip"))} :
+                </Col>
+                <Col span={22} >
+                  <Input value={this.state.provider.chain} onChange={e => {
+                    this.updateProviderField("chain", e.target.value);
+                  }} />
+                </Col>
+              </Row>
+            </React.Fragment>
+          )
+        }
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("provider:State"), i18next.t("provider:State - Tooltip"))} :

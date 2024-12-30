@@ -34,6 +34,8 @@ type Provider struct {
 	ClientId     string `xorm:"varchar(100)" json:"clientId"`
 	ClientSecret string `xorm:"varchar(100)" json:"clientSecret"`
 	Region       string `xorm:"varchar(100)" json:"region"`
+	Network      string `xorm:"varchar(100)" json:"network"`
+	Chain        string `xorm:"varchar(100)" json:"chain"`
 
 	State string `xorm:"varchar(100)" json:"state"`
 }
