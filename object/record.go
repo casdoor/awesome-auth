@@ -210,3 +210,7 @@ func DeleteRecord(record *Record) (bool, error) {
 
 	return affected != 0, nil
 }
+
+func (record *Record) getId() string {
+	return fmt.Sprintf("%s/%s", record.Owner, record.Name)
+}

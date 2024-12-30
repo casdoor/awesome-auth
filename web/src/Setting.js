@@ -262,6 +262,8 @@ export function getProviderTypeOptions(category) {
     return ([
       {value: "Hyperledger Fabric", label: "Hyperledger Fabric"},
       {value: "ChainMaker", label: "ChainMaker"},
+      {value: "Tencent ChainMaker", label: "Tencent ChainMaker"},
+      {value: "Tencent ChainMaker (Demo Network)", label: "Tencent ChainMaker (Demo Network)"},
     ]);
   } else {
     return [];

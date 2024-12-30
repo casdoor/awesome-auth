@@ -106,6 +106,33 @@ class RecordListPage extends BaseListPage {
       });
   }
 
+  commitRecord(i) {
+    RecordBackend.commitRecord(this.state.data[i])
+      .then((res) => {
+        if (res.status === "ok") {
+          Setting.showMessage("success", "Record committed successfully");
+        } else {
+          Setting.showMessage("error", `Failed to commit Record: ${res.msg}`);
+        }
+      })
+      .catch(error => {
+        Setting.showMessage("error", `Record failed to commit: ${error}`);
+      });
+  }
+
+  queryRecord(record) {
+    RecordBackend.queryRecord(record.owner, record.name)
+      .then((res) => {
+        if (res.status === "ok") {
+          this.setState({
+            record: res.data,
+          });
+        } else {
+          Setting.showMessage("error", `Failed to query record: ${res.msg}`);
+        }
+      });
+  }
+
   renderTable(records) {
     const columns = [
       {
@@ -296,15 +323,33 @@ class RecordListPage extends BaseListPage {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
-        width: "180px",
+        width: "270px",
         fixed: (Setting.isMobile()) ? "false" : "right",
         render: (text, record, index) => {
           return (
             <div>
+              {
+                (record.block === "") ? (
+                  <Button
+                    disabled={record.block !== ""}
+                    style={{marginTop: "10px", marginRight: "10px"}}
+                    type="primary" danger
+                    onClick={() => this.commitRecord(index)}
+                  >{i18next.t("record:Commit")}
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={record.block === ""}
+                    style={{marginTop: "10px", marginRight: "10px"}}
+                    type="primary"
+                    onClick={() => this.queryRecord(record)}
+                  >{i18next.t("record:Query")}
+                  </Button>
+                )
+              }
               <Button
                 // disabled={record.owner !== this.props.account.owner}
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
-                type="primary"
                 onClick={() => this.props.history.push(`/records/${record.owner}/${record.name}`)}
               >{i18next.t("general:View")}
               </Button>
