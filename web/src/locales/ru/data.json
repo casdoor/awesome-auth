@@ -27,6 +27,8 @@
     "Auto query": "Auto query",
     "Auto query - Tooltip": "Auto query - Tooltip",
     "Back Home": "Back Home",
+    "Block": "Block",
+    "Block - Tooltip": "Block - Tooltip",
     "Cancel": "Cancel",
     "Category": "Category",
     "Category - Tooltip": "Category - Tooltip",
@@ -52,6 +54,7 @@
     "Edit": "Edit",
     "Enable Remote App": "Enable Remote App",
     "Enable Remote App - Tooltip": "Enable Remote App - Tooltip",
+    "Exit": "Exit",
     "Expire time": "Expire time",
     "Expire time - Tooltip": "Expire time - Tooltip",
     "Failed to connect to server": "Failed to connect to server",
@@ -80,6 +83,8 @@
     "Network": "Network",
     "Network - Tooltip": "Network - Tooltip",
     "OK": "OK",
+    "Object": "Object",
+    "Object - Tooltip": "Object - Tooltip",
     "Organization": "Organization",
     "Organization - Tooltip": "Organization - Tooltip",
     "Password": "Password",
@@ -103,6 +108,8 @@
     "Remote desktop management all in one screen": "Remote desktop management all in one screen",
     "Request URI": "Request URI",
     "Request URI - Tooltip": "Request URI - Tooltip",
+    "Response": "Response",
+    "Response - Tooltip": "Response - Tooltip",
     "Save": "Save",
     "Save \u0026 Exit": "Save \u0026 Exit",
     "Services": "Services",
@@ -154,11 +161,10 @@
     "Type - Tooltip": "Type - Tooltip"
   },
   "record": {
-    "Edit Record": "Edit Record",
-    "Is triggered": "Is triggered",
     "New Record": "New Record",
     "Object": "Object",
-    "Response": "Response"
+    "Response": "Response",
+    "View Record": "View Record"
   },
   "session": {
     "History": "History",

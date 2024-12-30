@@ -222,7 +222,7 @@ class RecordListPage extends BaseListPage {
         },
       },
       {
-        title: i18next.t("record:Block"),
+        title: i18next.t("general:Block"),
         dataIndex: "block",
         key: "block",
         width: "90px",
@@ -231,7 +231,7 @@ class RecordListPage extends BaseListPage {
         ...this.getColumnSearchProps("block"),
       },
       {
-        title: i18next.t("record:Is triggered"),
+        title: i18next.t("general:Is triggered"),
         dataIndex: "isTriggered",
         key: "isTriggered",
         width: "140px",
