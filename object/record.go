@@ -163,7 +163,7 @@ func NewRecord(ctx *context.Context) (*Record, error) {
 		Action:      action,
 		Language:    languageCode,
 		Object:      object,
-		Response:    fmt.Sprintf("{status:\"%s\", msg:\"%s\"}", resp.Status, resp.Msg),
+		Response:    fmt.Sprintf("{\"status\":\"%s\",\"msg\":\"%s\"}", resp.Status, resp.Msg),
 		IsTriggered: false,
 	}
 	return &record, nil

@@ -75,6 +75,18 @@ export function parseJson(s) {
   }
 }
 
+export function formatJsonString(s) {
+  if (s === "") {
+    return "";
+  }
+
+  try {
+    return JSON.stringify(JSON.parse(s), null, 2);
+  } catch (error) {
+    return s;
+  }
+}
+
 export function myParseInt(i) {
   const res = parseInt(i);
   return isNaN(res) ? 0 : res;

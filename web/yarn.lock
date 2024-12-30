@@ -3337,6 +3337,11 @@ coa@^2.0.2:
     chalk "^2.4.1"
     q "^1.1.2"
 
+codemirror@^5.61.1:
+  version "5.65.18"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.18.tgz#d7146e4271135a9b4adcd023a270185457c9c428"
+  integrity sha512-Gaz4gHnkbHMGgahNt3CA5HBk5lLQBqmD/pBgeB4kQU6OedZmqMBjlRF0LSrp2tJ4wlLNPm2FfaUd1pDy0mdlpA==
+
 collect-v8-coverage@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/collect-v8-coverage/-/collect-v8-coverage-1.0.2.tgz#c0b29bcd33bcd0779a1344c2136051e6afd3d9e9"
@@ -8288,6 +8293,11 @@ react-app-polyfill@^3.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
+
+react-codemirror2@^7.2.1:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/react-codemirror2/-/react-codemirror2-7.3.0.tgz#c26e9fe655458389c6218496076e4bc7a4c31166"
+  integrity sha512-gCgJPXDX+5iaPolkHAu1YbJ92a2yL7Je4TuyO3QEqOtI/d6mbEk08l0oIm18R4ctuT/Sl87X63xIMBnRQBXYXA==
 
 react-dev-utils@^12.0.1:
   version "12.0.1"

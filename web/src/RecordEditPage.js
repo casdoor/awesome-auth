@@ -18,6 +18,11 @@ import * as RecordBackend from "./backend/RecordBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
 
+import {Controlled as CodeMirror} from "react-codemirror2";
+import "codemirror/lib/codemirror.css";
+require("codemirror/theme/material-darker.css");
+require("codemirror/mode/javascript/javascript");
+
 const {Option} = Select;
 
 class RecordEditPage extends React.Component {
@@ -103,6 +108,16 @@ class RecordEditPage extends React.Component {
             }} />
           </Col>
         </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Block"), i18next.t("general:Block - Tooltip"))} :
+          </Col>
+          <Col span={22}>
+            <Input disabled={false} value={this.state.record.block} onChange={e => {
+              // this.updateRecordField("block", e.target.value);
+            }} />
+          </Col>
+        </Row>
         <Row style={{marginTop: "20px"}} >
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Client IP"), i18next.t("general:Client IP - Tooltip"))} :
@@ -182,29 +197,29 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Object"), i18next.t("general:Object - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input disabled={false} value={this.state.record.object} onChange={e => {
-              // this.updateRecordField("object", e.target.value);
-            }} />
+            <div style={{width: "900px", height: "300px"}}>
+              <CodeMirror
+                value={Setting.formatJsonString(this.state.record.object)}
+                options={{mode: "javascript", theme: "material-darker"}}
+                onBeforeChange={(editor, data, value) => {
+                }}
+              />
+            </div>
           </Col>
         </Row>
-        <Row style={{marginTop: "20px"}} >
+        <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Response"), i18next.t("general:Response - Tooltip"))} :
           </Col>
-          <Col span={22} >
-            <Input disabled={false} value={this.state.record.response} onChange={e => {
-              // this.updateRecordField("response", e.target.value);
-            }} />
-          </Col>
-        </Row>
-        <Row style={{marginTop: "20px"}} >
-          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
-            {Setting.getLabel(i18next.t("general:Block"), i18next.t("general:Block - Tooltip"))} :
-          </Col>
-          <Col span={22} >
-            <Input disabled={false} value={this.state.record.block} onChange={e => {
-              // this.updateRecordField("block", e.target.value);
-            }} />
+          <Col span={22}>
+            <div style={{width: "900px", height: "300px"}}>
+              <CodeMirror
+                value={Setting.formatJsonString(this.state.record.response)}
+                options={{mode: "javascript", theme: "material-darker"}}
+                onBeforeChange={(editor, data, value) => {
+                }}
+              />
+            </div>
           </Col>
         </Row>
         <Row style={{marginTop: "20px"}} >
