@@ -71,9 +71,15 @@ class RecordEditPage extends React.Component {
     return (
       <Card size="small" title={
         <div>
-          {this.state.mode === "add" ? i18next.t("record:New Record") : i18next.t("record:Edit Record")}&nbsp;&nbsp;&nbsp;&nbsp;
-          <Button onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
-          <Button style={{marginLeft: "20px"}} type="primary" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+          {this.state.mode === "add" ? i18next.t("record:New Record") : i18next.t("record:View Record")}&nbsp;&nbsp;&nbsp;&nbsp;
+          {this.state.mode === "add" ? (
+            <React.Fragment>
+              <Button onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
+              <Button style={{marginLeft: "20px"}} type="primary" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+            </React.Fragment>
+          ) : (
+            <Button type="primary" onClick={() => this.props.history.push("/records")}>{i18next.t("general:Exit")}</Button>
+          )}
           {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} onClick={() => this.deleteRecord()}>{i18next.t("general:Cancel")}</Button> : null}
         </div>
       } style={{marginLeft: "5px"}} type="inner">
@@ -82,8 +88,8 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Organization"), i18next.t("general:Organization - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input disabled={true} value={this.state.record.owner} onChange={e => {
-              this.updateRecordField("owner", e.target.value);
+            <Input disabled={false} value={this.state.record.owner} onChange={e => {
+              // this.updateRecordField("owner", e.target.value);
             }} />
           </Col>
         </Row>
@@ -92,8 +98,8 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Name"), i18next.t("general:Name - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input disabled={true} value={this.state.record.name} onChange={e => {
-              this.updateRecordField("name", e.target.value);
+            <Input disabled={false} value={this.state.record.name} onChange={e => {
+              // this.updateRecordField("name", e.target.value);
             }} />
           </Col>
         </Row>
@@ -102,8 +108,8 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Client IP"), i18next.t("general:Client IP - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input disabled={true} value={this.state.record.clientIp} onChange={e => {
-              this.updateRecordField("clientIp", e.target.value);
+            <Input disabled={false} value={this.state.record.clientIp} onChange={e => {
+              // this.updateRecordField("clientIp", e.target.value);
             }} />
           </Col>
         </Row>
@@ -112,8 +118,8 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:User"), i18next.t("general:User - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input disabled={true} value={this.state.record.user} onChange={e => {
-              this.updateRecordField("user", e.target.value);
+            <Input disabled={false} value={this.state.record.user} onChange={e => {
+              // this.updateRecordField("user", e.target.value);
             }} />
           </Col>
         </Row>
@@ -122,7 +128,9 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Method"), i18next.t("general:Method - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Select disabled={true} virtual={false} style={{width: "100%"}} value={this.state.record.method} onChange={(value => {this.updateRecordField("method", value);})}>
+            <Select disabled={false} virtual={false} style={{width: "100%"}} value={this.state.record.method} onChange={(value => {
+              // this.updateRecordField("method", value);
+            })}>
               {
                 [
                   {id: "GET", name: "GET"},
@@ -144,8 +152,8 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Request URI"), i18next.t("general:Request URI - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input disabled={true} value={this.state.record.requestUri} onChange={e => {
-              this.updateRecordField("requestUri", e.target.value);
+            <Input disabled={false} value={this.state.record.requestUri} onChange={e => {
+              // this.updateRecordField("requestUri", e.target.value);
             }} />
           </Col>
         </Row>
@@ -154,8 +162,8 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Action"), i18next.t("general:Action - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input disabled={true} value={this.state.record.action} onChange={e => {
-              this.updateRecordField("action", e.target.value);
+            <Input disabled={false} value={this.state.record.action} onChange={e => {
+              // this.updateRecordField("action", e.target.value);
             }} />
           </Col>
         </Row>
@@ -164,8 +172,8 @@ class RecordEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Is triggered"), i18next.t("general:Is triggered - Tooltip"))} :
           </Col>
           <Col span={1} >
-            <Switch disabled={true} checked={this.state.record.isTriggered} onChange={checked => {
-              this.updateRecordField("isTriggered", checked);
+            <Switch disabled={false} checked={this.state.record.isTriggered} onChange={checked => {
+              // this.updateRecordField("isTriggered", checked);
             }} />
           </Col>
         </Row>
@@ -222,8 +230,14 @@ class RecordEditPage extends React.Component {
           this.state.record !== null ? this.renderRecord() : null
         }
         <div style={{marginTop: "20px", marginLeft: "40px"}}>
-          <Button size="large" onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
-          <Button style={{marginLeft: "20px"}} type="primary" size="large" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+          {this.state.mode === "add" ? (
+            <React.Fragment>
+              <Button size="large" onClick={() => this.submitRecordEdit(false)}>{i18next.t("general:Save")}</Button>
+              <Button style={{marginLeft: "20px"}} type="primary" size="large" onClick={() => this.submitRecordEdit(true)}>{i18next.t("general:Save & Exit")}</Button>
+            </React.Fragment>
+          ) : (
+            <Button type="primary" size="large" onClick={() => this.props.history.push("/records")}>{i18next.t("general:Exit")}</Button>
+          )}
           {this.state.mode === "add" ? <Button style={{marginLeft: "20px"}} size="large" onClick={() => this.deleteRecord()}>{i18next.t("general:Cancel")}</Button> : null}
         </div>
       </div>
