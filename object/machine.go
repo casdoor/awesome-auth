@@ -81,7 +81,7 @@ func GetMachineCount(owner, field, value string) (int64, error) {
 
 func GetMachines(owner string) ([]*Machine, error) {
 	machines := []*Machine{}
-	providers, err := getActiveProviders(owner)
+	providers, err := getActiveCloudProviders(owner)
 	if err != nil {
 		return machines, err
 	}
@@ -120,7 +120,7 @@ func GetPaginationMachines(owner string, offset, limit int, field, value, sortFi
 }
 
 func getMachine(owner string, name string) (*Machine, error) {
-	providers, err := getActiveProviders(owner)
+	providers, err := getActiveCloudProviders(owner)
 	if err != nil {
 		return nil, err
 	}

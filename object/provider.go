@@ -55,7 +55,7 @@ func GetProviders(owner string) ([]*Provider, error) {
 	return providers, nil
 }
 
-func getActiveProviders(owner string) ([]*Provider, error) {
+func getActiveCloudProviders(owner string) ([]*Provider, error) {
 	providers, err := GetProviders(owner)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func getActiveProviders(owner string) ([]*Provider, error) {
 
 	res := []*Provider{}
 	for _, provider := range providers {
-		if provider.ClientId != "" && provider.ClientSecret != "" && provider.State == "Active" {
+		if provider.ClientId != "" && provider.ClientSecret != "" && (provider.Category == "Public Cloud" || provider.Category == "Private Cloud") && provider.State == "Active" {
 			res = append(res, provider)
 		}
 	}
