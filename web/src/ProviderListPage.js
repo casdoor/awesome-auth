@@ -157,6 +157,23 @@ class ProviderListPage extends BaseListPage {
         sorter: (a, b) => a.region.localeCompare(b.region),
       },
       {
+        title: i18next.t("provider:Provider URL"),
+        dataIndex: "providerUrl",
+        key: "providerUrl",
+        width: "150px",
+        sorter: true,
+        ...this.getColumnSearchProps("providerUrl"),
+        render: (text, record, index) => {
+          return (
+            <a target="_blank" rel="noreferrer" href={text}>
+              {
+                Setting.getShortText(text)
+              }
+            </a>
+          );
+        },
+      },
+      {
         title: i18next.t("general:State"),
         dataIndex: "state",
         key: "state",
@@ -179,6 +196,7 @@ class ProviderListPage extends BaseListPage {
               </Button>
               <PopconfirmModal
                 disabled={provider.owner !== this.props.account.owner}
+                style={{marginBottom: "10px"}}
                 title={i18next.t("general:Sure to delete") + `: ${provider.name} ?`}
                 onConfirm={() => this.deleteProvider(index)}
               >

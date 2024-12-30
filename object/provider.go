@@ -36,8 +36,10 @@ type Provider struct {
 	Region       string `xorm:"varchar(100)" json:"region"`
 	Network      string `xorm:"varchar(100)" json:"network"`
 	Chain        string `xorm:"varchar(100)" json:"chain"`
+	BrowserUrl   string `xorm:"varchar(200)" json:"browserUrl"`
 
-	State string `xorm:"varchar(100)" json:"state"`
+	State       string `xorm:"varchar(100)" json:"state"`
+	ProviderUrl string `xorm:"varchar(200)" json:"providerUrl"`
 }
 
 func GetProviderCount(owner, field, value string) (int64, error) {

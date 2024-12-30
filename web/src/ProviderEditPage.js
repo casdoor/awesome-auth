@@ -14,6 +14,7 @@
 
 import React from "react";
 import {Button, Card, Col, Input, Row, Select} from "antd";
+import {LinkOutlined} from "@ant-design/icons";
 import * as ProviderBackend from "./backend/ProviderBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
@@ -183,6 +184,26 @@ class ProviderEditPage extends React.Component {
             </React.Fragment>
           )
         }
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("provider:Browser URL"), i18next.t("provider:Browser URL - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input prefix={<LinkOutlined />} value={this.state.provider.browserUrl} onChange={e => {
+              this.updateProviderField("browserUrl", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("provider:Provider URL"), i18next.t("provider:Provider URL - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input prefix={<LinkOutlined />} value={this.state.provider.providerUrl} onChange={e => {
+              this.updateProviderField("providerUrl", e.target.value);
+            }} />
+          </Col>
+        </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("provider:State"), i18next.t("provider:State - Tooltip"))} :
