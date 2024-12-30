@@ -57,21 +57,6 @@ func GetProviders(owner string) ([]*Provider, error) {
 	return providers, nil
 }
 
-func getActiveCloudProviders(owner string) ([]*Provider, error) {
-	providers, err := GetProviders(owner)
-	if err != nil {
-		return nil, err
-	}
-
-	res := []*Provider{}
-	for _, provider := range providers {
-		if provider.ClientId != "" && provider.ClientSecret != "" && (provider.Category == "Public Cloud" || provider.Category == "Private Cloud") && provider.State == "Active" {
-			res = append(res, provider)
-		}
-	}
-	return res, nil
-}
-
 func GetPaginationProviders(owner string, offset, limit int, field, value, sortField, sortOrder string) ([]*Provider, error) {
 	providers := []*Provider{}
 	session := GetSession(owner, offset, limit, field, value, sortField, sortOrder)

@@ -18,21 +18,47 @@ import {Button, Switch, Table} from "antd";
 import moment from "moment";
 import * as Setting from "./Setting";
 import * as RecordBackend from "./backend/RecordBackend";
+import * as ProviderBackend from "./backend/ProviderBackend";
 import i18next from "i18next";
 import BaseListPage from "./BaseListPage";
-import {GenerateId} from "./Setting";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
 
 class RecordListPage extends BaseListPage {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      providerMap: {},
+    };
+  }
+
+  componentDidMount() {
+    this.getProviders();
+  }
+
+  getProviders() {
+    ProviderBackend.getProviders(this.props.account.owner)
+      .then((res) => {
+        if (res.status === "ok") {
+          const providerMap = {};
+          for (const provider of res.data) {
+            providerMap[provider.name] = provider;
+          }
+          this.setState({
+            providerMap: providerMap,
+          });
+        } else {
+          Setting.showMessage("error", res.msg);
+        }
+      });
   }
 
   newRecord() {
     return {
       owner: this.props.account.owner,
-      name: GenerateId(),
+      name: Setting.GenerateId(),
       createdTime: moment().format(),
+      provider: "",
       organization: this.props.account.owner,
       clientIp: "::1",
       user: this.props.account.name,
@@ -144,6 +170,23 @@ class RecordListPage extends BaseListPage {
         },
       },
       {
+        title: i18next.t("general:Provider"),
+        dataIndex: "provider",
+        key: "provider",
+        width: "90px",
+        sorter: true,
+        ...this.getColumnSearchProps("provider"),
+        render: (text, record, index) => {
+          return (
+            <Link to={`/providers/${record.owner}/${text}`}>
+              {
+                Setting.getShortText(text, 25)
+              }
+            </Link>
+          );
+        },
+      },
+      {
         title: i18next.t("general:User"),
         dataIndex: "user",
         key: "user",
@@ -245,6 +288,9 @@ class RecordListPage extends BaseListPage {
         sorter: true,
         fixed: (Setting.isMobile()) ? "false" : "right",
         ...this.getColumnSearchProps("block"),
+        render: (text, record, index) => {
+          return Setting.getBlockBrowserUrl(this.state.providerMap, record.provider, text);
+        },
       },
       {
         title: i18next.t("general:Action"),

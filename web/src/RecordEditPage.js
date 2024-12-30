@@ -110,6 +110,16 @@ class RecordEditPage extends React.Component {
         </Row>
         <Row style={{marginTop: "20px"}}>
           <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Provider"), i18next.t("general:Provider - Tooltip"))} :
+          </Col>
+          <Col span={22}>
+            <Input disabled={false} value={this.state.record.provider} onChange={e => {
+              // this.updateRecordField("provider", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}}>
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
             {Setting.getLabel(i18next.t("general:Block"), i18next.t("general:Block - Tooltip"))} :
           </Col>
           <Col span={22}>

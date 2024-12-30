@@ -372,3 +372,17 @@ export function GetIdFromObject(obj) {
   }
   return `${obj.owner}/${obj.name}`;
 }
+
+export function getBlockBrowserUrl(providerMap, providerName, block) {
+  const provider = providerMap[providerName];
+  if (!provider || provider.browserUrl === "") {
+    return block;
+  }
+
+  const url = provider.browserUrl.replace("{bh}", block).replace("{chainId}", 1).replace("{clusterId}", provider.network);
+  return (
+    <a target="_blank" rel="noreferrer" href={url}>
+      {block}
+    </a>
+  );
+}
