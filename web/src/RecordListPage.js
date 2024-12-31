@@ -127,7 +127,7 @@ class RecordListPage extends BaseListPage {
     RecordBackend.queryRecord(record.owner, record.name)
       .then((res) => {
         if (res.status === "ok") {
-          Setting.showMessage("success", `Succeeded to query record: ${res.msg}`);
+          Setting.showMessage(res.data.includes("Mismatched") ? "error" : "success", `${res.data}`);
         } else {
           Setting.showMessage("error", `Failed to query record: ${res.msg}`);
         }

@@ -49,11 +49,11 @@ func (c *ApiController) CommitRecord() {
 func (c *ApiController) QueryRecord() {
 	id := c.Input().Get("id")
 
-	record, err := object.QueryRecord(id)
+	res, err := object.QueryRecord(id)
 	if err != nil {
 		c.ResponseError(err.Error())
 		return
 	}
 
-	c.ResponseOk(record)
+	c.ResponseOk(res)
 }

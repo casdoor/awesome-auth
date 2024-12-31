@@ -18,54 +18,62 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aliyun/alibaba-cloud-sdk-go/services/ecs"
+	"github.com/casvisor/casvisor/util"
 )
 
 type ChainTencentChainmakerClient struct {
-	Client *ecs.Client
+	AccessKeyId     string
+	AccessKeySecret string
+	Region          string
 }
 
 func newChainTencentChainmakerClient(accessKeyId string, accessKeySecret string, region string) (ChainTencentChainmakerClient, error) {
-	client, err := ecs.NewClientWithAccessKey(
-		region,
-		accessKeyId,
-		accessKeySecret,
-	)
-	if err != nil {
-		return ChainTencentChainmakerClient{}, err
-	}
-
-	return ChainTencentChainmakerClient{Client: client}, nil
+	return ChainTencentChainmakerClient{
+		AccessKeyId:     accessKeyId,
+		AccessKeySecret: accessKeySecret,
+		Region:          region,
+	}, nil
 }
 
-func (client ChainTencentChainmakerClient) Commit(data string) (*Response, error) {
-	blockId := "123456"
-	resp := &Response{
-		Code:   "",
-		Status: "ok",
-		Msg:    "",
-		Data:   blockId,
+func (client ChainTencentChainmakerClient) Commit(data map[string]string) (string, error) {
+	// simulate the situation that error occurs
+	if strings.HasSuffix(data["id"], "0") {
+		return "", fmt.Errorf("some error occurred in the ChainTencentChainmakerClient::Commit operation")
 	}
-	return resp, nil
+
+	// Commit the data to the blockchain
+	// Write some code... (if error occurred, handle it as above)
+
+	// assume the block ID is returned by the blockchain, here we generate it from the record ID just as an example
+	recordId := util.ParseInt(data["id"])
+	blockId := fmt.Sprintf("%d", 130000+recordId)
+
+	// if no error, return the block ID
+	return blockId, nil
 }
 
-func (client ChainTencentChainmakerClient) Query(blockId string) (*Response, error) {
-	data := "XXX"
-	var resp *Response
+func (client ChainTencentChainmakerClient) Query(blockId string, data map[string]string) (string, error) {
+	// simulate the situation that error occurs
+	if strings.HasSuffix(data["id"], "0") {
+		return "", fmt.Errorf("some error occurred in the ChainTencentChainmakerClient::Commit operation")
+	}
+
+	// Query the data from the blockchain
+	// Write some code... (if error occurred, handle it as above)
+
+	// assume the chain data are retrieved from the blockchain, here we just generate it statically
+	chainData := map[string]string{"organization": "casbin"}
+
+	// Check if the data are matched with the chain data
+	res := "Matched"
+	if chainData["organization"] != data["organization"] {
+		res = "Mismatched"
+	}
+
+	// simulate the situation that mismatch occurs
 	if strings.HasSuffix(blockId, "2") || strings.HasSuffix(blockId, "4") || strings.HasSuffix(blockId, "6") || strings.HasSuffix(blockId, "8") || strings.HasSuffix(blockId, "0") {
-		resp = &Response{
-			Code:   "400",
-			Status: "error",
-			Msg:    fmt.Sprintf("The query result for block [%s] is: %s", blockId, data),
-			Data:   "",
-		}
-	} else {
-		resp = &Response{
-			Code:   "0",
-			Status: "ok",
-			Msg:    fmt.Sprintf("The query result for block [%s] is: %s", blockId, data),
-			Data:   "",
-		}
+		res = "Mismatched"
 	}
-	return resp, nil
+
+	return fmt.Sprintf("The query result for block [%s] is: %s", blockId, res), nil
 }

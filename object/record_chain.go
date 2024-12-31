@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/casvisor/casvisor/chain"
-	"github.com/casvisor/casvisor/util"
 )
 
 func (record *Record) getRecordProvider() (*Provider, error) {
@@ -58,26 +57,48 @@ func (record *Record) getRecordChainClient() (chain.ChainClientInterface, error)
 	return client, nil
 }
 
-func (record *Record) toString() string {
-	return util.StructToJson(record)
+func (record *Record) toMap() map[string]string {
+	result := map[string]string{}
+
+	result["id"] = fmt.Sprintf("%d", record.Id)
+	result["owner"] = record.Owner
+	result["name"] = record.Name
+	result["createdTime"] = record.CreatedTime
+
+	result["organization"] = record.Organization
+	result["clientIp"] = record.ClientIp
+	result["user"] = record.User
+	result["method"] = record.Method
+	result["requestUri"] = record.RequestUri
+	result["action"] = record.Action
+	result["language"] = record.Language
+
+	result["object"] = record.Object
+	result["response"] = record.Response
+
+	result["provider"] = record.Provider
+	result["block"] = record.Block
+	result["isTriggered"] = fmt.Sprintf("%t", record.IsTriggered)
+
+	return result
 }
 
 func CommitRecord(record *Record) (bool, error) {
+	if record.Block != "" {
+		return false, fmt.Errorf("the record: %s has already been committed, blockId = %s", record.getId(), record.Block)
+	}
+
 	client, err := record.getRecordChainClient()
 	if err != nil {
 		return false, err
 	}
 
-	resp, err := client.Commit(record.toString())
+	blockId, err := client.Commit(record.toMap())
 	if err != nil {
 		return false, err
 	}
 
-	if resp.Status != "ok" {
-		return false, fmt.Errorf(resp.Msg)
-	}
-
-	record.Block = resp.Data
+	record.Block = blockId
 	return UpdateRecord(record.getId(), record)
 }
 
@@ -99,15 +120,10 @@ func QueryRecord(id string) (string, error) {
 		return "", err
 	}
 
-	resp, err := client.Query(record.Block)
+	res, err := client.Query(record.Block, record.toMap())
 	if err != nil {
 		return "", err
 	}
 
-	if resp.Status != "ok" {
-		return "", fmt.Errorf(resp.Msg)
-	}
-
-	res := resp.Data
 	return res, nil
 }

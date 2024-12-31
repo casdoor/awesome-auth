@@ -16,16 +16,9 @@ package chain
 
 import "fmt"
 
-type Response struct {
-	Code   string `json:"code"`
-	Status string `json:"status"`
-	Msg    string `json:"msg"`
-	Data   string `json:"data"`
-}
-
 type ChainClientInterface interface {
-	Commit(data string) (*Response, error)
-	Query(blockId string) (*Response, error)
+	Commit(data map[string]string) (string, error)
+	Query(blockId string, data map[string]string) (string, error)
 }
 
 func NewChainClient(providerType string, accessKeyId string, accessKeySecret string, region string) (ChainClientInterface, error) {
