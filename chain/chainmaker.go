@@ -22,16 +22,20 @@ import (
 )
 
 type ChainTencentChainmakerClient struct {
-	AccessKeyId     string
-	AccessKeySecret string
-	Region          string
+	ClientId     string
+	ClientSecret string
+	Region       string
+	NetworkId    string
+	ChainId      string
 }
 
-func newChainTencentChainmakerClient(accessKeyId string, accessKeySecret string, region string) (ChainTencentChainmakerClient, error) {
+func newChainTencentChainmakerClient(clientId string, clientSecret string, region string, networkId string, chainId string) (ChainTencentChainmakerClient, error) {
 	return ChainTencentChainmakerClient{
-		AccessKeyId:     accessKeyId,
-		AccessKeySecret: accessKeySecret,
-		Region:          region,
+		ClientId:     clientId,
+		ClientSecret: clientSecret,
+		Region:       region,
+		NetworkId:    networkId,
+		ChainId:      chainId,
 	}, nil
 }
 

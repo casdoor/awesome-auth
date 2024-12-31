@@ -21,11 +21,11 @@ type ChainClientInterface interface {
 	Query(blockId string, data map[string]string) (string, error)
 }
 
-func NewChainClient(providerType string, accessKeyId string, accessKeySecret string, region string) (ChainClientInterface, error) {
+func NewChainClient(providerType string, clientId string, clientSecret string, region string, networkId string, chainId string) (ChainClientInterface, error) {
 	var res ChainClientInterface
 	var err error
 	if providerType == "ChainMaker" || providerType == "Tencent ChainMaker" || providerType == "Tencent ChainMaker (Demo Network)" {
-		res, err = newChainTencentChainmakerClient(accessKeyId, accessKeySecret, region)
+		res, err = newChainTencentChainmakerClient(clientId, clientSecret, region, networkId, chainId)
 	} else {
 		return nil, fmt.Errorf("unsupported provider type: %s", providerType)
 	}
