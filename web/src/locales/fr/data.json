@@ -151,18 +151,24 @@
     "New Machine": "New Machine"
   },
   "provider": {
+    "Browser URL": "Browser URL",
+    "Browser URL - Tooltip": "Browser URL - Tooltip",
     "Category": "Category",
     "Category - Tooltip": "Category - Tooltip",
     "Edit Provider": "Edit Provider",
     "New Provider": "New Provider",
+    "Provider URL": "Provider URL",
+    "Provider URL - Tooltip": "Provider URL - Tooltip",
     "State": "State",
     "State - Tooltip": "State - Tooltip",
     "Type": "Type",
     "Type - Tooltip": "Type - Tooltip"
   },
   "record": {
+    "Commit": "Commit",
     "New Record": "New Record",
     "Object": "Object",
+    "Query": "Query",
     "Response": "Response",
     "View Record": "View Record"
   },

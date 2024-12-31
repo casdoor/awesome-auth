@@ -151,18 +151,24 @@
     "New Machine": "新建机器"
   },
   "provider": {
+    "Browser URL": "浏览器URL",
+    "Browser URL - Tooltip": "浏览器URL - 工具提示",
     "Category": "分类",
     "Category - Tooltip": "分类 - 工具提示",
     "Edit Provider": "编辑提供商",
     "New Provider": "新建提供商",
+    "Provider URL": "提供商URL",
+    "Provider URL - Tooltip": "提供商URL - 工具提示",
     "State": "状态",
     "State - Tooltip": "状态 - 工具提示",
     "Type": "类型",
     "Type - Tooltip": "类型 - 工具提示"
   },
   "record": {
+    "Commit": "上链",
     "New Record": "新建日志",
     "Object": "对象",
+    "Query": "查询",
     "Response": "响应",
     "View Record": "查看日志"
   },
