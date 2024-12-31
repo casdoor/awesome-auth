@@ -73,7 +73,7 @@ func CommitRecord(record *Record) (bool, error) {
 		return false, err
 	}
 
-	if resp.Msg != "success" {
+	if resp.Status != "ok" {
 		return false, fmt.Errorf(resp.Msg)
 	}
 
@@ -104,7 +104,7 @@ func QueryRecord(id string) (string, error) {
 		return "", err
 	}
 
-	if resp.Msg != "success" {
+	if resp.Status != "ok" {
 		return "", fmt.Errorf(resp.Msg)
 	}
 

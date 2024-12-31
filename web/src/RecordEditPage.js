@@ -124,7 +124,7 @@ class RecordEditPage extends React.Component {
           </Col>
           <Col span={22}>
             <Input disabled={false} value={this.state.record.block} onChange={e => {
-              // this.updateRecordField("block", e.target.value);
+              this.updateRecordField("block", e.target.value);
             }} />
           </Col>
         </Row>

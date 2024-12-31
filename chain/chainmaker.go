@@ -16,6 +16,7 @@ package chain
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ecs"
 )
@@ -38,9 +39,33 @@ func newChainTencentChainmakerClient(accessKeyId string, accessKeySecret string,
 }
 
 func (client ChainTencentChainmakerClient) Commit(data string) (*Response, error) {
-	return nil, fmt.Errorf("not implemented")
+	blockId := "123456"
+	resp := &Response{
+		Code:   "",
+		Status: "ok",
+		Msg:    "",
+		Data:   blockId,
+	}
+	return resp, nil
 }
 
 func (client ChainTencentChainmakerClient) Query(blockId string) (*Response, error) {
-	return nil, fmt.Errorf("not implemented")
+	data := "XXX"
+	var resp *Response
+	if strings.HasSuffix(blockId, "2") || strings.HasSuffix(blockId, "4") || strings.HasSuffix(blockId, "6") || strings.HasSuffix(blockId, "8") || strings.HasSuffix(blockId, "0") {
+		resp = &Response{
+			Code:   "400",
+			Status: "error",
+			Msg:    fmt.Sprintf("The query result for block [%s] is: %s", blockId, data),
+			Data:   "",
+		}
+	} else {
+		resp = &Response{
+			Code:   "0",
+			Status: "ok",
+			Msg:    fmt.Sprintf("The query result for block [%s] is: %s", blockId, data),
+			Data:   "",
+		}
+	}
+	return resp, nil
 }

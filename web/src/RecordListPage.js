@@ -111,6 +111,9 @@ class RecordListPage extends BaseListPage {
       .then((res) => {
         if (res.status === "ok") {
           Setting.showMessage("success", "Record committed successfully");
+          this.fetch({
+            pagination: this.state.pagination,
+          });
         } else {
           Setting.showMessage("error", `Failed to commit Record: ${res.msg}`);
         }
@@ -124,9 +127,7 @@ class RecordListPage extends BaseListPage {
     RecordBackend.queryRecord(record.owner, record.name)
       .then((res) => {
         if (res.status === "ok") {
-          this.setState({
-            record: res.data,
-          });
+          Setting.showMessage("success", `Succeeded to query record: ${res.msg}`);
         } else {
           Setting.showMessage("error", `Failed to query record: ${res.msg}`);
         }
