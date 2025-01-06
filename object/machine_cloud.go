@@ -61,7 +61,9 @@ func getMachinesCloud(owner string) ([]*Machine, error) {
 
 		clientMachines, err2 := client.GetMachines()
 		if err2 != nil {
-			return nil, err2
+			if provider.Type != "VMware" {
+				return nil, err2
+			}
 		}
 
 		for _, clientMachine := range clientMachines {

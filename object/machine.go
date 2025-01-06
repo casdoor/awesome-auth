@@ -110,9 +110,10 @@ func GetMaskedMachine(machine *Machine, errs ...error) (*Machine, error) {
 		return nil, nil
 	}
 
-	// if machine.ClientSecret != "" {
-	//	machine.ClientSecret = "***"
-	// }
+	if machine.RemotePassword != "" {
+		machine.RemotePassword = "***"
+	}
+
 	return machine, nil
 }
 
@@ -141,9 +142,9 @@ func UpdateMachine(id string, machine *Machine) (bool, error) {
 		return false, nil
 	}
 
-	// if machine.ClientSecret == "***" {
-	//	machine.ClientSecret = p.ClientSecret
-	// }
+	if machine.RemotePassword == "***" {
+		machine.RemotePassword = oldMachine.RemotePassword
+	}
 
 	_, err = updateMachineCloud(oldMachine, machine)
 	if err != nil {

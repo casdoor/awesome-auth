@@ -15,6 +15,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -180,19 +181,23 @@ func (c *ApiController) GetAssetTunnel() {
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
+			logs.Error(fmt.Sprintf("GetAssetTunnel():ws.ReadMessage() error: %s", err.Error()))
+
 			_ = tunnel.Close()
-			err := object.CloseSession(sessionId, Normal, "Normal user exit")
-			if err != nil {
-				logs.Info(err.Error())
+			err2 := object.CloseSession(sessionId, Normal, "Normal user exit")
+			if err2 != nil {
+				logs.Error(fmt.Sprintf("GetAssetTunnel():object.CloseSession() error: %s", err.Error()))
 			}
 			return
 		}
 
 		_, err = tunnel.WriteAndFlush(message)
 		if err != nil {
-			err := object.CloseSession(sessionId, Normal, "Normal user exit")
-			if err != nil {
-				logs.Info(err.Error())
+			logs.Error(fmt.Sprintf("GetAssetTunnel():tunnel.WriteAndFlush() error: %s", err.Error()))
+
+			err2 := object.CloseSession(sessionId, Normal, "Normal user exit")
+			if err2 != nil {
+				logs.Error(fmt.Sprintf("GetAssetTunnel():object.CloseSession() (2nd) error: %s", err.Error()))
 			}
 			return
 		}
