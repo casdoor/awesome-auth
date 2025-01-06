@@ -135,3 +135,35 @@ func (client MachineAliyunClient) GetMachine(name string) (*Machine, error) {
 	machine := getMachineFromInstance(instance)
 	return machine, nil
 }
+
+func (client MachineAliyunClient) UpdateMachineState(name string, state string) (bool, string, error) {
+	machine, err := client.GetMachine(name)
+	if err != nil {
+		return false, "", err
+	}
+
+	if machine == nil {
+		return false, fmt.Sprintf("Instance: [%s] is not found", name), nil
+	}
+
+	instanceId := machine.Id
+
+	switch state {
+	case "Running":
+		startRequest := ecs.CreateStartInstanceRequest()
+		startRequest.InstanceId = instanceId
+		_, err = client.Client.StartInstance(startRequest)
+	case "Stopped":
+		stopRequest := ecs.CreateStopInstanceRequest()
+		stopRequest.InstanceId = instanceId
+		_, err = client.Client.StopInstance(stopRequest)
+	default:
+		return false, fmt.Sprintf("Unsupported state: %s", state), nil
+	}
+
+	if err != nil {
+		return false, "", err
+	}
+
+	return true, fmt.Sprintf("Instance: [%s]'s state has been successfully updated to: [%s]", name, state), nil
+}

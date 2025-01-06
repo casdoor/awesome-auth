@@ -157,3 +157,7 @@ func (client MachineVmwareClient) GetMachine(name string) (*Machine, error) {
 	}
 	return machine, nil
 }
+
+func (client MachineVmwareClient) UpdateMachineState(name string, state string) (bool, string, error) {
+	return false, "", fmt.Errorf("Not implemented")
+}

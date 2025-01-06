@@ -100,3 +100,7 @@ func (client MachineAzureClient) GetMachine(name string) (*Machine, error) {
 
 	return getMachineFromAzureInstance(vm.VirtualMachine), nil
 }
+
+func (client MachineAzureClient) UpdateMachineState(name string, state string) (bool, string, error) {
+	return false, "", fmt.Errorf("Not implemented")
+}

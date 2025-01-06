@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Card, Col, Input, Row} from "antd";
+import {Button, Card, Col, Input, Row, Select} from "antd";
 import * as MachineBackend from "./backend/MachineBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
@@ -219,9 +219,13 @@ class MachineEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:State"), i18next.t("general:State - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.machine.state} onChange={e => {
-              this.updateMachineField("state", e.target.value);
-            }} />
+            <Select virtual={false} style={{width: "100%"}} value={this.state.machine.state} onChange={value => {
+              this.updateMachineField("state", value);
+            }}
+            options={[
+              {value: "Running", label: "Running"},
+              {value: "Stopped", label: "Stopped"},
+            ].map(item => Setting.getOption(item.label, item.value))} />
           </Col>
         </Row>
       </Card>

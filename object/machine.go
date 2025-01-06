@@ -119,36 +119,37 @@ func GetPaginationMachines(owner string, offset, limit int, field, value, sortFi
 	// return machines, nil
 }
 
-func getMachine(owner string, name string) (*Machine, error) {
+func getMachine(owner string, name string) (*Machine, service.MachineClientInterface, error) {
 	providers, err := getActiveCloudProviders(owner)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for _, provider := range providers {
 		client, err2 := service.NewMachineClient(provider.Type, provider.ClientId, provider.ClientSecret, provider.Region)
 		if err2 != nil {
-			return nil, err2
+			return nil, nil, err2
 		}
 
 		clientMachine, err2 := client.GetMachine(name)
 		if err2 != nil {
-			return nil, err2
+			return nil, nil, err2
 		}
 		if clientMachine == nil {
 			continue
 		}
 
 		machine := getMachineFromService(owner, provider.Name, clientMachine)
-		return machine, nil
+		return machine, client, nil
 	}
 
-	return nil, nil
+	return nil, nil, nil
 }
 
 func GetMachine(id string) (*Machine, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	return getMachine(owner, name)
+	machine, _, err := getMachine(owner, name)
+	return machine, err
 }
 
 func GetMaskedMachine(machine *Machine, errs ...error) (*Machine, error) {
@@ -184,16 +185,25 @@ func GetMaskedMachines(machines []*Machine, errs ...error) ([]*Machine, error) {
 
 func UpdateMachine(id string, machine *Machine) (bool, error) {
 	owner, name := util.GetOwnerAndNameFromId(id)
-	p, err := getMachine(owner, name)
+	p, client, err := getMachine(owner, name)
 	if err != nil {
 		return false, err
 	} else if p == nil {
-		return false, nil
+		return false, fmt.Errorf("The object: [%s] does not exist", id)
 	}
 
 	// if machine.ClientSecret == "***" {
 	//	machine.ClientSecret = p.ClientSecret
 	// }
+
+	if p.State != machine.State {
+		ok, _, err := client.UpdateMachineState(name, machine.State)
+		if err != nil {
+			return false, err
+		}
+
+		return ok, nil
+	}
 
 	affected, err := adapter.engine.ID(core.PK{owner, name}).AllCols().Update(machine)
 	if err != nil {

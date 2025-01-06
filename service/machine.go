@@ -19,6 +19,7 @@ import "fmt"
 type MachineClientInterface interface {
 	GetMachines() ([]*Machine, error)
 	GetMachine(name string) (*Machine, error)
+	UpdateMachineState(name string, state string) (bool, string, error)
 }
 
 func NewMachineClient(providerType string, accessKeyId string, accessKeySecret string, region string) (MachineClientInterface, error) {
