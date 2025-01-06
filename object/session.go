@@ -168,21 +168,21 @@ func AddSession(session *Session) (bool, error) {
 	return affected != 0, nil
 }
 
-func CreateSession(session *Session, assetId, mode string) (*Session, error) {
-	asset, err := GetAsset(assetId)
+func CreateSession(session *Session, machineId string, mode string) (*Session, error) {
+	machine, err := GetMachine(machineId)
 	if err != nil {
 		return nil, err
 	}
 
-	if asset == nil {
+	if machine == nil {
 		return nil, nil
 	}
 
-	session.Owner = asset.Owner
+	session.Owner = machine.Owner
 	session.Name = util.GenerateId()
 	session.CreatedTime = util.GetCurrentTime()
-	session.Protocol = asset.RemoteProtocol
-	session.Asset = assetId
+	session.Protocol = machine.RemoteProtocol
+	session.Asset = machineId
 	session.Status = NoConnect
 	session.Mode = mode
 	session.Reviewed = false
@@ -196,7 +196,7 @@ func CreateSession(session *Session, assetId, mode string) (*Session, error) {
 	respSession := &Session{
 		Owner:      session.Owner,
 		Name:       session.Name,
-		Protocol:   asset.RemoteProtocol,
+		Protocol:   machine.RemoteProtocol,
 		Operations: session.Operations,
 	}
 	return respSession, nil

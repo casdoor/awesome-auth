@@ -21,6 +21,7 @@ import * as Setting from "./Setting";
 import * as MachineBackend from "./backend/MachineBackend";
 import i18next from "i18next";
 import PopconfirmModal from "./common/modal/PopconfirmModal";
+import ConnectModal from "./common/modal/ConnectModal";
 
 class MachineListPage extends BaseListPage {
   constructor(props) {
@@ -219,11 +220,17 @@ class MachineListPage extends BaseListPage {
         title: i18next.t("general:Action"),
         dataIndex: "action",
         key: "action",
-        width: "170px",
+        width: "260px",
         fixed: (Setting.isMobile()) ? "false" : "right",
         render: (text, machine, index) => {
           return (
             <div>
+              <ConnectModal
+                owner={machine.owner}
+                name={machine.name}
+                category={"Machine"}
+                machine={machine}
+              />
               <Button
                 style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
                 onClick={() => this.props.history.push(`/machines/${machine.owner}/${machine.name}`)}

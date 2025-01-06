@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from "react";
-import {Button, Card, Col, Input, Row, Select} from "antd";
+import {Button, Card, Col, Input, InputNumber, Row, Select} from "antd";
 import * as MachineBackend from "./backend/MachineBackend";
 import * as Setting from "./Setting";
 import i18next from "i18next";
@@ -119,7 +119,7 @@ class MachineEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Created time"), i18next.t("general:Created time - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.machine.createdTime} onChange={e => {
+            <Input value={Setting.getFormattedDate(this.state.machine.createdTime)} onChange={e => {
               this.updateMachineField("createdTime", e.target.value);
             }} />
           </Col>
@@ -129,7 +129,7 @@ class MachineEditPage extends React.Component {
             {Setting.getLabel(i18next.t("general:Expire time"), i18next.t("general:Expire time - Tooltip"))} :
           </Col>
           <Col span={22} >
-            <Input value={this.state.machine.expireTime} onChange={e => {
+            <Input value={Setting.getFormattedDate(this.state.machine.expireTime)} onChange={e => {
               this.updateMachineField("expireTime", e.target.value);
             }} />
           </Col>
@@ -211,6 +211,52 @@ class MachineEditPage extends React.Component {
           <Col span={22} >
             <Input value={this.state.machine.privateIp} onChange={e => {
               this.updateMachineField("privateIp", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Remote protocol"), i18next.t("general:Remote protocol - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Select virtual={false} style={{width: "100%"}} value={this.state.machine.remoteProtocol} onChange={value => {
+              this.updateMachineField("remoteProtocol", value);
+            }}
+            options={[
+              {value: "SSH", label: "SSH"},
+              {value: "RDP", label: "RDP"},
+              {value: "Telnet", label: "Telnet"},
+              {value: "VNC", label: "VNC"},
+            ].map(item => Setting.getOption(item.label, item.value))} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Remote port"), i18next.t("general:Remote port - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <InputNumber value={this.state.machine.remotePort} min={0} max={65535} step={1} onChange={value => {
+              this.updateMachineField("remotePort", value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Remote username"), i18next.t("general:Remote username - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.machine.remoteUsername} onChange={e => {
+              this.updateMachineField("remoteUsername", e.target.value);
+            }} />
+          </Col>
+        </Row>
+        <Row style={{marginTop: "20px"}} >
+          <Col style={{marginTop: "5px"}} span={(Setting.isMobile()) ? 22 : 2}>
+            {Setting.getLabel(i18next.t("general:Remote password"), i18next.t("general:Remote password - Tooltip"))} :
+          </Col>
+          <Col span={22} >
+            <Input value={this.state.machine.remotePassword} onChange={e => {
+              this.updateMachineField("remotePassword", e.target.value);
             }} />
           </Col>
         </Row>

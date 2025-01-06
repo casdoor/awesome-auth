@@ -16,7 +16,6 @@ import React, {useState} from "react";
 import i18next from "i18next";
 import {Button, Input, Modal} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
-import {getAsset} from "../../backend/AssetBackend";
 import * as Setting from "../../Setting";
 
 const ConnectModal = (props) => {
@@ -28,26 +27,40 @@ const ConnectModal = (props) => {
   const owner = props.owner;
   const name = props.name;
   const category = props.category;
+  const machine = props.machine;
+
+  const handleUsernameAndPassword = (username, password) => {
+    setUsername(username || "");
+    if (username && password) {
+      handleOk();
+    } else {
+      if (username) {
+        setInputDisabled(true);
+      }
+      setIsModalOpen(true);
+    }
+  };
 
   const showModal = () => {
     initStatus();
-    getAsset(owner, name)
-      .then(res => {
-        if (res.status === "ok") {
-          setUsername(res.data.username || "");
-          if (res.data.username && res.data.password) {
-            handleOk();
-          } else {
-            if (res.data.username) {
-              setInputDisabled(true);
-            }
-            setIsModalOpen(true);
-          }
-        }
-      })
-      .catch(error => {
-        setIsModalOpen(true);
-      });
+    handleUsernameAndPassword(machine.remoteUsername, machine.remotePassword);
+    // getAsset(owner, name)
+    //   .then(res => {
+    //     if (res.status === "ok") {
+    //       setUsername(res.data.username || "");
+    //       if (res.data.username && res.data.password) {
+    //         handleOk();
+    //       } else {
+    //         if (res.data.username) {
+    //           setInputDisabled(true);
+    //         }
+    //         setIsModalOpen(true);
+    //       }
+    //     }
+    //   })
+    //   .catch(error => {
+    //     setIsModalOpen(true);
+    //   });
   };
 
   const handleOk = () => {
