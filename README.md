@@ -8,7 +8,7 @@
     <img alt="docker pull casbin/casvisor" src="https://img.shields.io/docker/pulls/casbin/casvisor.svg">
   </a>
   <a href="https://github.com/casvisor/casvisor/releases/latest">
-    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/casbin/casvisor.svg">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/casvisor/casvisor.svg">
   </a>
   <a href="https://hub.docker.com/r/casbin/casvisor">
     <img alt="Docker Image Version (latest semver)" src="https://img.shields.io/badge/Docker%20Hub-latest-brightgreen">
@@ -20,16 +20,16 @@
     <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/casvisor/casvisor?style=flat-square">
   </a>
   <a href="https://github.com/casvisor/casvisor/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/casbin/casvisor?style=flat-square" alt="license">
+    <img src="https://img.shields.io/github/license/casvisor/casvisor?style=flat-square" alt="license">
   </a>
   <a href="https://github.com/casvisor/casvisor/issues">
-    <img alt="GitHub issues" src="https://img.shields.io/github/issues/casbin/casvisor?style=flat-square">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/casvisor/casvisor?style=flat-square">
   </a>
   <a href="#">
-    <img alt="GitHub stars" src="https://img.shields.io/github/stars/casbin/casvisor?style=flat-square">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/casvisor/casvisor?style=flat-square">
   </a>
   <a href="https://github.com/casvisor/casvisor/network">
-    <img alt="GitHub forks" src="https://img.shields.io/github/forks/casbin/casvisor?style=flat-square">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/casvisor/casvisor?style=flat-square">
   </a>
 </p>
 
