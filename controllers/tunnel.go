@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/beego/beego"
 	"github.com/beego/beego/logs"
@@ -281,18 +282,17 @@ func (c *ApiController) TunnelMonitor() {
 }
 
 func setConfig(propertyMap map[string]string, machine *object.Machine, configuration *guacamole.Configuration) {
-	switch machine.RemoteProtocol {
-	case "SSH":
-		configuration.Protocol = "ssh"
-	case "RDP":
-		configuration.Protocol = "rdp"
-	case "Telnet":
-		configuration.Protocol = "telnet"
-	case "VNC":
-		configuration.Protocol = "vnc"
+	configuration.Protocol = strings.ToLower(machine.RemoteProtocol)
+
+	hostname := machine.PublicIp
+	if hostname == "" {
+		hostname = machine.PrivateIp
+	}
+	if hostname == "" {
+		hostname = machine.Name
 	}
 
-	configuration.SetParameter("hostname", machine.Name)
+	configuration.SetParameter("hostname", hostname)
 	configuration.SetParameter("port", strconv.Itoa(machine.RemotePort))
 	configuration.SetParameter("username", machine.RemoteUsername)
 	configuration.SetParameter("password", machine.RemotePassword)

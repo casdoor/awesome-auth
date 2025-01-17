@@ -88,7 +88,7 @@ const ConnectModal = (props) => {
     <>
       <Button
         disabled={props.disabled}
-        type="primary"
+        type={machine.remoteUsername && machine.remotePassword ? "primary" : "default"}
         onClick={showModal}
         style={{marginTop: "10px", marginBottom: "10px", marginRight: "10px"}}
       >

@@ -210,6 +210,20 @@ class MachineListPage extends BaseListPage {
         sorter: (a, b) => a.privateIp.localeCompare(b.privateIp),
       },
       {
+        title: i18next.t("general:Username"),
+        dataIndex: "remoteUsername",
+        key: "remoteUsername",
+        width: "120px",
+        sorter: (a, b) => a.remoteUsername.localeCompare(b.remoteUsername),
+      },
+      {
+        title: i18next.t("general:Password"),
+        dataIndex: "remotePassword",
+        key: "remotePassword",
+        width: "120px",
+        sorter: (a, b) => a.remotePassword.localeCompare(b.remotePassword),
+      },
+      {
         title: i18next.t("general:State"),
         dataIndex: "state",
         key: "state",
