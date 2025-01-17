@@ -105,6 +105,10 @@ func SyncMachinesCloud(owner string) (bool, error) {
 		return false, err
 	}
 
+	if len(machines) == 0 {
+		return false, nil
+	}
+
 	affected, err := addMachines(machines)
 	return affected, err
 }
