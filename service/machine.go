@@ -33,6 +33,8 @@ func NewMachineClient(providerType string, accessKeyId string, accessKeySecret s
 		res, err = newMachineVmwareClient(accessKeyId, accessKeySecret)
 	} else if providerType == "KVM" {
 		res, err = newMachineKvmClient(accessKeyId, accessKeySecret)
+	} else if providerType == "PVE" {
+		res, err = newMachinePveClient(accessKeyId, accessKeySecret)
 	} else {
 		return nil, fmt.Errorf("unsupported provider type: %s", providerType)
 	}
