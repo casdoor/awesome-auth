@@ -35,6 +35,8 @@ func NewMachineClient(providerType string, accessKeyId string, accessKeySecret s
 		res, err = newMachineKvmClient(accessKeyId, accessKeySecret)
 	} else if providerType == "PVE" {
 		res, err = newMachinePveClient(accessKeyId, accessKeySecret)
+	} else if providerType == "Google Cloud" {
+		res, err = newMachineGcpClient(accessKeyId, accessKeySecret, region)
 	} else {
 		return nil, fmt.Errorf("unsupported provider type: %s", providerType)
 	}
