@@ -1,6 +1,8 @@
 module github.com/casvisor/casvisor
 
-go 1.20
+go 1.21
+
+toolchain go1.23.6
 
 require (
 	cloud.google.com/go/compute v1.20.1
