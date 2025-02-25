@@ -187,6 +187,17 @@ class RecordListPage extends BaseListPage {
           );
         },
       },
+      // {
+      //   title: i18next.t("general:User agent"),
+      //   dataIndex: "userAgent",
+      //   key: "userAgent",
+      //   width: "150px",
+      //   sorter: true,
+      //   ...this.getColumnSearchProps("userAgent"),
+      //   render: (text, record, index) => {
+      //     return text;
+      //   },
+      // },
       {
         title: i18next.t("general:Created time"),
         dataIndex: "createdTime",

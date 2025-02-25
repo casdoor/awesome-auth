@@ -123,6 +123,13 @@ func (c *ApiController) AddRecord() {
 		return
 	}
 
+	if record.ClientIp == "" {
+		record.ClientIp = c.getClientIp()
+	}
+	if record.UserAgent == "" {
+		record.UserAgent = c.getUserAgent()
+	}
+
 	c.Data["json"] = wrapActionResponse(object.AddRecord(&record))
 	c.ServeJSON()
 }

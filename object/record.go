@@ -39,6 +39,7 @@ type Record struct {
 
 	Organization string `xorm:"varchar(100)" json:"organization"`
 	ClientIp     string `xorm:"varchar(100)" json:"clientIp"`
+	UserAgent    string `xorm:"varchar(100)" json:"userAgent"`
 	User         string `xorm:"varchar(100)" json:"user"`
 	Method       string `xorm:"varchar(100)" json:"method"`
 	RequestUri   string `xorm:"varchar(1000)" json:"requestUri"`
