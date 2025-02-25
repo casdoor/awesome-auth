@@ -17,8 +17,8 @@ package chain
 import "fmt"
 
 type ChainClientInterface interface {
-	Commit(data string) (string, error)
-	Query(blockId string, data map[string]string) (string, error)
+	Commit(data string) (string, string, error)
+	Query(txId string, data string) (string, error)
 }
 
 func NewChainClient(providerType string, clientId string, clientSecret string, region string, networkId string, chainId string) (ChainClientInterface, error) {

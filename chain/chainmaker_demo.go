@@ -16,8 +16,9 @@ package chain
 
 import (
 	"fmt"
-	"strings"
+	"strconv"
 
+	"github.com/casvisor/casvisor/util"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -53,7 +54,28 @@ func newChainTencentChainmakerDemoClient(clientId, clientSecret, region, network
 	}, nil
 }
 
-func (client *ChainTencentChainmakerDemoClient) Commit(data string) (string, error) {
+func (client ChainTencentChainmakerDemoClient) getQueryResult(txId string) (*tbaas.ChainMakerTransactionResult, error) {
+	request := tbaas.NewQueryChainMakerDemoTransactionRequest()
+	request.ClusterId = common.StringPtr(client.NetworkId)
+	request.ChainId = common.StringPtr(client.ChainId)
+	request.TxID = common.StringPtr(txId)
+
+	response, err := client.Client.QueryChainMakerDemoTransaction(request)
+	if err != nil {
+		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+			return nil, fmt.Errorf("TencentCloudSDKError: %v", sdkErr)
+		}
+
+		return nil, fmt.Errorf("ChainTencentChainmakerDemoClient.Client.InvokeChainMakerDemoContract() error: %v", err)
+	}
+	if *(response.Response.Result.Code) != 0 {
+		return nil, fmt.Errorf("TencentCloudSDKError, code = %d, message = %s", *(response.Response.Result.Code), *(response.Response.Result.Message))
+	}
+
+	return response.Response.Result, nil
+}
+
+func (client *ChainTencentChainmakerDemoClient) Commit(data string) (string, string, error) {
 	request := tbaas.NewInvokeChainMakerDemoContractRequest()
 	request.ClusterId = common.StringPtr(client.NetworkId)
 	request.ChainId = common.StringPtr(client.ChainId)
@@ -64,37 +86,63 @@ func (client *ChainTencentChainmakerDemoClient) Commit(data string) (string, err
 	response, err := client.Client.InvokeChainMakerDemoContract(request)
 	if err != nil {
 		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-			return "", fmt.Errorf("TencentCloudSDKError: %v", sdkErr)
+			return "", "", fmt.Errorf("TencentCloudSDKError: %v", sdkErr)
 		}
 
-		return "", fmt.Errorf("ChainTencentChainmakerDemoClient.Client.Invoke() error: %v", err)
+		return "", "", fmt.Errorf("ChainTencentChainmakerDemoClient.Client.InvokeChainMakerDemoContract() error: %v", err)
+	}
+	if *(response.Response.Result.Code) != 0 {
+		return "", "", fmt.Errorf("TencentCloudSDKError, code = %d, message = %s", *(response.Response.Result.Code), *(response.Response.Result.Message))
 	}
 
 	txId := *(response.Response.Result.TxId)
-	return txId, nil
+
+	queryResult, err := client.getQueryResult(txId)
+	if err != nil {
+		return "", "", err
+	}
+
+	blockId := strconv.FormatInt(*(queryResult.BlockHeight), 10)
+	return blockId, txId, nil
 }
 
-func (client ChainTencentChainmakerDemoClient) Query(blockId string, data map[string]string) (string, error) {
-	// simulate the situation that error occurs
-	if strings.HasSuffix(data["id"], "0") {
-		return "", fmt.Errorf("some error occurred in the ChainTencentChainmakerDemoClient::Commit operation")
+func (client ChainTencentChainmakerDemoClient) Query(txId string, data string) (string, error) {
+	queryResult, err := client.getQueryResult(txId)
+	if err != nil {
+		return "", err
 	}
 
-	// Query the data from the blockchain
-	// Write some code... (if error occurred, handle it as above)
+	blockId := strconv.FormatInt(*(queryResult.BlockHeight), 10)
 
-	// assume the chain data are retrieved from the blockchain, here we just generate it statically
-	chainData := map[string]string{"organization": "casbin"}
-
-	// Check if the data are matched with the chain data
-	res := "Matched"
-	if chainData["organization"] != data["organization"] {
-		res = "Mismatched"
+	type ContractEvent struct {
+		ContractName    string   `json:"contract_name"`
+		ContractVersion string   `json:"contract_version"`
+		EventData       []string `json:"event_data"`
+		Topic           string   `json:"topic"`
+		TxId            string   `json:"tx_id"`
 	}
 
-	// simulate the situation that mismatch occurs
-	if strings.HasSuffix(blockId, "2") || strings.HasSuffix(blockId, "4") || strings.HasSuffix(blockId, "6") || strings.HasSuffix(blockId, "8") || strings.HasSuffix(blockId, "0") {
-		res = "Mismatched"
+	contractEvents := []ContractEvent{}
+	err = util.JsonToStruct(*(queryResult.ContractEvent), &contractEvents)
+	if err != nil {
+		return "", err
+	}
+
+	type Param struct {
+		Key   string `json:"key"`
+		Field string `json:"field"`
+		Value string `json:"value"`
+	}
+
+	key := contractEvents[0].EventData[0]
+	field := contractEvents[0].EventData[1]
+	value := contractEvents[0].EventData[2]
+	param := Param{Key: key, Field: field, Value: value}
+	fetchedData := util.StructToJson(param)
+
+	res := "Mismatched"
+	if fetchedData == data {
+		res = "Matched"
 	}
 
 	return fmt.Sprintf("The query result for block [%s] is: %s", blockId, res), nil
