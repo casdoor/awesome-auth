@@ -319,6 +319,10 @@ github.com/stripe/safesql v0.2.0/go.mod h1:q7b2n0JmzM1mVGfcYpanfVb2j23cXZeWFxcIL
 github.com/syndtr/goleveldb v0.0.0-20160425020131-cfa635847112/go.mod h1:Z4AUp2Km+PwemOoO/VB5AOx9XSsIItzFjoJlOSiYmn0=
 github.com/syndtr/goleveldb v1.0.0 h1:fBdIW9lB4Iz0n9khmH8w27SJ3QEJ7+IgjPEwGSZiFdE=
 github.com/syndtr/goleveldb v1.0.0/go.mod h1:ZVVdQEZoIme9iO1Ch2Jdy24qqXrMMOU6lpPAyBWyWuQ=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1104 h1:VhxtPaGdOIZ23Vzv+hYJmIEj8M+MDjV/qXGiiYEbOMs=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1104/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tbaas v1.0.1104 h1:f0GjKm0Fsm6BYHRrbb749F3Qt7XSgG4H0xRvWjDhfSE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tbaas v1.0.1104/go.mod h1:QbZZSN3DpgWvt0ezJEDvcaRfypLsW7BF6EMjgnTOK6c=
 github.com/tsenart/deadcode v0.0.0-20160724212837-210d2dc333e9/go.mod h1:q+QjxYvZ+fpjMXqs+XEriussHjSYqeXVnAdSV1tkMYk=
 github.com/ua-parser/uap-go v0.0.0-20240113215029-33f8e6d47f38 h1:F04Na0QJP9GJrwmK3vQDuDrCuGllrrfngW8CIeF1aag=
 github.com/ua-parser/uap-go v0.0.0-20240113215029-33f8e6d47f38/go.mod h1:BUbeWZiieNxAuuADTBNb3/aeje6on3DhU3rpWsQSB1E=

@@ -24,7 +24,7 @@ import (
 	tbaas "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tbaas/v20180416"
 )
 
-type ChainTencentChainmakerClient struct {
+type ChainTencentChainmakerDemoClient struct {
 	ClientId     string
 	ClientSecret string
 	Region       string
@@ -33,7 +33,7 @@ type ChainTencentChainmakerClient struct {
 	Client       *tbaas.Client
 }
 
-func newChainTencentChainmakerClient(clientId, clientSecret, region, networkId, chainId string) (*ChainTencentChainmakerClient, error) {
+func newChainTencentChainmakerDemoClient(clientId, clientSecret, region, networkId, chainId string) (*ChainTencentChainmakerDemoClient, error) {
 	credential := common.NewCredential(clientId, clientSecret)
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.Endpoint = "tbaas.tencentcloudapi.com"
@@ -43,7 +43,7 @@ func newChainTencentChainmakerClient(clientId, clientSecret, region, networkId, 
 		return nil, fmt.Errorf("newChainTencentChainmakerClient() error: %v", err)
 	}
 
-	return &ChainTencentChainmakerClient{
+	return &ChainTencentChainmakerDemoClient{
 		ClientId:     clientId,
 		ClientSecret: clientSecret,
 		Region:       region,
@@ -53,37 +53,31 @@ func newChainTencentChainmakerClient(clientId, clientSecret, region, networkId, 
 	}, nil
 }
 
-func (client *ChainTencentChainmakerClient) Commit(data string) (string, error) {
-	request := tbaas.NewInvokeRequest()
-	request.Module = common.StringPtr("transaction")
-	request.Operation = common.StringPtr("invoke")
+func (client *ChainTencentChainmakerDemoClient) Commit(data string) (string, error) {
+	request := tbaas.NewInvokeChainMakerDemoContractRequest()
 	request.ClusterId = common.StringPtr(client.NetworkId)
-	request.ChaincodeName = common.StringPtr("ChainMakerDemo")
-	request.ChannelName = common.StringPtr(client.ChainId)
-	request.Peers = []*tbaas.PeerSet{
-		{OrgName: common.StringPtr("orgbeijing.chainmaker-demo"), PeerName: common.StringPtr("consensus1-orgbeijing.chainmaker-demo")},
-	}
+	request.ChainId = common.StringPtr(client.ChainId)
+	request.ContractName = common.StringPtr("ChainMakerDemo")
 	request.FuncName = common.StringPtr("save")
-	request.GroupName = common.StringPtr("orgbeijing.chainmaker-demo")
-	//request.Args = []*string{common.StringPtr(data["arg1"]), common.StringPtr(data["arg2"])}
-	request.Args = []*string{common.StringPtr(data)}
+	request.FuncParam = common.StringPtr(data)
 
-	response, err := client.Client.Invoke(request)
+	response, err := client.Client.InvokeChainMakerDemoContract(request)
 	if err != nil {
 		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
 			return "", fmt.Errorf("TencentCloudSDKError: %v", sdkErr)
 		}
 
-		return "", fmt.Errorf("ChainTencentChainmakerClient.Client.Invoke() error: %v", err)
+		return "", fmt.Errorf("ChainTencentChainmakerDemoClient.Client.Invoke() error: %v", err)
 	}
 
-	return response.ToJsonString(), nil
+	txId := *(response.Response.Result.TxId)
+	return txId, nil
 }
 
-func (client ChainTencentChainmakerClient) Query(blockId string, data map[string]string) (string, error) {
+func (client ChainTencentChainmakerDemoClient) Query(blockId string, data map[string]string) (string, error) {
 	// simulate the situation that error occurs
 	if strings.HasSuffix(data["id"], "0") {
-		return "", fmt.Errorf("some error occurred in the ChainTencentChainmakerClient::Commit operation")
+		return "", fmt.Errorf("some error occurred in the ChainTencentChainmakerDemoClient::Commit operation")
 	}
 
 	// Query the data from the blockchain

@@ -50,7 +50,7 @@ type Record struct {
 	// ExtendedUser *User  `xorm:"-" json:"extendedUser"`
 
 	Provider    string `xorm:"varchar(100)" json:"provider"`
-	Block       string `xorm:"varchar(100)" json:"block"`
+	Block       string `xorm:"varchar(500)" json:"block"`
 	IsTriggered bool   `json:"isTriggered"`
 }
 

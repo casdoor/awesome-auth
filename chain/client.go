@@ -17,15 +17,17 @@ package chain
 import "fmt"
 
 type ChainClientInterface interface {
-	Commit(data map[string]string) (string, error)
+	Commit(data string) (string, error)
 	Query(blockId string, data map[string]string) (string, error)
 }
 
 func NewChainClient(providerType string, clientId string, clientSecret string, region string, networkId string, chainId string) (ChainClientInterface, error) {
 	var res ChainClientInterface
 	var err error
-	if providerType == "ChainMaker" || providerType == "Tencent ChainMaker" || providerType == "Tencent ChainMaker (Demo Network)" {
+	if providerType == "ChainMaker" || providerType == "Tencent ChainMaker" {
 		res, err = newChainTencentChainmakerClient(clientId, clientSecret, region, networkId, chainId)
+	} else if providerType == "Tencent ChainMaker (Demo Network)" {
+		res, err = newChainTencentChainmakerDemoClient(clientId, clientSecret, region, networkId, chainId)
 	} else {
 		return nil, fmt.Errorf("unsupported provider type: %s", providerType)
 	}

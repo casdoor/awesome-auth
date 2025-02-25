@@ -18,7 +18,14 @@ import (
 	"fmt"
 
 	"github.com/casvisor/casvisor/chain"
+	"github.com/casvisor/casvisor/util"
 )
+
+type Param struct {
+	Key   string `json:"key"`
+	Field string `json:"field"`
+	Value string `json:"value"`
+}
 
 func (record *Record) getRecordProvider() (*Provider, error) {
 	if record.Provider != "" {
@@ -83,6 +90,15 @@ func (record *Record) toMap() map[string]string {
 	return result
 }
 
+func (record *Record) toParam() string {
+	res := Param{
+		Key:   record.getId(),
+		Field: "Record",
+		Value: util.StructToJson(record),
+	}
+	return util.StructToJson(res)
+}
+
 func CommitRecord(record *Record) (bool, error) {
 	if record.Block != "" {
 		return false, fmt.Errorf("the record: %s has already been committed, blockId = %s", record.getId(), record.Block)
@@ -93,7 +109,7 @@ func CommitRecord(record *Record) (bool, error) {
 		return false, err
 	}
 
-	blockId, err := client.Commit(record.toMap())
+	blockId, err := client.Commit(record.toParam())
 	if err != nil {
 		return false, err
 	}
