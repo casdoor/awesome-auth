@@ -138,11 +138,25 @@ func (client ChainTencentChainmakerDemoClient) Query(txId string, data string) (
 	field := contractEvents[0].EventData[1]
 	value := contractEvents[0].EventData[2]
 	param := Param{Key: key, Field: field, Value: value}
-	fetchedData := util.StructToJson(param)
+	chainData := util.StructToJson(param)
 
 	res := "Mismatched"
-	if fetchedData == data {
-		res = "Matched"
+	if chainData == data {
+		res = fmt.Sprintf(`Matched
+******************************************************
+Data:
+
+%s`, chainData)
+	} else {
+		res = fmt.Sprintf(`Mismatched
+******************************************************
+Chain data:
+
+%s
+******************************************************
+Local data:
+
+%s`, chainData, data)
 	}
 
 	return fmt.Sprintf("The query result for block [%s] is: %s", blockId, res), nil
