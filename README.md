@@ -25,7 +25,7 @@
   <a href="https://github.com/casvisor/casvisor/issues">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues/casvisor/casvisor?style=flat-square">
   </a>
-  <a href="#">
+  <a href="https://github.com/casvisor/casvisor/stargazers">
     <img alt="GitHub stars" src="https://img.shields.io/github/stars/casvisor/casvisor?style=flat-square">
   </a>
   <a href="https://github.com/casvisor/casvisor/network">
