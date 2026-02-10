@@ -1,4 +1,4 @@
-FROM casbin/guacd:1.5.4 as guacd
+FROM ghcr.io/hanzovm/vmd:1.5.4 as vmd
 FROM node:18.19.0 AS FRONT
 WORKDIR /web
 COPY ./web .
@@ -13,8 +13,8 @@ RUN ./build.sh
 
 
 FROM alpine:latest AS STANDARD
-LABEL MAINTAINER="https://github.com/hanzoai/vm"
-ARG USER=hanzo-vm
+LABEL MAINTAINER="https://github.com/hanzovm/vm"
+ARG USER=vm
 
 RUN sed -i 's/https/http/' /etc/apk/repositories
 RUN apk add --update sudo
@@ -37,8 +37,8 @@ COPY --from=FRONT --chown=$USER:$USER /web/build ./web/build
 ENTRYPOINT ["/server"]
 
 
-FROM guacd AS ALLINONE
-LABEL MAINTAINER="https://github.com/hanzoai/vm"
+FROM vmd AS ALLINONE
+LABEL MAINTAINER="https://github.com/hanzovm/vm"
 
 WORKDIR /
 
