@@ -87,10 +87,10 @@ After creating an organization and an application for Hanzo VM in a Casdoor, you
 
 #### RDP
 
-Run guacd for RDP connection.
+Run vmd (Hanzo VM Daemon) for RDP connection.
 
 ```shell
-docker run --name some-guacd -d -p 4822:4822 guacamole/guacd
+docker run --name vmd -d -p 4822:4822 ghcr.io/hanzovm/vmd
 ```
 
 ## Contribute
