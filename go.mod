@@ -1,4 +1,4 @@
-module github.com/casvisor/casvisor
+module github.com/hanzoai/vm
 
 go 1.21
 

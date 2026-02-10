@@ -22,9 +22,9 @@ import (
 
 	"github.com/beego/beego"
 	"github.com/beego/beego/logs"
-	"github.com/casvisor/casvisor/object"
-	"github.com/casvisor/casvisor/util"
-	"github.com/casvisor/casvisor/util/guacamole"
+	"github.com/hanzoai/vm/object"
+	"github.com/hanzoai/vm/util"
+	"github.com/hanzoai/vm/util/guacamole"
 	"github.com/gorilla/websocket"
 )
 

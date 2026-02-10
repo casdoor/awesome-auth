@@ -17,7 +17,7 @@ package object
 import (
 	"fmt"
 
-	"github.com/casvisor/casvisor/util"
+	"github.com/hanzoai/vm/util"
 	"xorm.io/core"
 )
 

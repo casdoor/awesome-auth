@@ -21,7 +21,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/casvisor/casvisor/util"
+	"github.com/hanzoai/vm/util"
 )
 
 type I18nData map[string]map[string]string

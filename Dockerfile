@@ -6,15 +6,15 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000 && yarn run build
 
 
 FROM golang:1.20.12 AS BACK
-WORKDIR /go/src/casvisor
+WORKDIR /go/src/hanzo-vm
 COPY . .
 RUN chmod +x ./build.sh
 RUN ./build.sh
 
 
 FROM alpine:latest AS STANDARD
-LABEL MAINTAINER="https://casvisor.org/"
-ARG USER=casvisor
+LABEL MAINTAINER="https://github.com/hanzoai/vm"
+ARG USER=hanzo-vm
 
 RUN sed -i 's/https/http/' /etc/apk/repositories
 RUN apk add --update sudo
@@ -29,16 +29,16 @@ RUN adduser -D $USER -u 1000 \
 
 USER 1000
 WORKDIR /
-COPY --from=BACK --chown=$USER:$USER /go/src/casvisor/server ./server
-COPY --from=BACK --chown=$USER:$USER /go/src/casvisor/data ./data
-COPY --from=BACK --chown=$USER:$USER /go/src/casvisor/conf/app.conf ./conf/app.conf
+COPY --from=BACK --chown=$USER:$USER /go/src/hanzo-vm/server ./server
+COPY --from=BACK --chown=$USER:$USER /go/src/hanzo-vm/data ./data
+COPY --from=BACK --chown=$USER:$USER /go/src/hanzo-vm/conf/app.conf ./conf/app.conf
 COPY --from=FRONT --chown=$USER:$USER /web/build ./web/build
 
 ENTRYPOINT ["/server"]
 
 
 FROM guacd AS ALLINONE
-LABEL MAINTAINER="https://casvisor.org/"
+LABEL MAINTAINER="https://github.com/hanzoai/vm"
 
 WORKDIR /
 
@@ -51,10 +51,10 @@ RUN apt-get update \
     && update-ca-certificates  \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=BACK /go/src/casvisor/server ./server
-COPY --from=BACK /go/src/casvisor/data ./data
-COPY --from=BACK /go/src/casvisor/docker-entrypoint.sh /docker-entrypoint.sh
-COPY --from=BACK /go/src/casvisor/conf/app.conf ./conf/app.conf
+COPY --from=BACK /go/src/hanzo-vm/server ./server
+COPY --from=BACK /go/src/hanzo-vm/data ./data
+COPY --from=BACK /go/src/hanzo-vm/docker-entrypoint.sh /docker-entrypoint.sh
+COPY --from=BACK /go/src/hanzo-vm/conf/app.conf ./conf/app.conf
 COPY --from=FRONT /web/build ./web/build
 
 EXPOSE 19000

@@ -17,7 +17,7 @@ package object
 import (
 	"fmt"
 
-	"github.com/casvisor/casvisor/service"
+	"github.com/hanzoai/vm/service"
 )
 
 func getMachineFromService(owner string, provider string, clientMachine *service.Machine) *Machine {

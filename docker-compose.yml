@@ -1,6 +1,6 @@
 version: '3.1'
 services:
-  casvisor:
+  hanzo-vm:
     restart: always
     build:
       context: ./
@@ -30,7 +30,7 @@ services:
     environment:
       GUACD_LOG_LEVEL: debug
     volumes:
-      - ./data/guacd:/usr/local/casvisor/data
+      - ./data/guacd:/usr/local/hanzo-vm/data
     ports:
       - "4822:4822"
     restart:

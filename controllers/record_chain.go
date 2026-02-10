@@ -17,7 +17,7 @@ package controllers
 import (
 	"encoding/json"
 
-	"github.com/casvisor/casvisor/object"
+	"github.com/hanzoai/vm/object"
 )
 
 // CommitRecord

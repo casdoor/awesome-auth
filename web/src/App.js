@@ -367,7 +367,7 @@ class App extends Component {
             textAlign: "center",
           }
         }>
-          Powered by <a target="_blank" href="https://github.com/casvisor/casvisor" rel="noreferrer"><img style={{paddingBottom: "3px"}} height={"20px"} alt={"Casvisor"} src={`${Setting.StaticBaseUrl}/img/casvisor-logo_1200x256.png`} /></a>
+          Powered by <a target="_blank" href="https://github.com/hanzoai/vm" rel="noreferrer">Hanzo VM</a>
         </Footer>
       </React.Fragment>
     );

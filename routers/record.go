@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/beego/beego/context"
-	"github.com/casvisor/casvisor/object"
-	"github.com/casvisor/casvisor/util"
+	"github.com/hanzoai/vm/object"
+	"github.com/hanzoai/vm/util"
 )
 
 func RecordMessage(ctx *context.Context) {

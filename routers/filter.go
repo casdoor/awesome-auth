@@ -22,8 +22,8 @@ import (
 	"strings"
 
 	"github.com/beego/beego/context"
-	"github.com/casvisor/casvisor/conf"
-	"github.com/casvisor/casvisor/util"
+	"github.com/hanzoai/vm/conf"
+	"github.com/hanzoai/vm/util"
 )
 
 var (
@@ -33,7 +33,7 @@ var (
 	newClientId            = conf.GetConfigString("clientId")
 	oldCasdoorOrganization = "casbin"
 	newCasdoorOrganization = conf.GetConfigString("casdoorOrganization")
-	oldCasdoorApplication  = "app-casvisor"
+	oldCasdoorApplication  = "app-hanzo-vm"
 	newCasdoorApplication  = conf.GetConfigString("casdoorApplication")
 )
 
