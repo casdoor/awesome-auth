@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: visor-config
+  namespace: hanzo
+type: Opaque
+stringData:
+  app.conf: |
+    appname = hanzo-visor
+    httpport = 19000
+    runmode = prod
+    SessionOn = true
+    copyrequestbody = true
+    driverName = postgres
+    dataSourceName = "user=hanzo password=REDACTED dbname=hanzo_vm host=postgres.hanzo.svc port=5432 sslmode=disable"
+    dbName = hanzo_vm
+    tableNamePrefix =
+    isDemoMode = false
+    logPostOnly = true
+    redisEndpoint =
+    guacamoleEndpoint = vmd.hanzo.svc:4822
+    casdoorEndpoint = http://iam.hanzo.svc:8000
+    clientId = b108dacba027db36ec26
+    clientSecret = REDACTED
+    casdoorOrganization = "hanzo"
+    casdoorApplication = "app-hanzo-vm"

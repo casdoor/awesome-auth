@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: visor
+  namespace: hanzo
+  labels:
+    app: visor
+spec:
+  type: ClusterIP
+  ports:
+    - port: 19000
+      targetPort: 19000
+      protocol: TCP
+  selector:
+    app: visor
