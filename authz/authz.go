@@ -32,9 +32,14 @@ func InitAuthz() {
 
 	tableNamePrefix := conf.GetConfigString("tableNamePrefix")
 	driverName := conf.GetConfigString("driverName")
-	dataSourceName := conf.GetConfigDataSourceName()
-	if conf.GetConfigString("driverName") == "mysql" {
-		dataSourceName = dataSourceName + conf.GetConfigString("dbName")
+	dataSourceName := strings.TrimSpace(conf.GetConfigDataSourceName())
+	dbName := conf.GetConfigString("dbName")
+	if driverName == "postgres" {
+		if !strings.Contains(dataSourceName, "dbname=") {
+			dataSourceName = dataSourceName + " dbname=" + dbName
+		}
+	} else {
+		dataSourceName = dataSourceName + dbName
 	}
 
 	a, err := xormadapter.NewAdapterWithTableName(driverName, dataSourceName, "api_rule", tableNamePrefix, true)

@@ -17,11 +17,13 @@ package object
 import (
 	"fmt"
 	"runtime"
+	"strings"
 
 	"github.com/beego/beego"
 	"github.com/hanzoai/vm/conf"
 	"github.com/hanzoai/vm/util"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 	"xorm.io/xorm"
 )
 
@@ -37,7 +39,7 @@ func InitConfig() {
 }
 
 func InitAdapter() {
-	adapter = NewAdapter(conf.GetConfigString("driverName"), conf.GetConfigDataSourceName())
+	adapter = NewAdapter(conf.GetConfigString("driverName"), strings.TrimSpace(conf.GetConfigDataSourceName()))
 }
 
 // Adapter represents the MySQL adapter for policy storage.
@@ -71,13 +73,44 @@ func NewAdapter(driverName string, dataSourceName string) *Adapter {
 }
 
 func (a *Adapter) createDatabase() error {
+	dbName := beego.AppConfig.String("dbName")
+
+	if a.driverName == "postgres" {
+		// For postgres, connect to the default "postgres" database to create the target DB.
+		connStr := a.dataSourceName
+		if strings.Contains(connStr, "dbname=") {
+			// Replace existing dbname with "postgres" for the admin connection.
+			connStr = strings.Replace(connStr, fmt.Sprintf("dbname=%s", dbName), "dbname=postgres", 1)
+		} else {
+			connStr += " dbname=postgres"
+		}
+		engine, err := xorm.NewEngine(a.driverName, connStr)
+		if err != nil {
+			return err
+		}
+		defer engine.Close()
+
+		// Check if database exists before creating.
+		var count int64
+		_, err = engine.SQL("SELECT count(*) FROM pg_database WHERE datname = ?", dbName).Get(&count)
+		if err != nil {
+			return err
+		}
+		if count == 0 {
+			_, err = engine.Exec(fmt.Sprintf("CREATE DATABASE %s", dbName))
+			return err
+		}
+		return nil
+	}
+
+	// MySQL path.
 	engine, err := xorm.NewEngine(a.driverName, a.dataSourceName)
 	if err != nil {
 		return err
 	}
 	defer engine.Close()
 
-	_, err = engine.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s default charset utf8 COLLATE utf8_general_ci", beego.AppConfig.String("dbName")))
+	_, err = engine.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s default charset utf8 COLLATE utf8_general_ci", dbName))
 	return err
 }
 
@@ -86,7 +119,22 @@ func (a *Adapter) open() {
 		panic(err)
 	}
 
-	engine, err := xorm.NewEngine(a.driverName, a.dataSourceName+beego.AppConfig.String("dbName"))
+	var dsn string
+	dbName := beego.AppConfig.String("dbName")
+	if a.driverName == "postgres" {
+		// For postgres, set dbname in the connection string.
+		dsn = a.dataSourceName
+		if strings.Contains(dsn, "dbname=") {
+			dsn = strings.Replace(dsn, "dbname=postgres", fmt.Sprintf("dbname=%s", dbName), 1)
+		} else {
+			dsn += fmt.Sprintf(" dbname=%s", dbName)
+		}
+	} else {
+		// MySQL: append dbName to DSN.
+		dsn = a.dataSourceName + dbName
+	}
+
+	engine, err := xorm.NewEngine(a.driverName, dsn)
 	if err != nil {
 		panic(err)
 	}

@@ -5,7 +5,7 @@ COPY ./web .
 RUN yarn install --frozen-lockfile --network-timeout 1000000 && yarn run build
 
 
-FROM golang:1.20.12 AS BACK
+FROM golang:1.21 AS BACK
 WORKDIR /go/src/hanzo-vm
 COPY . .
 RUN chmod +x ./build.sh
