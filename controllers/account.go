@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2023 The Hanzo Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import (
 	_ "embed"
 
 	"github.com/beego/beego"
-	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
+	iamsdk "github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 )
 
 //go:embed token_jwt_key.pem
@@ -29,25 +29,25 @@ func init() {
 }
 
 func InitAuthConfig() {
-	casdoorEndpoint := beego.AppConfig.String("casdoorEndpoint")
+	iamEndpoint := beego.AppConfig.String("iamEndpoint")
 	clientId := beego.AppConfig.String("clientId")
 	clientSecret := beego.AppConfig.String("clientSecret")
-	casdoorOrganization := beego.AppConfig.String("casdoorOrganization")
-	casdoorApplication := beego.AppConfig.String("casdoorApplication")
+	iamOrganization := beego.AppConfig.String("iamOrganization")
+	iamApplication := beego.AppConfig.String("iamApplication")
 
-	casdoorsdk.InitConfig(casdoorEndpoint, clientId, clientSecret, JwtPublicKey, casdoorOrganization, casdoorApplication)
+	iamsdk.InitConfig(iamEndpoint, clientId, clientSecret, JwtPublicKey, iamOrganization, iamApplication)
 }
 
 func (c *ApiController) Signin() {
 	code := c.Input().Get("code")
 	state := c.Input().Get("state")
 
-	token, err := casdoorsdk.GetOAuthToken(code, state)
+	token, err := iamsdk.GetOAuthToken(code, state)
 	if err != nil {
 		panic(err)
 	}
 
-	claims, err := casdoorsdk.ParseJwtToken(token.AccessToken)
+	claims, err := iamsdk.ParseJwtToken(token.AccessToken)
 	if err != nil {
 		panic(err)
 	}

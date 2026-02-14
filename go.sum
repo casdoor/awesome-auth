@@ -88,8 +88,6 @@ github.com/casbin/casbin/v2 v2.82.0/go.mod h1:jX8uoN4veP85O/n2674r2qtfSXI6myvxW8
 github.com/casbin/govaluate v1.1.0/go.mod h1:G/UnbIjZk/0uMNaLwZZmFQrR72tYRZWQkO70si/iR7A=
 github.com/casbin/govaluate v1.1.1 h1:J1rFKIBhiC5xr0APd5HP6rDL+xt+BRoyq1pa4o2i/5c=
 github.com/casbin/govaluate v1.1.1/go.mod h1:G/UnbIjZk/0uMNaLwZZmFQrR72tYRZWQkO70si/iR7A=
-github.com/casdoor/casdoor-go-sdk v0.35.1 h1:vOGBjHQPw7U5BbnkJgX6/ZUf+PEix1wv4greuNzDCUY=
-github.com/casdoor/casdoor-go-sdk v0.35.1/go.mod h1:hVSgmSdwTCsBEJNt9r2K5aLVsoeMc37/N4Zzescy5SA=
 github.com/casdoor/xorm-adapter/v3 v3.1.0 h1:NodWayRtSLVSeCvL9H3Hc61k0G17KhV9IymTCNfh3kk=
 github.com/casdoor/xorm-adapter/v3 v3.1.0/go.mod h1:4WTcUw+bTgBylGHeGHzTtBvuTXRS23dtwzFLl9tsgFM=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
@@ -184,6 +182,8 @@ github.com/h2non/gock v1.2.0 h1:K6ol8rfrRkUOefooBC8elXoaNGYkpp7y2qcxGG6BzUE=
 github.com/h2non/gock v1.2.0/go.mod h1:tNhoxHYW2W42cYkYb1WqzdbYIieALC99kpYr7rH/BQk=
 github.com/h2non/parth v0.0.0-20190131123155-b4df798d6542 h1:2VTzZjLZBgl62/EtslCrtky5vbi9dd7HrQPQIx6wqiw=
 github.com/h2non/parth v0.0.0-20190131123155-b4df798d6542/go.mod h1:Ow0tF8D4Kplbc8s8sSb3V2oUCygFHVp8gC3Dn6U4MNI=
+github.com/hanzoid/go-sdk v1.44.0 h1:8UM72vltrEQyOQRepXISdzlTHicBaa6R9KIvNlS3HA8=
+github.com/hanzoid/go-sdk v1.44.0/go.mod h1:7aXOpfl6s5M5/yjHgIGuPBwdHeSCV/jha1iYsnE1MNc=
 github.com/hashicorp/golang-lru v0.5.4/go.mod h1:iADmTwqILo4mZ8BN3D2Q6+9jd8WM5uGBxy+E8yxSoD4=
 github.com/hashicorp/golang-lru v1.0.2 h1:dV3g9Z/unq5DpblPpw+Oqcv4dU/1omnb4Ok8iPY6p1c=
 github.com/hashicorp/golang-lru v1.0.2/go.mod h1:iADmTwqILo4mZ8BN3D2Q6+9jd8WM5uGBxy+E8yxSoD4=

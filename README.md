@@ -38,21 +38,21 @@ Hanzo VM contains 2 parts:
 
 ## Installation
 
-Hanzo VM uses Casdoor as the authentication system. So you need to create an organization and an application for Hanzo VM in a Casdoor instance.
+Hanzo VM uses Hanzo IAM as the authentication system. So you need to create an organization and an application for Hanzo VM in a Hanzo IAM instance.
 
 ### Necessary configuration
 
 #### Get the code
 
 ```shell
-go get github.com/casdoor/casdoor
+go get github.com/hanzoai/iam
 go get github.com/hanzoai/vm
 ```
 
 or
 
 ```shell
-git clone https://github.com/casdoor/casdoor
+git clone https://github.com/hanzoai/iam
 git clone https://github.com/hanzoai/vm
 ```
 
@@ -66,9 +66,9 @@ dataSourceName = root:123@tcp(localhost:3306)/
 
 Hanzo VM uses XORM to connect to DB, so all DBs supported by XORM can also be used.
 
-#### Configure Casdoor
+#### Configure Hanzo IAM
 
-After creating an organization and an application for Hanzo VM in a Casdoor, you need to update `clientID`, `clientSecret`, `casdoorOrganization` and `casdoorApplication` in app.conf.
+After creating an organization and an application for Hanzo VM in Hanzo IAM, you need to update `clientID`, `clientSecret`, `iamOrganization` and `iamApplication` in app.conf.
 
 #### Run Hanzo VM
 
@@ -79,11 +79,11 @@ After creating an organization and an application for Hanzo VM in a Casdoor, you
 
 #### Setup your Hanzo VM to enable some third-party login platform
 
-  Hanzo VM uses Casdoor to manage members. If you want to log in with oauth, you should see [casdoor oauth configuration](https://casdoor.org/docs/provider/oauth/overview).
+  Hanzo VM uses Hanzo IAM to manage members. If you want to log in with oauth, you should see [Hanzo IAM oauth configuration](https://hanzo.ai/docs/iam/provider/oauth/overview).
 
 #### OSS, Email, and SMS
 
-  Hanzo VM uses Casdoor to upload files to cloud storage, send Emails and send SMSs. See Casdoor for more details.
+  Hanzo VM uses Hanzo IAM to upload files to cloud storage, send Emails and send SMSs. See Hanzo IAM for more details.
 
 #### RDP
 

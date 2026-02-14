@@ -19,8 +19,8 @@ stringData:
     logPostOnly = true
     redisEndpoint =
     guacamoleEndpoint = vmd.hanzo.svc:4822
-    casdoorEndpoint = http://iam.hanzo.svc:8000
+    iamEndpoint = http://iam.hanzo.svc:8000
     clientId = b108dacba027db36ec26
     clientSecret = REDACTED
-    casdoorOrganization = "hanzo"
-    casdoorApplication = "app-hanzo-vm"
+    iamOrganization = "hanzo"
+    iamApplication = "app-hanzo-vm"

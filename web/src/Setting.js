@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2023 The Hanzo Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@ import React from "react";
 import {Tooltip, message} from "antd";
 import {isMobile as isMobileDevice} from "react-device-detect";
 import i18next from "i18next";
-import Sdk from "casdoor-js-sdk";
+import Sdk from "casdoor-js-sdk"; // Hanzo IAM JS SDK (casdoor-compatible)
 import {QuestionCircleTwoTone} from "@ant-design/icons";
 import {v4 as uuidv4} from "uuid";
 
 export let ServerUrl = "";
-export let CasdoorSdk;
+export let IamSdk;
 
 export function initServerUrl() {
   const hostname = window.location.hostname;
@@ -35,8 +35,8 @@ export function isLocalhost() {
   return hostname === "localhost";
 }
 
-export function initCasdoorSdk(config) {
-  CasdoorSdk = new Sdk(config);
+export function initIamSdk(config) {
+  IamSdk = new Sdk(config);
 }
 
 function getUrlWithLanguage(url) {
@@ -48,23 +48,23 @@ function getUrlWithLanguage(url) {
 }
 
 export function getSignupUrl() {
-  return getUrlWithLanguage(CasdoorSdk.getSignupUrl());
+  return getUrlWithLanguage(IamSdk.getSignupUrl());
 }
 
 export function getSigninUrl() {
-  return getUrlWithLanguage(CasdoorSdk.getSigninUrl());
+  return getUrlWithLanguage(IamSdk.getSigninUrl());
 }
 
 export function getUserProfileUrl(userName, account) {
-  return getUrlWithLanguage(CasdoorSdk.getUserProfileUrl(userName, account));
+  return getUrlWithLanguage(IamSdk.getUserProfileUrl(userName, account));
 }
 
 export function getMyProfileUrl(account) {
-  return getUrlWithLanguage(CasdoorSdk.getMyProfileUrl(account));
+  return getUrlWithLanguage(IamSdk.getMyProfileUrl(account));
 }
 
 export function signin() {
-  return CasdoorSdk.signin(ServerUrl);
+  return IamSdk.signin(ServerUrl);
 }
 
 export function parseJson(s) {

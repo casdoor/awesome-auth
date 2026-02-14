@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2023 The Hanzo Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import (
 	"encoding/gob"
 
 	"github.com/beego/beego"
-	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
+	iamsdk "github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 )
 
 type ApiController struct {
@@ -26,10 +26,10 @@ type ApiController struct {
 }
 
 func init() {
-	gob.Register(casdoorsdk.Claims{})
+	gob.Register(iamsdk.Claims{})
 }
 
-func GetUserName(user *casdoorsdk.User) string {
+func GetUserName(user *iamsdk.User) string {
 	if user == nil {
 		return ""
 	}
@@ -47,17 +47,17 @@ func wrapActionResponse(affected bool, e ...error) *Response {
 	}
 }
 
-func (c *ApiController) GetSessionClaims() *casdoorsdk.Claims {
+func (c *ApiController) GetSessionClaims() *iamsdk.Claims {
 	s := c.GetSession("user")
 	if s == nil {
 		return nil
 	}
 
-	claims := s.(casdoorsdk.Claims)
+	claims := s.(iamsdk.Claims)
 	return &claims
 }
 
-func (c *ApiController) SetSessionClaims(claims *casdoorsdk.Claims) {
+func (c *ApiController) SetSessionClaims(claims *iamsdk.Claims) {
 	if claims == nil {
 		c.DelSession("user")
 		return
@@ -66,7 +66,7 @@ func (c *ApiController) SetSessionClaims(claims *casdoorsdk.Claims) {
 	c.SetSession("user", *claims)
 }
 
-func (c *ApiController) GetSessionUser() *casdoorsdk.User {
+func (c *ApiController) GetSessionUser() *iamsdk.User {
 	claims := c.GetSessionClaims()
 	if claims == nil {
 		return nil
@@ -75,7 +75,7 @@ func (c *ApiController) GetSessionUser() *casdoorsdk.User {
 	return &claims.User
 }
 
-func (c *ApiController) SetSessionUser(user *casdoorsdk.User) {
+func (c *ApiController) SetSessionUser(user *iamsdk.User) {
 	if user == nil {
 		c.DelSession("user")
 		return

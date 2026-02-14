@@ -1,6 +1,6 @@
 module github.com/hanzoai/vm
 
-go 1.21
+go 1.23
 
 toolchain go1.23.6
 
@@ -96,3 +96,5 @@ require (
 	modernc.org/token v1.1.0 // indirect
 	xorm.io/builder v0.3.13 // indirect
 )
+
+replace github.com/casdoor/casdoor-go-sdk => github.com/hanzoid/go-sdk v1.44.0

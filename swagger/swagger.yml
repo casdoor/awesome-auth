@@ -87,7 +87,7 @@ paths:
         description: The details of the permission
         required: true
         schema:
-          $ref: '#/definitions/casdoorsdk.Permission'
+          $ref: '#/definitions/iamsdk.Permission'
       responses:
         "200":
           description: The Response object
@@ -196,7 +196,7 @@ paths:
         description: The details of the permission
         required: true
         schema:
-          $ref: '#/definitions/casdoorsdk.Permission'
+          $ref: '#/definitions/iamsdk.Permission'
       responses:
         "200":
           description: The Response object
@@ -395,7 +395,7 @@ paths:
         "200":
           description: The Response object
           schema:
-            $ref: '#/definitions/casdoorsdk.Permission'
+            $ref: '#/definitions/iamsdk.Permission'
   /get-permissions:
     get:
       tags:
@@ -408,7 +408,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/casdoorsdk.Permission'
+              $ref: '#/definitions/iamsdk.Permission'
   /get-record:
     get:
       tags:
@@ -565,7 +565,7 @@ paths:
         description: The details of the permission
         required: true
         schema:
-          $ref: '#/definitions/casdoorsdk.Permission'
+          $ref: '#/definitions/iamsdk.Permission'
       responses:
         "200":
           description: The Response object
@@ -621,7 +621,7 @@ definitions:
   Response:
     title: Response
     type: object
-  casdoorsdk.Permission:
+  iamsdk.Permission:
     title: Permission
     type: object
   controllers.Response:

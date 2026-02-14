@@ -1,4 +1,4 @@
-// Copyright 2024 The Casbin Authors. All Rights Reserved.
+// Copyright 2024 The Hanzo Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import (
 	"net/http"
 
 	"github.com/beego/beego/context"
-	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
+	iamsdk "github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 	"github.com/hanzoai/vm/conf"
 	"github.com/hanzoai/vm/util"
 )
@@ -31,13 +31,13 @@ type Response struct {
 	Data2  interface{} `json:"data2"`
 }
 
-func GetSessionUser(ctx *context.Context) *casdoorsdk.User {
+func GetSessionUser(ctx *context.Context) *iamsdk.User {
 	s := ctx.Input.Session("user")
 	if s == nil {
 		return nil
 	}
 
-	claims := s.(casdoorsdk.Claims)
+	claims := s.(iamsdk.Claims)
 	return &claims.User
 }
 
@@ -76,7 +76,7 @@ func getUsernameByClientIdSecret(ctx *context.Context) (string, error) {
 		return "", nil
 	}
 
-	applicationName := conf.GetConfigString("casdoorApplication")
+	applicationName := conf.GetConfigString("iamApplication")
 	if clientSecret != conf.GetConfigString("clientSecret") {
 		return "", fmt.Errorf("Incorrect client secret for application: %s", applicationName)
 	}

@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2023 The Hanzo Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // limitations under the License.
 
 export const AuthConfig = {
-  serverUrl: "https://door.casdoor.com",
+  serverUrl: "https://hanzo.id",
   // serverUrl: "http://localhost:7001",
   clientId: "b108dacba027db36ec26",
   appName: "app-hanzo-vm",

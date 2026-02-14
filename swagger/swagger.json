@@ -131,7 +131,7 @@
                         "description": "The details of the permission",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/casdoorsdk.Permission"
+                            "$ref": "#/definitions/iamsdk.Permission"
                         }
                     }
                 ],
@@ -299,7 +299,7 @@
                         "description": "The details of the permission",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/casdoorsdk.Permission"
+                            "$ref": "#/definitions/iamsdk.Permission"
                         }
                     }
                 ],
@@ -601,7 +601,7 @@
                     "200": {
                         "description": "The Response object",
                         "schema": {
-                            "$ref": "#/definitions/casdoorsdk.Permission"
+                            "$ref": "#/definitions/iamsdk.Permission"
                         }
                     }
                 }
@@ -620,7 +620,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/casdoorsdk.Permission"
+                                "$ref": "#/definitions/iamsdk.Permission"
                             }
                         }
                     }
@@ -859,7 +859,7 @@
                         "description": "The details of the permission",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/casdoorsdk.Permission"
+                            "$ref": "#/definitions/iamsdk.Permission"
                         }
                     }
                 ],
@@ -949,7 +949,7 @@
             "title": "Response",
             "type": "object"
         },
-        "casdoorsdk.Permission": {
+        "iamsdk.Permission": {
             "title": "Permission",
             "type": "object"
         },

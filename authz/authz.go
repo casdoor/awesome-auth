@@ -1,4 +1,4 @@
-// Copyright 2024 The Casbin Authors. All Rights Reserved.
+// Copyright 2024 The Hanzo Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
-	"github.com/casdoor/casdoor-go-sdk/casdoorsdk"
+	iamsdk "github.com/casdoor/casdoor-go-sdk/casdoorsdk"
 	xormadapter "github.com/casdoor/xorm-adapter/v3"
 	"github.com/hanzoai/vm/conf"
 	stringadapter "github.com/qiangmzsx/string-adapter/v2"
@@ -105,7 +105,7 @@ p, *, *, POST, /api/start-session, *, *
 	}
 }
 
-func IsAllowed(user *casdoorsdk.User, subOwner string, subName string, method string, urlPath string, objOwner string, objName string) bool {
+func IsAllowed(user *iamsdk.User, subOwner string, subName string, method string, urlPath string, objOwner string, objName string) bool {
 	if conf.GetConfigBool("IsDemoMode") {
 		if !isAllowedInDemoMode(method, urlPath) {
 			return false

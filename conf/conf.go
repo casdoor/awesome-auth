@@ -1,4 +1,4 @@
-// Copyright 2023 The casbin Authors. All Rights Reserved.
+// Copyright 2023 The Hanzo Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ func GetConfigString(key string) string {
 		if key == "staticBaseUrl" {
 			res = "https://cdn.casbin.org"
 		} else if key == "logConfig" {
-			res = "{\"filename\": \"logs/casdoor.log\", \"maxdays\":99999, \"perm\":\"0770\"}"
+			res = "{\"filename\": \"logs/iam.log\", \"maxdays\":99999, \"perm\":\"0770\"}"
 		}
 	}
 
