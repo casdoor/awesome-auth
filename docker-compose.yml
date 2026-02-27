@@ -1,4 +1,3 @@
-version: '3.1'
 services:
   hanzo-vm:
     restart: always
@@ -10,21 +9,29 @@ services:
     ports:
       - "19000:19000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       RUNNING_IN_DOCKER: "true"
     volumes:
       - ./conf:/conf/
+
   db:
     restart: always
-    image: mysql:8.0.25
-    platform: linux/amd64
+    image: ghcr.io/hanzoai/sql:latest
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
+      POSTGRES_USER: hanzo
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-hanzo}
+      POSTGRES_DB: hanzo_vm
     volumes:
-      - /usr/local/docker/mysql:/var/lib/mysql
+      - vm_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hanzo -d hanzo_vm"]
+      timeout: 5s
+      retries: 10
+
   guacd:
     image: guacamole/guacd:latest
     environment:
@@ -33,5 +40,7 @@ services:
       - ./data/guacd:/usr/local/hanzo-vm/data
     ports:
       - "4822:4822"
-    restart:
-      always
+    restart: always
+
+volumes:
+  vm_postgres_data:
