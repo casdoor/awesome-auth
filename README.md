@@ -147,6 +147,7 @@
 - [Oso](https://github.com/osohq/oso) - Batteries-included framework for building authorization in your Node.js application.
 - [Stack Auth](https://stack-auth.com) - Open-source authN & authZ for modern web apps, comes with pre-built components for Next.js.
 - [pundit-ts](https://github.com/fatihky/pundit-ts) - Fully type-safe authorization library inspired by awesome [pundit](https://github.com/varvet/pundit) gem. Can be used for RBAC, ABAC access control models or any other model you wish.
+- [Grantex](https://github.com/mishrasanjeev/grantex) - Open delegated authorization protocol for AI agents with JWT grant tokens, PKCE, scope-based access control, and SDKs for TypeScript, Python, and Go.
 
 ### <a name="authZ-php"></a>PHP
 
@@ -164,6 +165,7 @@
 - [Flask-RBAC](https://github.com/shonenada/flask-rbac) - Adds RBAC support to [Flask](https://github.com/pallets/flask).
 - [Vakt](https://github.com/kolotaev/vakt) - Attribute-based access control (ABAC) SDK for Python.
 - [Oso](https://github.com/osohq/oso) - Batteries-included framework for building authorization in your Python application.
+- [Grantex](https://github.com/mishrasanjeev/grantex) - Delegated authorization for AI agents with JWT grant tokens, PKCE, and scope-based access control. Python SDK with FastAPI middleware.
 
 ### <a name="authZ-ruby"></a>Ruby
 
