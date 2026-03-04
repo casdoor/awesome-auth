@@ -1,6 +1,6 @@
 module github.com/hanzoai/vm
 
-go 1.23
+go 1.26
 
 toolchain go1.23.6
 
