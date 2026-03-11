@@ -161,7 +161,7 @@
 ### <a name="authZ-python"></a>Python
 
 - [PyCasbin](https://github.com/casbin/pycasbin) - Authorization library that supports access control models like ACL, RBAC, ABAC in Python.
-- [casbin-fastapi-decorator](https://github.com/Neko1313/casbin-fastapi-decorator) - Decorator-based authorization for FastAPI using PyCasbin — per-route permissions with no middleware, supports JWT, async SQLAlchemy, and Casdoor.
+- [casbin-fastapi-decorator](https://github.com/Neko1313/casbin-fastapi-decorator) - Decorator-based authorization for FastAPI using PyCasbin, providing per-route permissions with no middleware and support for JWT, async SQLAlchemy, and Casdoor.
 - [Flask-RBAC](https://github.com/shonenada/flask-rbac) - Adds RBAC support to [Flask](https://github.com/pallets/flask).
 - [Vakt](https://github.com/kolotaev/vakt) - Attribute-based access control (ABAC) SDK for Python.
 - [Oso](https://github.com/osohq/oso) - Batteries-included framework for building authorization in your Python application.
