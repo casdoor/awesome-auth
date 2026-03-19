@@ -39,6 +39,7 @@
 - [Authelia](https://github.com/authelia/authelia) - The Single Sign-On Multi-Factor portal for web apps.
 - [ZITADEL](https://github.com/caos/zitadel) - Cloud-native Identity & Access Management platform for secure authentication, authorization and identity management.
 - [Authentik](https://goauthentik.io) - authentik is an open-source Identity Provider that emphasizes flexibility and versatility. It can be seamlessly integrated into existing environments to support new protocols.
+- [Authon](https://authon.dev) - Authentication platform with 15 SDKs (React, Next.js, Vue, Nuxt, Svelte, Angular, React Native, Python, Go, Dart, Swift, Kotlin). Supports OAuth (10+ providers), passwordless, passkeys, Web3 wallets, and MFA.
 - [Stack Auth](https://stack-auth.com) - Open-source, developer-friendly authentication, authorization, and IAM solution.
 - [Scalekit](https://scalekit.com) – Add enterprise SSO (SAML, OIDC) and SCIM provisioning on top of existing auth systems alongside additive auth stack for MCP and Agent Auth.
 - [SSOJet](https://ssojet.com) – Add enterprise SSO (SAML, OIDC) and SCIM user provisioning to your app without changing your existing authentication system.
