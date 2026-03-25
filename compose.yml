@@ -1,0 +1,46 @@
+services:
+  hanzo-vm:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: STANDARD
+    entrypoint: /bin/sh -c './server --createDatabase=true'
+    ports:
+      - "19000:19000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      RUNNING_IN_DOCKER: "true"
+    volumes:
+      - ./conf:/conf/
+
+  db:
+    restart: always
+    image: ghcr.io/hanzoai/sql:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: hanzo
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-hanzo}
+      POSTGRES_DB: hanzo_vm
+    volumes:
+      - vm_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hanzo -d hanzo_vm"]
+      timeout: 5s
+      retries: 10
+
+  guacd:
+    image: guacamole/guacd:latest
+    environment:
+      GUACD_LOG_LEVEL: debug
+    volumes:
+      - ./data/guacd:/usr/local/hanzo-vm/data
+    ports:
+      - "4822:4822"
+    restart: always
+
+volumes:
+  vm_postgres_data:
