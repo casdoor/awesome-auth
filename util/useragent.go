@@ -16,7 +16,6 @@ package util
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/ua-parser/uap-go/uaparser"
 )
@@ -25,13 +24,7 @@ var Parser *uaparser.Parser
 
 func InitParser() {
 	var err error
-	Parser, err = uaparser.New("../data/regexes.yaml")
-	if _, ok := err.(*os.PathError); ok {
-		Parser, err = uaparser.New("data/regexes.yaml")
-	}
-	if _, ok := err.(*os.PathError); ok {
-		Parser, err = uaparser.New("../../data/regexes.yaml")
-	}
+	Parser, err = uaparser.New()
 	if err != nil {
 		panic(err)
 	}
