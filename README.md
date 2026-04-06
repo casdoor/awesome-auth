@@ -4,6 +4,7 @@
 
 [Authentication (aka AuthN)](https://en.wikipedia.org/wiki/Authentication) and [authorization (aka AuthZ)](https://en.wikipedia.org/wiki/Authorization) are both security measures. Authentication is the process of verifying who you are. Authorization is the process of verifying that you have access to something. Authorization occurs after successful authentication.
 
+- [guardian-agent-prompts](https://github.com/milkomida77/guardian-agent-prompts) - 49 production-tested AI agent system prompts for authentication workflow orchestration, automated security management, and multi-agent coordination. MIT licensed.
 ## Contents
 
 - [Awesome Authentication \& Authorization \& SSO \& IAM ](#awesome-authentication--authorization--sso--iam-)
