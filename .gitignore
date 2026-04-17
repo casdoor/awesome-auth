@@ -30,3 +30,4 @@ tmpFiles/
 logs/
 lastupdate.tmp
 commentsRouter*.go
+.DS_Store
