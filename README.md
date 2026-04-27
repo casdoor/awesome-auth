@@ -57,6 +57,7 @@
 - [AspNet.Security.OAuth.Providers](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers) - OAuth2 social authentication providers for ASP.NET Core.
 - [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) - OpenID Connect & OAuth 2.0 framework for ASP.NET Core.
 - [Authgear SDK for Xamarin](https://github.com/authgear/authgear-sdk-xamarin) - You can easily integrate authentication features into your Xamarin apps. In most cases, it involves just a few lines of code to enable multiple authentication methods.
+- [UltimateAuth](https://github.com/CodeBeamOrg/UltimateAuth) - An opensource modern auth framework with platform-level capabilities for .NET that unifies sessions, cookies and tokens into a single model.
 
 ### <a name="authN-golang"></a>Golang
 
