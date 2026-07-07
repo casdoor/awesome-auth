@@ -191,6 +191,7 @@
 - [Organizational RBAC in Argo CD with Casbin](https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/)
 - [Authorization Academy: A series of technical guides for building application authorization](https://www.osohq.com/academy)
 - [Why Authorization is Hard](https://www.osohq.com/post/why-authorization-is-hard)
+- [CIAM.wiki: vendor-neutral Customer Identity encyclopedia](https://ciam.wiki)
 
 ## Contribute
 
