@@ -46,7 +46,7 @@
 - [SSOJet](https://ssojet.com) – Add enterprise SSO (SAML, OIDC) and SCIM user provisioning to your app without changing your existing authentication system.
 - [Logto](https://github.com/logto-io/logto) - An IAM infrastructure with AuthN, AuthZ, MFA, SSO, user management, and multi-tenancy features, supporting OAuth 2.0, OIDC, and SAML.
 - [Neon Auth](https://neon.com/docs/neon-auth/overview) - Managed authentication built on Better Auth that syncs users directly into your Neon Postgres database.
-
+- [NanoIDP](https://github.com/cdelmonte-zg/nanoidp) - Local development Identity Provider for testing OAuth2, OpenID Connect, and SAML flows without running a full IAM stack.
 
 ## Authentication
 
