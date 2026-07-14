@@ -82,6 +82,7 @@
 - [bell](https://github.com/hapijs/bell) - Third-party authentication plugin for hapi. Ships with built-in support for various well-known sites and simple configuration object will support other OAuth 1.0a and OAuth 2.0 sites.
 - [Stack Auth](https://stack-auth.com) - Open-source authN & authZ for modern web apps, comes with pre-built components for Next.js.
 - [client-certificate-auth](https://github.com/tgies/client-certificate-auth) - Mutual TLS (mTLS) client certificate authentication middleware for Node.js with reverse proxy support, composable verification callbacks, and X.509 certificate parsing.
+- [pauth-js](https://github.com/pauth-me/pauth-js) - Caller-ID based phone verification where the user dials a number instead of receiving an SMS — SIM-swap resistant and landline-compatible.
 
 ### <a name="authN-python"></a>Python
 
