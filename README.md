@@ -108,6 +108,7 @@
 ### <a name="authZ-cSharp"></a>C#
 
 - [Casbin.NET](https://github.com/casbin/Casbin.NET) - Authorization library that supports access control models like ACL, RBAC, ABAC in .NET (C#).
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a .NET SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 ### <a name="authZ-golang"></a>Golang
 
@@ -120,12 +121,14 @@
 - [Topaz](https://www.topaz.sh) - Fine-grained authorization for cloud-native applications. Combining the best of OPA and Zanzibar
 - [SpiceDB](https://github.com/authzed/spicedb) - Open-source implementation of the Zanzibar paper, a performant database for fine-grained permissions.
 - [ZITADEL](https://github.com/zitadel/zitadel) - Cloud-native Identity & Access Management platform for secure authentication, authorization and identity management.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a Go SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 
 ### <a name="authZ-rust"></a>Rust
 
 - [Casbin-Rs](https://github.com/casbin/casbin-rs) - Authorization library that supports access control models like ACL, RBAC, ABAC in Rust.
 - [Oso](https://github.com/osohq/oso) - Batteries-included framework for building authorization in your Rust application.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a Rust SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 ### <a name="authZ-ios"></a>iOS
 
@@ -140,6 +143,7 @@
 - [AT&T XACML](https://github.com/att/xacml-3.0) - XACML 3.0 implementation from AT&T.
 - [TOTP Server-Side Library](https://github.com/wstrange/GoogleAuth) - TOTP server-side library.
 - [Oso](https://github.com/osohq/oso) - Batteries-included framework for building authorization in your Java application.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a Java SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 ### <a name="authZ-node"></a>Node.js
 
@@ -150,6 +154,7 @@
 - [Oso](https://github.com/osohq/oso) - Batteries-included framework for building authorization in your Node.js application.
 - [Stack Auth](https://stack-auth.com) - Open-source authN & authZ for modern web apps, comes with pre-built components for Next.js.
 - [pundit-ts](https://github.com/fatihky/pundit-ts) - Fully type-safe authorization library inspired by awesome [pundit](https://github.com/varvet/pundit) gem. Can be used for RBAC, ABAC access control models or any other model you wish.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a JavaScript/Node.js SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 ### <a name="authZ-php"></a>PHP
 
@@ -160,6 +165,7 @@
 - [laravel-permission](https://github.com/spatie/laravel-permission) - Allows you to manage user permissions and roles in a database.
 - [logical-permissions-php](https://github.com/ordermind/logical-permissions-php) - This is a generic library that provides support for array-based permissions with logic gates such as AND and OR.
 - [symfony-logical-authorization-bundle](https://github.com/ordermind/symfony-logical-authorization-bundle) - This Symfony bundle provides a unifying solution for authorization that aims to be flexible, convenient and consistent.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a PHP SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 ### <a name="authZ-python"></a>Python
 
@@ -168,6 +174,7 @@
 - [Flask-RBAC](https://github.com/shonenada/flask-rbac) - Adds RBAC support to [Flask](https://github.com/pallets/flask).
 - [Vakt](https://github.com/kolotaev/vakt) - Attribute-based access control (ABAC) SDK for Python.
 - [Oso](https://github.com/osohq/oso) - Batteries-included framework for building authorization in your Python application.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a Python SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 ### <a name="authZ-ruby"></a>Ruby
 
@@ -175,6 +182,7 @@
 - [Pundit](https://github.com/varvet/pundit) - Minimal authorization through OO design and pure Ruby classes.
 - [Casbin](https://github.com/CasbinRuby/casbin-ruby) - Authorization library that supports access control models like ACL, RBAC, ABAC in Ruby.
 - [CanCanCan](https://github.com/CanCanCommunity/cancancan) - Authorization for Ruby on Rails.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a Ruby SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
 
 ## AI Agent Auth
 
@@ -182,6 +190,7 @@
 - [authsome](https://github.com/agentrhq/authsome) - Local-first credential broker for AI agents with an encrypted local vault and HTTPS proxy injection; no hosted service required.
 - [Composio](https://github.com/ComposioHQ/composio) - Hosted integration platform with managed OAuth and tool calling for 1000+ apps.
 - [Nango](https://github.com/NangoHQ/nango) - Open-source OAuth and API key handling for 700+ APIs with token refresh and a unified API for agent workloads.
+- [Cerbos](https://github.com/cerbos/cerbos) - Open-source, policy-based authorization for AI agents, agentic workflows, and MCP servers, with fine-grained access control and full decision logging at runtime.
 
 ## Articles
 
@@ -191,6 +200,7 @@
 - [Organizational RBAC in Argo CD with Casbin](https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/)
 - [Authorization Academy: A series of technical guides for building application authorization](https://www.osohq.com/academy)
 - [Why Authorization is Hard](https://www.osohq.com/post/why-authorization-is-hard)
+- [AuthZEN: The Standard for Interoperable Authorization](https://www.cerbos.dev/blog/authzen-standards-based-authorization-for-enterprises)
 
 ## Contribute
 
