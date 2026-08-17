@@ -191,6 +191,7 @@
 - [Composio](https://github.com/ComposioHQ/composio) - Hosted integration platform with managed OAuth and tool calling for 1000+ apps.
 - [Nango](https://github.com/NangoHQ/nango) - Open-source OAuth and API key handling for 700+ APIs with token refresh and a unified API for agent workloads.
 - [Cerbos](https://github.com/cerbos/cerbos) - Open-source, policy-based authorization for AI agents, agentic workflows, and MCP servers, with fine-grained access control and full decision logging at runtime.
+- [Grantor](https://chaingrantor.com) - OAuth/OIDC for wallets and AI agents with no authorization server: a self-certifying deed is verified in-process against a public on-chain registry, which mints a standard token. TS/Python/Go/Rust.
 
 ## Articles
 
