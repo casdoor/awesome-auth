@@ -48,6 +48,7 @@
 - [Logto](https://github.com/logto-io/logto) - An IAM infrastructure with AuthN, AuthZ, MFA, SSO, user management, and multi-tenancy features, supporting OAuth 2.0, OIDC, and SAML.
 - [Neon Auth](https://neon.com/docs/neon-auth/overview) - Managed authentication built on Better Auth that syncs users directly into your Neon Postgres database.
 - [NanoIDP](https://github.com/cdelmonte-zg/nanoidp) - Local development Identity Provider for testing OAuth2, OpenID Connect, and SAML flows without running a full IAM stack.
+- [issuerd](https://github.com/issuerd/issuerd) - Fast, Keycloak-compatible Identity & Access Management in Rust — OIDC/OAuth2 with DPoP and CIBA, conformance-tested, single binary.
 
 ## Authentication
 
