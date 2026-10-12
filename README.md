@@ -49,6 +49,7 @@
 - [Neon Auth](https://neon.com/docs/neon-auth/overview) - Managed authentication built on Better Auth that syncs users directly into your Neon Postgres database.
 - [NanoIDP](https://github.com/cdelmonte-zg/nanoidp) - Local development Identity Provider for testing OAuth2, OpenID Connect, and SAML flows without running a full IAM stack.
 - [issuerd](https://github.com/issuerd/issuerd) - Fast, Keycloak-compatible Identity & Access Management in Rust — OIDC/OAuth2 with DPoP and CIBA, conformance-tested, single binary.
+- [SAMLkit](https://samlkit.com) - Hosted SAML 2.0 identity provider and service provider for testing SAML SSO: log in as any user, edit, and replay SAML messages.
 
 ## Authentication
 
