@@ -126,6 +126,7 @@
 - [SpiceDB](https://github.com/authzed/spicedb) - Open-source implementation of the Zanzibar paper, a performant database for fine-grained permissions.
 - [ZITADEL](https://github.com/zitadel/zitadel) - Cloud-native Identity & Access Management platform for secure authentication, authorization and identity management.
 - [Cerbos](https://github.com/cerbos/cerbos) - Open-source authorization layer with a Go SDK for RBAC, ABAC, and PBAC policies evaluated at runtime.
+- [Speedle+](https://github.com/teramoby/speedle-plus) - Open-source authorization engine in Go supporting RBAC and ABAC, with a human-readable policy language (SPDL) and embedded or standalone deployment.
 
 
 ### <a name="authZ-rust"></a>Rust
