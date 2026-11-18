@@ -50,6 +50,7 @@
 - [NanoIDP](https://github.com/cdelmonte-zg/nanoidp) - Local development Identity Provider for testing OAuth2, OpenID Connect, and SAML flows without running a full IAM stack.
 - [issuerd](https://github.com/issuerd/issuerd) - Fast, Keycloak-compatible Identity & Access Management in Rust — OIDC/OAuth2 with DPoP and CIBA, conformance-tested, single binary.
 - [SAMLkit](https://samlkit.com) - Hosted SAML 2.0 identity provider and service provider for testing SAML SSO: log in as any user, edit, and replay SAML messages.
+- [Mockatoo](https://mockatoo.globalunderdog.com) - Hosted mock OAuth provider for local development and E2E tests that mimics GitHub, Google, Apple, Microsoft, Discord, Facebook, LinkedIn and X, with open-source [Auth.js](https://mockatoo.globalunderdog.com/gh/connect-authjs) and [Better Auth](https://mockatoo.globalunderdog.com/gh/connect-better-auth) connectors and [examples](https://mockatoo.globalunderdog.com/gh/examples).
 
 ## Authentication
 
