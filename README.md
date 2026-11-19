@@ -211,7 +211,7 @@
 
 ## Contribute
 
-PR is welcomed.
+PR is welcomed. Please read the [contribution guidelines](contributing.md) first. Open-source projects must have more than 100 GitHub stars.
 
 ## License
 

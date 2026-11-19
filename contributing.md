@@ -6,6 +6,7 @@ Please note that this project is released with a [Contributor Code of Conduct](c
 
 Ensure your pull request adheres to the following guidelines:
 
+- **Open-source projects must have more than 100 GitHub stars.** Pull requests for projects below this threshold will be closed.
 - **If you just created something, wait at least 30 days before submitting.** This is to give it some time to mature and ensure it's not just a publish-and-forget type of project.
 - Search previous suggestions before making a new one, as yours may be a duplicate.
 - Suggested packages should be tested and documented.
