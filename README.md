@@ -197,6 +197,7 @@
 - [Nango](https://github.com/NangoHQ/nango) - Open-source OAuth and API key handling for 700+ APIs with token refresh and a unified API for agent workloads.
 - [Cerbos](https://github.com/cerbos/cerbos) - Open-source, policy-based authorization for AI agents, agentic workflows, and MCP servers, with fine-grained access control and full decision logging at runtime.
 - [Gram](https://github.com/speakeasy-api/gram) - Controls agent access to MCPs with role-scoped permissions and audit logging.
+- [Tenuo](https://github.com/tenuo-ai/tenuo) - Open-source, task-scoped authorization tokens for AI agents that limit tools and arguments, where each delegation can only narrow the one before it.
 
 ## Articles
 
