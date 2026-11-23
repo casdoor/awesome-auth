@@ -63,6 +63,7 @@
 - [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) - OpenID Connect & OAuth 2.0 framework for ASP.NET Core.
 - [Authgear SDK for Xamarin](https://github.com/authgear/authgear-sdk-xamarin) - You can easily integrate authentication features into your Xamarin apps. In most cases, it involves just a few lines of code to enable multiple authentication methods.
 - [AuthEndpoints](https://github.com/madeyoga/AuthEndpoints) - Ready-made ASP.NET Core Identity API endpoints for registration, login, 2FA, password reset, and passkeys, with cookie or JWT sessions.
+- [Abblix OIDC Server](https://github.com/Abblix/Oidc.Server) - OpenID Connect & OAuth 2.0 server library for ASP.NET Core, certified by the OpenID Foundation.
 
 ### <a name="authN-golang"></a>Golang
 
